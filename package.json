@@ -1,0 +1,29 @@
+{
+  "name": "mongodb-datasets",
+  "version": "0.0.0",
+  "description": "What's a database without any data?",
+  "scripts": {
+    "test": "mocha",
+    "check": "jshint *.js && istanbul cover _mocha"
+  },
+  "dependencies": {
+    "debug": "^0.7.4",
+    "regret": "^0.1.1"
+  },
+  "devDependencies": {
+    "mocha": "^1.17.1",
+    "jshint": "^2.5.1",
+    "istanbul": "^0.2.10"
+  },
+  "keywords": [
+    "mongodb",
+    "mongodb.js"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/imlucas/mongodb-datasets.git"
+  },
+  "author": "Lucas Hrabovsky <hrabovsky.lucas@gmail.com> (http://imlucas.com)",
+  "license": "MIT",
+  "homepage": "http://github.com/imlucas/mongodb-datasets"
+}
