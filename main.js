@@ -1,7 +1,7 @@
 // an experiment script to insert random data into test databse
 
 var MongoClient = require('mongodb').MongoClient;
-var gen = require('./data_gen.js');
+var gen = require('./generator');
 
 var format = require('util').format;
 var argv = require('minimist')(process.argv.slice(2));
