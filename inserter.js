@@ -5,7 +5,9 @@ var debugLogger = function (msg) {
 }
 
 var Inserter = function (collection, dataStream, callback) {
-  // check valid input
+  // todo: check valid input
+  // todo: private variable https://code.google.com/p/jslibs/wiki/JavascriptTips#Objects_private_and_public_members
+  // todo: prototype function vs constructor function http://stackoverflow.com/questions/422476/setting-methods-through-prototype-object-or-in-constructor-difference
   this.callback = callback;
   this.dataStream = dataStream;
   this.collection = collection;

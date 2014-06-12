@@ -1,27 +1,57 @@
-// Customized version of Chance.js to serve more types of data,
-// such as User, Address, etc.
-
 var chance = require('chance').Chance();
+// var GENERATOR = '_';
 
 chance.mixin({
-    'user': function() {
-        return {
-            first: chance.first(),
-            last: chance.last(),
-            email: chance.email()
-        };
-    }
+  'user': function() {
+    return {
+      first: chance.first(),
+      last: chance.last(),
+      email: chance.email()
+    };
+  }
 });
 
-chance.mixin({
-    'user1': function() {
-        return {
-            first: chance.first(),
-            email: chance.email()
-        };
+// todo: singeleton pattern
+var DataStream = function (schema) {
+  // private
+  this.dataLength = 100;
+  this.restLength = 100;
+
+  chance.mixin({
+    '_': function () {
+      // todo: more complex logic
+      var o = {};
+      var field, type;
+
+      for (field in schema) {
+        type = schema[field];
+        o[field] = chance[type]();
+      }
+      return o;
     }
-});
+  });
+};
 
-chance.mixin({});
+DataStream.prototype.hasMore = function () {
+  return this.restLength > 0;
+};
 
-module.exports = chance;
+DataStream.prototype.emit = function (step) {
+  if (step === undefined) step = 1;
+  if (typeof step !== 'number') {
+    throw new Error('Not a number');
+  }
+  if (!this.hasMore()) {
+    throw StopIteration; // not defined?
+  }
+
+  var i, data = [];
+  step = Math.min(step, this.restLength);
+  this.restLength -= step;
+  for (i = 0; i < step; i++) {
+    data.push(chance['_']());
+  }
+  return data;
+};
+
+module.exports = DataStream;
