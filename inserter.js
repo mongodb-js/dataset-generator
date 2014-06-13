@@ -1,8 +1,7 @@
 var MongoClient = require('mongodb').MongoClient;
 
-var debugLogger = function (msg) {
-  console.log(msg);
-}
+var format = require('util').format;
+var debugPrint = require('./util').debugPrint;
 
 var Inserter = function (collection, dataStream, callback) {
   // todo: check valid input
@@ -30,6 +29,7 @@ Inserter.prototype.getUnfinishedData = function () {
 
 Inserter.prototype.pauseInsertion = function () {
   this.pause = true;
+  debugPrint('insertion is paused', 'info');
 };
 
 // PROBLEM. MUST KEEP CALLING THIS METHOD
@@ -52,6 +52,7 @@ Inserter.prototype.startInsertion = function () {
         var workTime = Math.round((currTime - that.startTime) / 1000);
         that.currThreads--;
         that.inserted += that.bulkSize; // change of bulkSize
+        debugPrint(format('%d inserted till now', that.inserted), 'info');
     });
   }
 };

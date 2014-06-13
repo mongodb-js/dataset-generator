@@ -1,6 +1,9 @@
 var chance = require('chance').Chance();
 // var GENERATOR = '_';
 
+var format = require('util').format;
+var debugPrint = require('./util').debugPrint;
+
 chance.mixin({
   'user': function() {
     return {
@@ -27,6 +30,9 @@ var DataStream = function (schema) {
         type = schema[field];
         o[field] = chance[type]();
       }
+
+      // debugPrint(format('mixin is built: %j', o), 'info');
+
       return o;
     }
   });
@@ -55,7 +61,14 @@ DataStream.prototype.emit = function (step) {
   for (i = 0; i < step; i++) {
     data.push(chance['_']());
   }
+
+  debugPrint(format('emitted %d data', step), 'info');
+
   return data;
+};
+
+DataStream.prototype.testEmit = function () {
+  return chance['_']();
 };
 
 module.exports = DataStream;
