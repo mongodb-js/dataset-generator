@@ -15,10 +15,10 @@ chance.mixin({
 });
 
 // todo: singeleton pattern
-var DataStream = function (schema) {
+var DataStream = function (schema, dataLength) {
   // private
-  this.dataLength = 100;
-  this.restLength = 100;
+  this.dataLength = dataLength;
+  this.restLength = dataLength;
 
   chance.mixin({
     '_': function () {

@@ -43,15 +43,17 @@ Inserter.prototype.startInsertion = function () {
     return;
   }
   if (this.currThreads < this.maxThreads) {
+    var data = this.dataStream.emit(this.bulkSize);
     this.pause = false;
     this.currThreads++;
-    this.collection.insert(this.dataStream.emit(this.bulkSize),
+    this.collection.insert(data,
       this.insertOptions, function (err, docs) { //indent?
         if (err) throw err;
         var currTime = Date.now();
         var workTime = Math.round((currTime - that.startTime) / 1000);
+        debugPrint(format('current num threads: %d', that.currThreads), 'info');
         that.currThreads--;
-        that.inserted += that.bulkSize; // change of bulkSize
+        that.inserted += data.length; // change of bulkSize
         debugPrint(format('%d inserted till now', that.inserted), 'info');
     });
   }

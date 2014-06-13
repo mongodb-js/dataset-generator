@@ -21,7 +21,7 @@ var serverName = 'mongodb://127.0.0.1:27017/',
 var schema = schemaBuilder(rawSchema);
 
 // get the customized iterator to generate random data
-var dataStream = new Generator(schema);
+var dataStream = new Generator(schema, size);
 
 // connect to MongoDB
 MongoClient.connect(serverName + dbName, function(err, db) {
