@@ -32,6 +32,10 @@ var DataStream = function (schema) {
   });
 };
 
+DataStream.prototype.numLeft = function () {
+  return this.restLength;
+};
+
 DataStream.prototype.hasMore = function () {
   return this.restLength > 0;
 };

@@ -20,6 +20,10 @@ var Inserter = function (collection, dataStream, callback) {
   this.inserted = 0;
 };
 
+Inserter.prototype.getNumDataLeft = function () {
+  return this.dataStream.numLeft();
+};
+
 Inserter.prototype.getUnfinishedData = function () {
   return this.dataStream.copy(); // todo: copy
 };

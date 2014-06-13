@@ -1,4 +1,5 @@
 var colors = require('colors');
+var format = require('util').format;
 
 var GLOBALS = {};
 
@@ -9,7 +10,7 @@ GLOBALS.theme = {
   info: 'green',
   data: 'grey',
   help: 'cyan',
-  warn: 'yellow',
+  warning: 'yellow',
   debug: 'blue',
   error: 'red',
   unknown: 'white'
@@ -22,7 +23,7 @@ var debugPrint = function (msg, type, options) {
 		   (type = type.trim().toLowerCase()) in GLOBALS.theme)) {
 		type = 'unknown';
 	}
-	console.log(msg[type]);
+	console.log(format("%s: %s", type.toUpperCase(), msg)[type]);
 };
 
 module.exports.debugPrint = debugPrint;
