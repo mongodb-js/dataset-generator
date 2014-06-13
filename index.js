@@ -34,6 +34,7 @@ MongoClient.connect(serverName + dbName, function(err, db) {
   });
 
   while (inserter.getNumDataLeft() > 0) {
+  	// console.log(inserter.getNumDataLeft());
   	inserter.startInsertion();
   }
 

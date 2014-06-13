@@ -64,7 +64,7 @@ DataStream.prototype.emit = function (step) {
 
   debugPrint(format('emitted %d data', step), 'info');
 
-  return data;
+  return data.slice(0);
 };
 
 DataStream.prototype.testEmit = function () {

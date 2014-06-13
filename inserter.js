@@ -34,20 +34,24 @@ Inserter.prototype.pauseInsertion = function () {
 
 // PROBLEM. MUST KEEP CALLING THIS METHOD
 Inserter.prototype.startInsertion = function () {
-  var that = this;
-
   if (!this.dataStream.hasMore()) { // todo: hasMore
     if (typeof this.callback === "function") {
       this.callback();
     }
     return;
   }
+
+  var that = this;
   if (this.currThreads < this.maxThreads) {
     var data = this.dataStream.emit(this.bulkSize);
+    console.log(this.getNumDataLeft() + 'left');
+    console.log(this.inserted+'inserted');
+    console.log(this.currThreads + 'threads');
     this.pause = false;
     this.currThreads++;
     this.collection.insert(data,
       this.insertOptions, function (err, docs) { //indent?
+        console.log('in');
         if (err) throw err;
         var currTime = Date.now();
         var workTime = Math.round((currTime - that.startTime) / 1000);
@@ -56,6 +60,8 @@ Inserter.prototype.startInsertion = function () {
         that.inserted += data.length; // change of bulkSize
         debugPrint(format('%d inserted till now', that.inserted), 'info');
     });
+  } else {
+    // debugPrint('reached max num threads', 'info');
   }
 };
 
