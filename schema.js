@@ -1,6 +1,9 @@
 var format = require('util').format;
 var debugPrint = require('./util').debugPrint;
 
+// a 'class' that converts user input into legal schema object
+// that is recognized by generator
+// temporarily not in use, still in progress
 var Schema = function () {
 	if (Schema.prototype._singletonInstance) {
 		debugPrint('Schema constructor called multiple times', 'warning');
@@ -19,6 +22,7 @@ var Schema = function () {
 	};
 };
 
+// a temporary convenient substitude
 var buildSchema = function (s) {
 	return s;
 }

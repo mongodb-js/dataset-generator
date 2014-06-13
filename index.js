@@ -16,7 +16,7 @@ var serverName = 'mongodb://127.0.0.1:27017/',
 			last_name: 'last',
 			email: 'email'
 		};
-
+size = 10;
 // to build a Schema object from user input
 var schema = schemaBuilder(rawSchema);
 
@@ -27,15 +27,23 @@ var dataStream = new Generator(schema, size);
 MongoClient.connect(serverName + dbName, function(err, db) {
   if(err) throw err;
 
+  // the collection to dump the generated data
   var collection = db.collection(datasetName);
 
+  // initiate the inserter to do the job
   var inserter = new Inserter(collection, dataStream, function() {
   	console.log('job completed');
   });
 
+  // this is a temporary makeshift, should not have this while loop
+  var timer = Date.now();
   while (inserter.getNumDataLeft() > 0) {
   	// console.log(inserter.getNumDataLeft());
   	inserter.startInsertion();
+    while (Date.now() - timer < 500) {
+      ;
+    }
+    timer = Date.now();
   }
 
 });

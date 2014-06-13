@@ -12,11 +12,14 @@ var Inserter = function (collection, dataStream, callback) {
   this.collection = collection;
   this.maxThreads = 6;
   this.currThreads = 0;
-  this.bulkSize = 100;
+  this.bulkSize = 1;
   this.startTime = Date.now();
   this.pause = true;
   this.insertOptions = {};
   this.inserted = 0;
+
+  debugPrint('inserter is built', 'info');
+  debugPrint(format('dataStream: %j', this.dataStream.testEmit()), 'info');
 };
 
 Inserter.prototype.getNumDataLeft = function () {
@@ -49,6 +52,7 @@ Inserter.prototype.startInsertion = function () {
     console.log(this.currThreads + 'threads');
     this.pause = false;
     this.currThreads++;
+
     this.collection.insert(data,
       this.insertOptions, function (err, docs) { //indent?
         console.log('in');
