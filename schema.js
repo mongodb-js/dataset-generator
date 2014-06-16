@@ -6,7 +6,7 @@ var debugPrint = require('./util').debugPrint;
 // temporarily not in use, still in progress
 var Schema = function () {
 	if (Schema.prototype._singletonInstance) {
-		debugPrint('Schema constructor called multiple times', 'warning');
+		debugPrint('warn', 'Schema constructor called multiple times');
 		return Schema.prototype._singletonInstance;
 	}
 	Schema.prototype._singletonInstance = this;
@@ -17,7 +17,7 @@ var Schema = function () {
 	};
 	this.buildSchema = function (s) { // todo: actually build the object
 		schema = s;
-		debugPrint(format('Schema is built: %j', s), 'info');
+		debugPrint('op', format('Schema is built: %j', s));
 		return schema;
 	};
 };
@@ -25,6 +25,6 @@ var Schema = function () {
 // a temporary convenient substitude
 var buildSchema = function (s) {
 	return s;
-}
+};
 
 module.exports = buildSchema;

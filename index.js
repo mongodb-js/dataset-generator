@@ -35,16 +35,7 @@ MongoClient.connect(serverName + dbName, function(err, db) {
   	console.log('job completed');
   });
 
-  // this is a temporary makeshift, should not have this while loop
-  var timer = Date.now();
-  while (inserter.getNumDataLeft() > 0) {
-  	// console.log(inserter.getNumDataLeft());
-  	inserter.startInsertion();
-    while (Date.now() - timer < 500) {
-      ;
-    }
-    timer = Date.now();
-  }
+  inserter.start();
 
 });
 

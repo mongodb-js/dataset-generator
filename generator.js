@@ -21,7 +21,7 @@ var DataStream = function (schema, dataLength) {
   this.restLength = dataLength;
 
   chance.mixin({
-    '_': function () {
+    _: function () {
       // todo: more complex logic
       var o = {};
       var field, type;
@@ -52,23 +52,23 @@ DataStream.prototype.emit = function (step) {
     throw new Error('Not a number');
   }
   if (!this.hasMore()) {
-    throw StopIteration; // not defined?
+    throw new Error('no more data to emit');
   }
 
   var i, data = [];
   step = Math.min(step, this.restLength);
   this.restLength -= step;
   for (i = 0; i < step; i++) {
-    data.push(chance['_']());
+    data.push(chance._());
   }
 
-  debugPrint(format('emitted %d data', step), 'info');
+  debugPrint('op', format('emitted %d data', step));
 
   return data.slice(0);
 };
 
 DataStream.prototype.testEmit = function () {
-  return chance['_']();
+  return chance._();
 };
 
 module.exports = DataStream;
