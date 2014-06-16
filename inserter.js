@@ -30,7 +30,7 @@ var Inserter = function (collection, dataStream, callback) {
   var _active = true;
   var _concurrency = 6;
   var _taskCounter = 0;
-  this._bulkSize = 1;
+  this._bulkSize = 100;
 
   // statistics
   var _startTime = Date.now();
@@ -88,16 +88,20 @@ var Inserter = function (collection, dataStream, callback) {
   };
 
   this.start = function () {
-    debugPrint('op', 'Inserter starts working');
+    debugPrint('info', 'Inserter starts working');
     if (!_active) return;
+
+    var delay = 10; // delay in callback, adjusted adpatively
     async.whilst(
       function () { // test function
-        var rtn = !(_queue.paused && self.isDone());
+        var rtn = !_queue.paused && _active && _dataStream.hasMore();
         if (!rtn) debugPrint('op', 'current insertion session ends');
         return rtn;
       },
-      function () { // task function
+      function (callback) { // task function
         if (_queue.running() < _queue.concurrency) {
+          console.log(_queue.length());
+          console.log(_queue.running());
           var task = {
             id: ++_taskCounter,
             data: _dataStream.emit(self._bulkSize)
@@ -106,11 +110,17 @@ var Inserter = function (collection, dataStream, callback) {
           _queue.push(task, function (err) {
             debugPrint('info', format('task %d handled by db', task.id));
           });
+          delay = Math.max(1, delay / 2);
+        } else {
+          delay = delay * 2;
         }
+        setTimeout(callback(), delay);
       },
       function (err) {
-        debugPrint('error', 'whilst reported error');
-        throw err;
+        if (err) {
+          debugPrint('error', 'whilst reported error');
+          throw err;
+        }
       }
     );
   };

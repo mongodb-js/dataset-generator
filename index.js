@@ -17,7 +17,7 @@ var serverName = 'mongodb://127.0.0.1:27017/',
 			last_name: 'last',
 			email: 'email'
 		};
-size = 10;
+size = 10000;
 // to build a Schema object from user input
 var schema = schemaBuilder(rawSchema);
 
@@ -34,7 +34,9 @@ MongoClient.connect(serverName + dbName, function(err, db) {
 
   // initiate the inserter to do the job
   var inserter = new Inserter(collection, dataStream, function() {
-  	console.log('job completed');
+  	console.log('This is the callback function user defined');
+    console.log('Yay! We reached here.');
+    db.close();
   });
 
   inserter.start();
