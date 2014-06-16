@@ -9,7 +9,7 @@ var Inserter = function (collection, dataStream, callback) {
   // todo: private variable https://code.google.com/p/jslibs/wiki/JavascriptTips#Objects_private_and_public_members
   // todo: prototype function vs constructor function http://stackoverflow.com/questions/422476/setting-methods-through-prototype-object-or-in-constructor-difference
   var self = this;
-  debugPrint('verbose', 'Building an inserter');
+  debugPrint('op', 'Building an inserter');
 
   // error detection
   if (!dataStream instanceof DataStream) {
@@ -43,21 +43,26 @@ var Inserter = function (collection, dataStream, callback) {
     var id = task.id;
     var data = task.data;
     var count = data.length;
-    debugPrint('op', format('processing task %d with %d docs', id, count));
+    debugPrint('op', format('queue is processing task %d', id));
     _collection.insert(data, { safe: true }, function (err, docs) {
-      debugPrint('op', format('task %d was handled by db', id));
+      debugPrint('op', format('db is handling task %d', id));
       if (err) throw err;
-      callback();
+      callback(); // defined in method start
       // statistics
       _numInserted += count;
       var currTime = Date.now();
-      var workTime = Math.round((currTime - _startTime) / 1000);
-      debugPrint(format('%d seconds have elapsed', workTime), 'info');
-      debugPrint(format('%d docs inserted till now', _numInserted), 'info');
+      var workTime = (currTime - _startTime);
+      debugPrint('info',
+        format('%d ms elapsed, total insert %d', workTime, _numInserted));
     });
   }, _concurrency);
+
   _queue.drain = function () {
-    if (self.isDone()) _callback();
+    debugPrint('verbose', 'queue is drained');
+    if (self.isDone()) {
+      debugPrint('info', 'insertion is done');
+      _callback(); // user input
+    }
   };
 
   this.pause = function () { _queue.pause(); };
@@ -67,8 +72,13 @@ var Inserter = function (collection, dataStream, callback) {
     // add logic to recover un-processed data
   };
   this.isDone = function () {
-    return !_active || (!_dataStream.hasMore && _queue.idle());
+    // console.log(_active);
+    // console.log(_dataStream.hasMore());
+    // console.log(_queue.idle());
+    // console.log(!_active || (!_dataStream.hasMore() && _queue.idle()));
+    return !_active || (!_dataStream.hasMore() && _queue.idle());
   };
+
   this.getConcurrency = function () { return _concurrency; };
   this.setConcurrency = function (num) {
     if (typeof num === 'number') {
@@ -78,32 +88,34 @@ var Inserter = function (collection, dataStream, callback) {
   };
 
   this.start = function () {
+    debugPrint('op', 'Inserter starts working');
     if (!_active) return;
     async.whilst(
-      function () {
-        return !(_queue.paused && self.isDone());
+      function () { // test function
+        var rtn = !(_queue.paused && self.isDone());
+        if (!rtn) debugPrint('op', 'current insertion session ends');
+        return rtn;
       },
-      function () {
-        if (_queue.length() === 0) {
+      function () { // task function
+        if (_queue.running() < _queue.concurrency) {
           var task = {
             id: ++_taskCounter,
             data: _dataStream.emit(self._bulkSize)
           };
           debugPrint('op', format('pushing task %d into queue', task.id));
           _queue.push(task, function (err) {
-            debugPrint('op', format('callback for task %d', task.id));
+            debugPrint('info', format('task %d handled by db', task.id));
           });
         }
       },
       function (err) {
-        debugPrint('error', 'whilst report error');
+        debugPrint('error', 'whilst reported error');
         throw err;
       }
     );
   };
   // debug print
-  debugPrint('verbose', 'Successfully built the inserter');
-  debugPrint(format('verbose', 'dataStream: %j', this.dataStream.testEmit()));
+  debugPrint('info', 'Successfully built the inserter');
 };
 
 module.exports = Inserter;

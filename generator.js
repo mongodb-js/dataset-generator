@@ -16,26 +16,25 @@ chance.mixin({
 
 // todo: singeleton pattern
 var DataStream = function (schema, dataLength) {
-  // private
+  // private var
   this.dataLength = dataLength;
   this.restLength = dataLength;
-
+  // mixin
   chance.mixin({
     _: function () {
       // todo: more complex logic
       var o = {};
       var field, type;
-
       for (field in schema) {
         type = schema[field];
         o[field] = chance[type]();
       }
-
-      // debugPrint(format('mixin is built: %j', o), 'info');
-
       return o;
     }
   });
+  // log
+  debugPrint('op', 'DataStream successfully built');
+  debugPrint('verbose', this.toString());
 };
 
 DataStream.prototype.numLeft = function () {
@@ -62,13 +61,19 @@ DataStream.prototype.emit = function (step) {
     data.push(chance._());
   }
 
-  debugPrint('op', format('emitted %d data', step));
+  debugPrint('op',
+    format('DataStream emitted %d docs, %d left', step, this.restLength));
 
   return data.slice(0);
 };
 
 DataStream.prototype.testEmit = function () {
   return chance._();
+};
+
+DataStream.prototype.toString = function () {
+  return format('<DataStream:%d/%d,%j>',
+    this.restLength, this.dataLength, this.testEmit());
 };
 
 module.exports = DataStream;

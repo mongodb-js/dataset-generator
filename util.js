@@ -4,10 +4,10 @@ var format = require('util').format;
 var GLOBALS = {};
 GLOBALS.debugMode = true;
 GLOBALS.theme = {
-  verbose: 'cyan',
+  verbose: 'blue',
   data: 'grey',
   info: 'green',
-  op: 'blue',
+  op: 'cyan',
   warn: 'yellow',
   error: 'red',
   unknown: 'white'
