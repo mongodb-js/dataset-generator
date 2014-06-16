@@ -1,5 +1,4 @@
 var chance = require('chance').Chance();
-// var GENERATOR = '_';
 
 var format = require('util').format;
 var debugPrint = require('./util').debugPrint;

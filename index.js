@@ -17,7 +17,7 @@ var serverName = 'mongodb://127.0.0.1:27017/',
 			last_name: 'last',
 			email: 'email'
 		};
-size = 10000;
+
 // to build a Schema object from user input
 var schema = schemaBuilder(rawSchema);
 
