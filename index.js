@@ -3,7 +3,7 @@ var MongoClient = require('mongodb').MongoClient;
 var argv = require('minimist')(process.argv.slice(2));
 // internal packages
 var Generator = require('./generator');
-var schemaBuilder = require('./schema');
+var schemaBuilder = require('./schema')();
 var Inserter = require('./inserter');
 var debug = require('debug')('dataset:index');
 
@@ -19,7 +19,7 @@ var serverName = 'mongodb://127.0.0.1:27017/',
 		};
 
 // to build a Schema object from user input
-var schema = schemaBuilder(rawSchema);
+var schema = schemaBuilder.build(rawSchema);
 
 // get the customized iterator to generate random data
 var dataStream = new Generator(schema, size);

@@ -6,7 +6,6 @@
  */
 
 var async = require('async');
-var DataStream = require('./generator');
 var debug = require('debug')('dataset:inserter');
 var debugDb = require('debug')('dataset:inserter:db');
 var debugQ = require('debug')('dataset:inserter:queue');
@@ -72,7 +71,7 @@ var Inserter = function (collection, dataStream, callback) {
 Inserter.prototype.start = function () {
   debug('INFO: Inserter starts working');
   this._queue.resume();
-  if (!(this._active && this._dataStream.hasMore())) {
+  if (!(this._active && this._dataStream.hasNext())) {
     debug('WARNING: Inserter has no more data to work');
     return;
   }
@@ -91,12 +90,12 @@ Inserter.prototype.terminate = function () {
 
 Inserter.prototype.isDone = function () {
   return !this._active ||
-        (!this._dataStream.hasMore() && this._queue.idle());
+        (!this._dataStream.hasNext() && this._queue.idle());
 };
 
 Inserter.prototype._refill = function () {
   debugQ('INFO: refilling the queue');
-  if (!(this._active && this._dataStream.hasMore()) || this._queue.paused) {
+  if (!(this._active && this._dataStream.hasNext()) || this._queue.paused) {
     debugQ('WARNING: refilling terminated');
     return;
   }
@@ -104,7 +103,7 @@ Inserter.prototype._refill = function () {
   async.whilst(
     function () { // test function
       var ends = that._queue.paused ||
-                !that._active || !that._dataStream.hasMore();
+                !that._active || !that._dataStream.hasNext();
       var full = that._queue.length() >= that._queue.concurrency;
       if (full) debugQ('OP: current session ends, queue is filled');
       if (ends) debugQ('OP: insertion session ends permanently');
@@ -113,7 +112,7 @@ Inserter.prototype._refill = function () {
     function (callback) { // task function
       var task = {
         id: ++that._taskCounter,
-        data: that._dataStream.emit(that._bulkSize)
+        data: that._dataStream.next(that._bulkSize)
       };
       debugQ('OP: pushing task %d into queue', task.id);
       that._queue.push(task, function (err) {
