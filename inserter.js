@@ -1,9 +1,22 @@
+/* inserter.js */
+
+/**
+ * A tool to insert data into MongoDB that adaptively adjusts the timing
+ * and bulk size for each insertion to maximize performance.
+ */
+
 var async = require('async');
 var format = require('util').format;
-var myUtil = require('./util');
 var debugPrint = require('./util').debugPrint;
 var DataStream = require('./generator');
 
+/**
+ * Inserter constructor
+ *
+ * @param collection - a MongoDB collection to insert the data
+ * @param dataStream - a DataStream object as specified in generator.js
+ * @param callback - the function to call when insertion is finished
+ */
 var Inserter = function (collection, dataStream, callback) {
   var self = this;
   debugPrint('op', 'Building an inserter');
