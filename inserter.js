@@ -23,126 +23,112 @@ var Inserter = function (collection, dataStream, callback) {
     return new Inserter(collection, dataStream, callback);
   }
 
-  var self = this;
-  debug('OP: Building an inserter');
-
-  // error detection
-  if (!dataStream instanceof DataStream) {
-    throw new Error('Inserter: invalid DataStream object');
-  }
-  if (!(callback && typeof callback === 'function')) {
-    throw new Error('Inserter: invalid callback function');
-  }
-
   // main component
-  var _callback = callback;
-  var _dataStream = dataStream;
-  this.getDataStream = function () { return _dataStream; };
-  var _collection = collection;
-  this.getCollection = function () { return _collection; };
+  this._callback = callback;
+  this._dataStream = dataStream;
+  this._collection = collection;
 
   // operations and config
-  var _active = true;
-  var _concurrency = 6;
-  var _taskCounter = 0;
+  this._active = true;
+  this._concurrency = 6;
+  this._taskCounter = 0;
   this._bulkSize = 10;
 
   // statistics
-  var _startTime = Date.now();
-  this.getStartTime = function () { return _startTime; };
-  var _numInserted = 0;
-  this.getNumInserted = function () { return _numInserted; };
+  this._startTime = Date.now();
+  this._numInserted = 0;
 
   // init
-  var _queue = async.queue(function (task, callback) {
+  var that = this;
+  this._queue = async.queue(function (task, callback) {
     var id = task.id;
     var data = task.data;
     var count = data.length;
     debugQ('OP: queue is processing task %d', id);
-    _collection.insert(data, { safe: true }, function (err, docs) {
+    that._collection.insert(data, { safe: true }, function (err, docs) {
       debugDb('OP: db is handling task %d', id);
       if (err) throw err;
       callback(); // defined in method start
       // statistics
-      _numInserted += count;
+      that._numInserted += count;
       var currTime = Date.now();
-      var workTime = (currTime - _startTime);
-      debug('INFO: %d ms elapsed, total insert %d', workTime, _numInserted);
+      var workTime = (currTime - that._startTime);
+      debug('INFO: %d ms elapsed, total insert %d',
+            workTime, that._numInserted);
     });
-  }, _concurrency);
+  }, this._concurrency);
 
-  _queue.drain = function () {
+  this._queue.drain = function () {
     debugQ('VERBOSE: queue is drained');
-    if (self.isDone()) {
+    if (that.isDone()) {
       debug('INFO: insertion is done');
-      _callback(); // user input
+      that._callback(); // user input
     }
-  };
-
-  this.pause = function () { _queue.pause(); };
-  this.terminate = function () {
-    _queue.pause();
-    _active = false;
-    // todo: add logic to recover un-processed data
-  };
-  this.isDone = function () {
-    return !_active || (!_dataStream.hasMore() && _queue.idle());
-  };
-
-  this.getConcurrency = function () { return _concurrency; };
-  this.setConcurrency = function (num) {
-    if (typeof num === 'number') {
-      _concurrency = num;
-      _queue.concurrency = num;
-    }
-  };
-
-  this.refill = function () {
-    debugQ('INFO: refilling the queue');
-    if (!(_active && _dataStream.hasMore()) || _queue.paused) {
-      debugQ('WARNING: refilling terminated');
-      return;
-    }
-    async.whilst(
-      function () { // test function
-        var ends = _queue.paused || !_active || !_dataStream.hasMore();
-        var full = _queue.length() >= _queue.concurrency;
-        if (full) debugQ('OP: current session ends, queue is filled');
-        if (ends) debugQ('OP: insertion session ends permanently');
-        return !(full || ends);
-      },
-      function (callback) { // task function
-        var task = {
-          id: ++_taskCounter,
-          data: _dataStream.emit(self._bulkSize)
-        };
-        debugQ('OP: pushing task %d into queue', task.id);
-        _queue.push(task, function (err) {
-          debugDb('INFO: task %d handled by db', task.id);
-          self.refill();
-        });
-        callback();
-      },
-      function (err) {
-        if (err) {
-          debug('ERROR: whilst reported error');
-          throw err;
-        }
-      }
-    );
-  };
-
-  this.start = function () {
-    debug('INFO: Inserter starts working');
-    _queue.resume();
-    if (!(_active && _dataStream.hasMore())) {
-      debug('WARNING: Inserter has no more data to work');
-      return;
-    }
-    self.refill();
   };
 
   debug('INFO: Successfully built the inserter');
+};
+
+Inserter.prototype.start = function () {
+  debug('INFO: Inserter starts working');
+  this._queue.resume();
+  if (!(this._active && this._dataStream.hasMore())) {
+    debug('WARNING: Inserter has no more data to work');
+    return;
+  }
+  this._refill();
+};
+
+Inserter.prototype.pause = function () {
+  this._queue.pause();
+};
+
+Inserter.prototype.terminate = function () {
+  this._queue.pause();
+  this._active = false;
+  // todo: add logic to recover un-processed data
+};
+
+Inserter.prototype.isDone = function () {
+  return !this._active ||
+        (!this._dataStream.hasMore() && this._queue.idle());
+};
+
+Inserter.prototype._refill = function () {
+  debugQ('INFO: refilling the queue');
+  if (!(this._active && this._dataStream.hasMore()) || this._queue.paused) {
+    debugQ('WARNING: refilling terminated');
+    return;
+  }
+  var that = this;
+  async.whilst(
+    function () { // test function
+      var ends = that._queue.paused ||
+                !that._active || !that._dataStream.hasMore();
+      var full = that._queue.length() >= that._queue.concurrency;
+      if (full) debugQ('OP: current session ends, queue is filled');
+      if (ends) debugQ('OP: insertion session ends permanently');
+      return !(full || ends);
+    },
+    function (callback) { // task function
+      var task = {
+        id: ++that._taskCounter,
+        data: that._dataStream.emit(that._bulkSize)
+      };
+      debugQ('OP: pushing task %d into queue', task.id);
+      that._queue.push(task, function (err) {
+        debugDb('INFO: task %d handled by db', task.id);
+        that._refill();
+      });
+      callback();
+    },
+    function (err) {
+      if (err) {
+        debug('ERROR: whilst reported error');
+        throw err;
+      }
+    }
+  );
 };
 
 module.exports = Inserter;
