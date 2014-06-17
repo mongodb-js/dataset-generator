@@ -7,7 +7,7 @@
 
 var async = require('async');
 var format = require('util').format;
-var debugPrint = require('./util').debugPrint;
+var debug = require('debug')('datasets:inserter');
 var DataStream = require('./generator');
 
 /**
@@ -19,7 +19,7 @@ var DataStream = require('./generator');
  */
 var Inserter = function (collection, dataStream, callback) {
   var self = this;
-  debugPrint('op', 'Building an inserter');
+  debug('OP: Building an inserter');
 
   // error detection
   if (!dataStream instanceof DataStream) {
@@ -53,24 +53,23 @@ var Inserter = function (collection, dataStream, callback) {
     var id = task.id;
     var data = task.data;
     var count = data.length;
-    debugPrint('op', format('queue is processing task %d', id));
+    debug('OP: queue is processing task %d', id);
     _collection.insert(data, { safe: true }, function (err, docs) {
-      debugPrint('op', format('db is handling task %d', id));
+      debug('OP: db is handling task %d', id);
       if (err) throw err;
       callback(); // defined in method start
       // statistics
       _numInserted += count;
       var currTime = Date.now();
       var workTime = (currTime - _startTime);
-      debugPrint('info',
-        format('%d ms elapsed, total insert %d', workTime, _numInserted));
+      debug('INFO: %d ms elapsed, total insert %d', workTime, _numInserted);
     });
   }, _concurrency);
 
   _queue.drain = function () {
-    debugPrint('verbose', 'queue is drained');
+    debug('VERBOSE: queue is drained');
     if (self.isDone()) {
-      debugPrint('info', 'insertion is done');
+      debug('INFO: insertion is done');
       _callback(); // user input
     }
   };
@@ -94,17 +93,17 @@ var Inserter = function (collection, dataStream, callback) {
   };
 
   this.refill = function () {
-    debugPrint('info', 'refilling the queue');
+    debug('INFO: refilling the queue');
     if (!(_active && _dataStream.hasMore()) || _queue.paused) {
-      debugPrint('warn', 'refilling terminated');
+      debug('WARNING: refilling terminated');
       return;
     }
     async.whilst(
       function () { // test function
         var ends = _queue.paused || !_active || !_dataStream.hasMore();
         var full = _queue.length() >= _queue.concurrency;
-        if (full) debugPrint('op', 'current session ends, queue is filled');
-        if (ends) debugPrint('op', 'insertion session ends permanently');
+        if (full) debug('OP: current session ends, queue is filled');
+        if (ends) debug('OP: insertion session ends permanently');
         return !(full || ends);
       },
       function (callback) { // task function
@@ -112,16 +111,16 @@ var Inserter = function (collection, dataStream, callback) {
           id: ++_taskCounter,
           data: _dataStream.emit(self._bulkSize)
         };
-        debugPrint('op', format('pushing task %d into queue', task.id));
+        debug('OP: pushing task %d into queue', task.id);
         _queue.push(task, function (err) {
-          debugPrint('info', format('task %d handled by db', task.id));
+          debug('INFO: task %d handled by db', task.id);
           self.refill();
         });
         callback();
       },
       function (err) {
         if (err) {
-          debugPrint('error', 'whilst reported error');
+          debug('ERROR: whilst reported error');
           throw err;
         }
       }
@@ -129,16 +128,16 @@ var Inserter = function (collection, dataStream, callback) {
   };
 
   this.start = function () {
-    debugPrint('info', 'Inserter starts working');
+    debug('INFO: Inserter starts working');
     _queue.resume();
     if (!(_active && _dataStream.hasMore())) {
-      debugPrint('warn', 'Inserter has no more data to work');
+      debug('WARNING: Inserter has no more data to work');
       return;
     }
     self.refill();
   };
 
-  debugPrint('info', 'Successfully built the inserter');
+  debug('INFO: Successfully built the inserter');
 };
 
 module.exports = Inserter;

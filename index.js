@@ -5,7 +5,7 @@ var argv = require('minimist')(process.argv.slice(2));
 var Generator = require('./generator');
 var schemaBuilder = require('./schema');
 var Inserter = require('./inserter');
-var debugPrint = require('./util').debugPrint;
+var debug = require('debug')('datasets:main');
 
 // assume these are the user input
 var serverName = 'mongodb://127.0.0.1:27017/',
@@ -26,7 +26,7 @@ var dataStream = new Generator(schema, size);
 
 // connect to MongoDB
 MongoClient.connect(serverName + dbName, function(err, db) {
-  debugPrint('info', 'connected to MongoDB');
+  debug('INFO: connected to MongoDB');
   if(err) throw err;
 
   // the collection to dump the generated data

@@ -7,7 +7,7 @@
 
 var chance = require('chance').Chance();
 var format = require('util').format;
-var debugPrint = require('./util').debugPrint;
+var debug = require('debug')('datasets:generator');
 
 chance.mixin({
   'user': function() {
@@ -42,8 +42,8 @@ var DataStream = function (schema, dataLength) {
     }
   });
   // log
-  debugPrint('op', 'DataStream successfully built');
-  debugPrint('verbose', this.toString());
+  debug('OP: DataStream successfully built');
+  debug('VERBOSE:' + this.toString());
 };
 
 /**
@@ -83,8 +83,7 @@ DataStream.prototype.emit = function (step) {
     data.push(chance._());
   }
 
-  debugPrint('op',
-    format('DataStream emitted %d docs, %d left', step, this.restLength));
+  debug('OP: DataStream emitted %d docs, %d left', step, this.restLength);
 
   return data.slice(0);
 };

@@ -18,7 +18,7 @@
  */
 
 var format = require('util').format;
-var debugPrint = require('./util').debugPrint;
+var debug = require('debug')('dataset:schema');
 
 // a 'class' that converts user input into legal schema object
 // that is recognized by generator
