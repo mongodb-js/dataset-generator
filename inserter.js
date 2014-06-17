@@ -6,10 +6,10 @@
  */
 
 var async = require('async');
-var debugDb = require('debug')('inserter:db');
-var debugQ = require('debug')('inserter:queue');
-var debug = require('debug')('inserter');
 var DataStream = require('./generator');
+var debug = require('debug')('dataset:inserter');
+var debugDb = require('debug')('dataset:inserter:db');
+var debugQ = require('debug')('dataset:inserter:queue');
 
 /**
  * Inserter constructor

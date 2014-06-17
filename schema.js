@@ -17,7 +17,7 @@
  * collection should correspond to 'id' in Manager collection
  */
 
-var debug = require('debug')('schema');
+var debug = require('debug')('dataset:schema');
 
 // a 'class' that converts user input into legal schema object
 // that is recognized by generator
