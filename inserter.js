@@ -19,6 +19,10 @@ var DataStream = require('./generator');
  * @param callback - the function to call when insertion is finished
  */
 var Inserter = function (collection, dataStream, callback) {
+  if (!(this instanceof Inserter)) {
+    return new Inserter(collection, dataStream, callback);
+  }
+
   var self = this;
   debug('OP: Building an inserter');
 

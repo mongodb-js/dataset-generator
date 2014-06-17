@@ -25,6 +25,9 @@ chance.mixin({
  * @param dataLength - the number of documents to generate
  */
 var DataStream = function (schema, dataLength) {
+  if (!(this instanceof DataStream)) {
+    return new DataStream(schema, dataLength);
+  }
   this.dataLength = dataLength;
   this.restLength = dataLength;
 
