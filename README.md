@@ -39,18 +39,16 @@ establish MongoDB as a leader in this emerging market.
   * Simple educational schemas that cover
     1. basic model relationships, e.g. one-to-one, one-to-many with
        embedded document, one-to-many with document reference
-    2. @todo: more examples
   * Ready-to-use template schemas such as
     1. user activity stream
     2. time series data
     3. user management
-    4. @todo: gather or refine [use cases](http://docs.mongodb.org/ecosystem/use-cases)
+    4. other [use cases](http://docs.mongodb.org/ecosystem/use-cases)
 + Set up skeleton code that encapsulates the feature to populate random
   data, which has support of
   1. reading and configuring for the selected schemas with limited user
      customization
-  2. generating data of types that are used in the schemas (possibly
-     extend existing APIs such as [Mockaroo](http://www.mockaroo.com/api/docs))
+  2. generating data of types that are used in the schemas
   3. feeding the generated data to MongoDB database
 + Add peripheral support for individual schemas, based on the skeleton
   1. identify types and/or reasonable range for data in each field
@@ -62,9 +60,7 @@ establish MongoDB as a leader in this emerging market.
 + Random data generator
   * MongoDB official doc: [Generate Test Data](http://docs.mongodb.org/manual/tutorial/generate-test-data)
   * community question [random k-v pair](https://groups.google.com/forum/#!topic/mongodb-user/o0AmMt9i3Zc)
-  * API:
-    1. [json-generator](http://www.json-generator.com/)
-    2. [chance.js](http://chancejs.com/): [mixin](http://chancejs.com/#mixin) seems useful
+  * API: [chance.js](http://chancejs.com/)
 
 + Schema Design
   * [Time Series](http://blog.mongodb.org/post/65517193370/schema-design-for-time-series-data-in-mongodb)[same topic ppt](http://www.mongodb.com/presentations/webinar-time-series-data-mongodb)
