@@ -17,15 +17,14 @@
  * collection should correspond to 'id' in Manager collection
  */
 
-var format = require('util').format;
-var debug = require('debug')('dataset:schema');
+var debug = require('debug')('schema');
 
 // a 'class' that converts user input into legal schema object
 // that is recognized by generator
 // temporarily not in use, still in progress
 var Schema = function () {
 	if (Schema.prototype._singletonInstance) {
-		debugPrint('warn', 'Schema constructor called multiple times');
+		debug('WARNING: Schema constructor called multiple times');
 		return Schema.prototype._singletonInstance;
 	}
 	Schema.prototype._singletonInstance = this;
@@ -36,7 +35,7 @@ var Schema = function () {
 	};
 	this.buildSchema = function (s) { // todo: actually build the object
 		schema = s;
-		debugPrint('op', format('Schema is built: %j', s));
+		debug('OP: Schema is built: %j', s);
 		return schema;
 	};
 };

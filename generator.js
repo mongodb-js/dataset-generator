@@ -7,7 +7,7 @@
 
 var chance = require('chance').Chance();
 var format = require('util').format;
-var debug = require('debug')('datasets:generator');
+var debug = require('debug')('generator');
 
 chance.mixin({
   'user': function() {

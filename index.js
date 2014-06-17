@@ -5,7 +5,7 @@ var argv = require('minimist')(process.argv.slice(2));
 var Generator = require('./generator');
 var schemaBuilder = require('./schema');
 var Inserter = require('./inserter');
-var debug = require('debug')('datasets:main');
+var debug = require('debug')('index');
 
 // assume these are the user input
 var serverName = 'mongodb://127.0.0.1:27017/',

@@ -6,8 +6,9 @@
  */
 
 var async = require('async');
-var format = require('util').format;
-var debug = require('debug')('datasets:inserter');
+var debugDb = require('debug')('inserter:db');
+var debugQ = require('debug')('inserter:queue');
+var debug = require('debug')('inserter');
 var DataStream = require('./generator');
 
 /**
@@ -53,9 +54,9 @@ var Inserter = function (collection, dataStream, callback) {
     var id = task.id;
     var data = task.data;
     var count = data.length;
-    debug('OP: queue is processing task %d', id);
+    debugQ('OP: queue is processing task %d', id);
     _collection.insert(data, { safe: true }, function (err, docs) {
-      debug('OP: db is handling task %d', id);
+      debugDb('OP: db is handling task %d', id);
       if (err) throw err;
       callback(); // defined in method start
       // statistics
@@ -67,7 +68,7 @@ var Inserter = function (collection, dataStream, callback) {
   }, _concurrency);
 
   _queue.drain = function () {
-    debug('VERBOSE: queue is drained');
+    debugQ('VERBOSE: queue is drained');
     if (self.isDone()) {
       debug('INFO: insertion is done');
       _callback(); // user input
@@ -93,17 +94,17 @@ var Inserter = function (collection, dataStream, callback) {
   };
 
   this.refill = function () {
-    debug('INFO: refilling the queue');
+    debugQ('INFO: refilling the queue');
     if (!(_active && _dataStream.hasMore()) || _queue.paused) {
-      debug('WARNING: refilling terminated');
+      debugQ('WARNING: refilling terminated');
       return;
     }
     async.whilst(
       function () { // test function
         var ends = _queue.paused || !_active || !_dataStream.hasMore();
         var full = _queue.length() >= _queue.concurrency;
-        if (full) debug('OP: current session ends, queue is filled');
-        if (ends) debug('OP: insertion session ends permanently');
+        if (full) debugQ('OP: current session ends, queue is filled');
+        if (ends) debugQ('OP: insertion session ends permanently');
         return !(full || ends);
       },
       function (callback) { // task function
@@ -111,9 +112,9 @@ var Inserter = function (collection, dataStream, callback) {
           id: ++_taskCounter,
           data: _dataStream.emit(self._bulkSize)
         };
-        debug('OP: pushing task %d into queue', task.id);
+        debugQ('OP: pushing task %d into queue', task.id);
         _queue.push(task, function (err) {
-          debug('INFO: task %d handled by db', task.id);
+          debugDb('INFO: task %d handled by db', task.id);
           self.refill();
         });
         callback();
