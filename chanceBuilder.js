@@ -13,16 +13,22 @@ function buildMixinHelper (schema, id) {
 	debug('id=%d starts building, schema -> %j', id, schema);
 	var treeSize = 1; // count itself
 	var flatSchema = {};
-	var field, type, childId;
+	var field, type;
+	var simplifyField = function (type) {
+		if (typeof type !== 'object') {
+			return type;
+		} else {
+			var childId = id + treeSize;
+			treeSize += buildMixinHelper(type, childId);
+			return '_' + childId;
+		}
+	};
 	for (field in schema) {
 		type = schema[field];
-		if (typeof type !== 'object') {
-			flatSchema[field] = type;
-		} else if (type instanceof Array) {
+		if (type instanceof Array) {
+			flatSchema[field] = [simplifyField(type[0])];
 		} else {
-			childId = id + treeSize;
-			treeSize += buildMixinHelper(type, childId);
-			flatSchema[field] = '_' + childId;
+			flatSchema[field] = simplifyField(type);
 		}
 	}
 	debug('id=%d, flatSchema -> %j', id, flatSchema);

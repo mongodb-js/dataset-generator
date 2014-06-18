@@ -8,11 +8,11 @@
   	"user_name": "word",
   	"password": "hash"
   },
-  "friends":
+  "friends": [
     {
       "name": "name",
       "telephone": "phone"
     }
-  ,
+  ],
   "description": "sentence"
 }
