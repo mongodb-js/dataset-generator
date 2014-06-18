@@ -4,5 +4,10 @@
   "user_email": "email",
   "cell_phone": "phone",
   "birthday": "birthday",
+  "credentials": {
+  	"domain": "domain",
+  	"user_name": "word",
+  	"password": "hash"
+  },
   "description": "paragraph"
 }
