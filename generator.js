@@ -26,20 +26,6 @@ function DataStream (schema, dataLength) {
   this.restLength = dataLength;
   this.chance = chanceBuilder(schema);
 
-  // // add schema-specific template to Chance.js
-  // chance.mixin({
-  //   _: function () {
-  //     // todo: more complex logic
-  //     var o = {};
-  //     var field, type;
-  //     for (field in schema) {
-  //       type = schema[field];
-  //       o[field] = chance[type]();
-  //     }
-  //     return o;
-  //   }
-  // });
-
   // log
   debug('OP: DataStream successfully built');
   debug('VERBOSE:' + this.toString());
