@@ -1,6 +1,5 @@
 {
-	"first_name": "first",
-  "last_name": "last",
+	"full_name": "name",
   "user_email": "email",
   "cell_phone": "phone",
   "birthday": "birthday",
@@ -9,5 +8,11 @@
   	"user_name": "word",
   	"password": "hash"
   },
-  "description": "paragraph"
+  "friends":
+    {
+      "name": "name",
+      "telephone": "phone"
+    }
+  ,
+  "description": "sentence"
 }
