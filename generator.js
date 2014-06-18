@@ -7,19 +7,9 @@
 
 var util = require('util');
 var stream = require('stream');
-var chance = require('chance').Chance();
+var chanceBuilder = require('./chanceBuilder');
 var format = require('util').format;
 var debug = require('debug')('dataset:generator');
-
-chance.mixin({
-  'user': function() {
-    return {
-      first: chance.first(),
-      last: chance.last(),
-      email: chance.email()
-    };
-  }
-});
 
 /**
  * DataStream Constructor
@@ -34,20 +24,21 @@ function DataStream (schema, dataLength) {
   stream.Readable.call(this, {objectMode: true});
   this.dataLength = dataLength;
   this.restLength = dataLength;
+  this.chance = chanceBuilder(schema);
 
-  // add schema-specific template to Chance.js
-  chance.mixin({
-    _: function () {
-      // todo: more complex logic
-      var o = {};
-      var field, type;
-      for (field in schema) {
-        type = schema[field];
-        o[field] = chance[type]();
-      }
-      return o;
-    }
-  });
+  // // add schema-specific template to Chance.js
+  // chance.mixin({
+  //   _: function () {
+  //     // todo: more complex logic
+  //     var o = {};
+  //     var field, type;
+  //     for (field in schema) {
+  //       type = schema[field];
+  //       o[field] = chance[type]();
+  //     }
+  //     return o;
+  //   }
+  // });
 
   // log
   debug('OP: DataStream successfully built');
@@ -82,7 +73,7 @@ DataStream.prototype.next = function (step) {
   step = Math.min(step, this.restLength);
   this.restLength -= step;
   for (i = 0; i < step; i++) {
-    data.push(chance._());
+    data.push(this.chance._0());
   }
 
   debug('OP: DataStream emitted %d docs, %d left', step, this.restLength);
@@ -100,7 +91,7 @@ DataStream.prototype.hasEnough = function (n) {
 
 DataStream.prototype.toString = function () {
   return format('<DataStream:%d/%d,%j>',
-    this.restLength, this.dataLength, chance._());
+    this.restLength, this.dataLength, this.chance._0());
 };
 
 module.exports = DataStream;

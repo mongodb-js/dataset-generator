@@ -9,17 +9,15 @@ var Generator = require('./generator');
 var schemaBuilder = require('./schema')();
 
 // assume these are the user input
-var serverName = 'mongodb://127.0.0.1:27017/',
-    dbName = 'test',
-    datasetName = 'dataset';
-var size = argv.size;
-var schemaFile = __dirname + '/' + argv.schema;
+argv.serverName = 'mongodb://127.0.0.1:27017/';
+argv.dbName = 'test';
+argv.datasetName = 'dataset';
+argv.schemaFile = __dirname + '/' + argv.schema;
 // to build a Schema object from user input
 var schema, dataStream;
-fs.readFile(schemaFile, 'utf8', function (err, data) {
-  debug('Schema file path: %j', schemaFile);
+fs.readFile(argv.schemaFile, 'utf8', function (err, data) {
+  debug('Schema file path: %j', argv.schemaFile);
   if (err) {
-    throw err;
     debug('No schema file is specified. Using default.');
     schema = { first_name: 'first',
                last_name: 'last',
@@ -32,17 +30,17 @@ fs.readFile(schemaFile, 'utf8', function (err, data) {
     schema = schemaBuilder.build(JSON.parse(data));
   }
   debug('Schema built as %j', schema);
-  dataStream = new Generator(schema, size);
+  dataStream = new Generator(schema, argv.size);
   main();
 });
 
-  // connect to MongoDB
+// connect to MongoDB
 var main = function () {
-  MongoClient.connect(serverName + dbName, function(err, db) {
+  MongoClient.connect(argv.serverName + argv.dbName, function(err, db) {
     debug('INFO: connected to MongoDB');
     if(err) throw err;
     // the collection to dump the generated data
-    var collection = db.collection(datasetName);
+    var collection = db.collection(argv.datasetName);
     // initiate the inserter to do the job
     var inserter = new Inserter(collection, dataStream, function() {
     	console.log('This is the callback function user defined');
