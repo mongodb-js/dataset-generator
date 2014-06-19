@@ -18,32 +18,29 @@ describe('Populator with empty schema', function () {
   	});
   });
 
-  afterEach(function(done) {
-  	console.log('aftereach');
-  	_options.size = null;
-  	_connection.collection.remove({}, done);
-  });
-
   after(function(done) {
   	console.log('after');
   	util.tearDown(_connection, done);
   });
 
   // smoke test
-  describe('length of data to generate is zero', function() {
+  describe('when size = 0 (smoke test)', function() {
 
   	before(function(done) {
-  		console.log('inner before');
+	  	console.log('before inner 1');
 	  	_options.size = 0;
-	  	util.populator(_options, function() {
-	  		done();
+	  	_connection.collection.remove({}, function(err, res) {
+	  		if(err) return done(err);
+				util.populator(_options, function() {
+					done();
+				});
 	  	});
   	});
 
 		it('should not insert any entry', function (done) {
-			console.log('test');
+			console.log('test1-1');
 			_connection.collection.count(function (err, count) {
-				if (err) done(err);
+				if (err) return done(err);
 				util.assert.equal(count, 0);
 				done();
 			});
@@ -51,25 +48,35 @@ describe('Populator with empty schema', function () {
 
   });
 
-  // //
-  // describe('length of data to generate is zero', function() {
+  // basic test
+  describe('when size is small', function() {
 
-  // 	before(function(done) {
-	 //  	_options.size = 0;
-	 //  	util.populator(_options, function() {
-	 //  		done();
-	 //  	});
-  // 	});
+  	before(function(done) {
+  		console.log('test inner 2');
+	  	_options.size = 5;
+	  	util.populator(_options, function() {
+	  		done();
+	  	});
+  	});
 
-		// it('should not insert any entry', function (done) {
+		it('should have the correct size', function (done) {
+			console.log('test2-1');
+			_connection.collection.count(function (err, count) {
+				if (err) return done(err);
+				util.assert.equal(count, 5);
+				done();
+			});
+		});
+
+		// it('2', function (done) {
 		// 	_connection.collection.count(function (err, count) {
-		// 		if (err) done(err);
-		// 		util.assert.equal(count, 0);
+		// 		if (err) return done(err);
+		// 		util.assert.equal(count, 5);
 		// 		done();
 		// 	});
 		// });
 
-  // });
+  });
 
 
 });
