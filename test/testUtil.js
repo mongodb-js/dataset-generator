@@ -8,8 +8,16 @@ var Joi = require('joi');
 var MongoClient = require('mongodb').MongoClient;
 var Server = require('mongodb').Server;
 
+var defaultOptions = {
+	host: 'localhost',
+	port: '27017',
+	db: 'test',
+	collection: 'dataset'
+};
+
 // connects to the target collection, and possibly clear its content
-var setUp = function (options, callback) {
+var setUp = function (inputOptions, callback) {
+	var options = merge_objects(defaultOptions, inputOptions);
 	var serverConfig = new Server(options.host, options.port,
 																options.serverOptions);
 	var mongoclient = new MongoClient(serverConfig, options.clientOptions);
@@ -54,6 +62,13 @@ var testEach = function (connection, schema, callback) {
 		});
 	});
 };
+
+function merge_objects(defaults, instance) {
+    var obj3 = {}, attrname;
+    for (attrname in defaults) { obj3[attrname] = defaults[attrname]; }
+    for (attrname in instance) { obj3[attrname] = instance[attrname]; }
+    return obj3;
+}
 
 // external modules
 module.exports.Joi = Joi;

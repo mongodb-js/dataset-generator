@@ -5,10 +5,6 @@ describe('Populator with empty schema', function () {
 	var _options = {};
 
   before(function(done) {
-  	_options.host = 'localhost';
-  	_options.port = '27017';
-  	_options.db = 'test';
-  	_options.collection = 'dataset';
   	_options.schemaPath = 'test/schema_empty.json';
   	util.setUp(_options, function(err, connection) {
   		if(err) return done(err);
