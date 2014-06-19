@@ -5,6 +5,7 @@ describe('Populator with empty schema', function () {
 	var _options = {};
 
   before(function(done) {
+  	console.log('before');
   	_options.host = 'localhost';
   	_options.port = '27017';
   	_options.db = 'test';
@@ -18,11 +19,13 @@ describe('Populator with empty schema', function () {
   });
 
   afterEach(function(done) {
+  	console.log('aftereach');
   	_options.size = null;
   	_connection.collection.remove({}, done);
   });
 
   after(function(done) {
+  	console.log('after');
   	util.tearDown(_connection, done);
   });
 
@@ -30,6 +33,7 @@ describe('Populator with empty schema', function () {
   describe('length of data to generate is zero', function() {
 
   	before(function(done) {
+  		console.log('inner before');
 	  	_options.size = 0;
 	  	util.populator(_options, function() {
 	  		done();
@@ -37,6 +41,7 @@ describe('Populator with empty schema', function () {
   	});
 
 		it('should not insert any entry', function (done) {
+			console.log('test');
 			_connection.collection.count(function (err, count) {
 				if (err) done(err);
 				util.assert.equal(count, 0);
@@ -46,25 +51,25 @@ describe('Populator with empty schema', function () {
 
   });
 
-  //
-  describe('length of data to generate is zero', function() {
+  // //
+  // describe('length of data to generate is zero', function() {
 
-  	before(function(done) {
-	  	_options.size = 0;
-	  	util.populator(_options, function() {
-	  		done();
-	  	});
-  	});
+  // 	before(function(done) {
+	 //  	_options.size = 0;
+	 //  	util.populator(_options, function() {
+	 //  		done();
+	 //  	});
+  // 	});
 
-		it('should not insert any entry', function (done) {
-			_connection.collection.count(function (err, count) {
-				if (err) done(err);
-				util.assert.equal(count, 0);
-				done();
-			});
-		});
+		// it('should not insert any entry', function (done) {
+		// 	_connection.collection.count(function (err, count) {
+		// 		if (err) done(err);
+		// 		util.assert.equal(count, 0);
+		// 		done();
+		// 	});
+		// });
 
-  });
+  // });
 
 
 });

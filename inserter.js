@@ -73,7 +73,7 @@ Inserter.prototype.start = function () {
   this._queue.resume();
   if (!(this._active && this._dataStream.hasNext())) {
     debug('WARNING: Inserter has no more data to work');
-    return;
+    return this._queue.drain();
   }
   this._refill();
 };

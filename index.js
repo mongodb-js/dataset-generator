@@ -11,19 +11,20 @@ var schemaBuilder = require('./schema')();
 
 // assume these are the user input
 var main = function (options, callback) {
-  options.size = options.size || 100;
-  options.host = options.host || 'localhost';
-  options.port = options.port || 27017;
-  options.db = options.db || 'test';
-  options.collection = options.collection || 'dataset';
-  options.schema = options.schema ? (__dirname + '/' + options.schema) : '';
-  options.serverOptions = options.serverOptions || {};
-  options.clientOptions = options.clientOptions || {};
+  var size = typeof options.size === 'number' ? options.size : 100;
+  var host = options.host || 'localhost';
+  var port = options.port || 27017;
+  var db = options.db || 'test';
+  var collection = options.collection || 'dataset';
+  var schemaPath = __dirname + '/' +
+                  (options.schemaPath || 'schema_example.json');
+  var serverOptions = options.serverOptions || {};
+  var clientOptions = options.clientOptions || {};
 
   // to build a Schema object from user input
   var schema, dataStream;
-  fs.readFile(options.schema, 'utf8', function (err, data) {
-    debug('Schema file path: %j', options.schema);
+  fs.readFile(schemaPath, 'utf8', function (err, data) {
+    debug('Schema file path: %j', schemaPath);
     if (err) {
       debug('No schema file is specified. Using default.');
       schema = { first_name: 'first',
@@ -37,20 +38,19 @@ var main = function (options, callback) {
       schema = schemaBuilder.build(JSON.parse(data));
     }
     debug('Schema built as %j', schema);
-    dataStream = new Generator(schema, options.size);
+    dataStream = new Generator(schema, size);
 
     // core
-    var serverConfig = new Server(options.host, options.port,
-                                  options.serverOptions);
-    var mongoclient = new MongoClient(serverConfig, options.clientOptions);
+    var serverConfig = new Server(host, port, serverOptions);
+    var mongoclient = new MongoClient(serverConfig, clientOptions);
     mongoclient.open(function(err, mongoclient) {
       debug('INFO: connected to MongoDB');
       if(err) throw err;
       // the collection to dump the generated data
-      var db = mongoclient.db(options.db);
-      var collection = db.collection(options.collection);
+      var _db = mongoclient.db(db);
+      var _collection = _db.collection(collection);
       // initiate the inserter to do the job
-      var inserter = new Inserter(collection, dataStream, function() {
+      var inserter = new Inserter(_collection, dataStream, function() {
         callback();
         mongoclient.close();
       });
