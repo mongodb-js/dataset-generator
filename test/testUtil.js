@@ -4,7 +4,7 @@
 
 var assert = require('assert');
 var populator = require('../index.js');
-var joi = require('joi');
+var Joi = require('joi');
 var MongoClient = require('mongodb').MongoClient;
 var Server = require('mongodb').Server;
 
@@ -37,11 +37,31 @@ var tearDown = function (connection, callback) {
 	callback();
 };
 
+var testCount = function (connection, trueCount, callback) {
+	connection.collection.count(function (err, count) {
+		assert.equal(null, err);
+		assert.equal(trueCount, count);
+		callback();
+	});
+};
+
+var testEach = function (connection, schema, callback) {
+	connection.collection.find().each(function (err, item) {
+		assert.equal(null, err);
+		if(item === null) return callback();
+		Joi.validate(item, schema, function(err, val) {
+			assert.equal(null, err);
+		});
+	});
+};
+
 // external modules
-module.exports.joi = joi;
+module.exports.Joi = Joi;
 module.exports.assert = assert;
 // modules to test
 module.exports.populator = populator;
 // test utility functions
 module.exports.setUp = setUp;
 module.exports.tearDown = tearDown;
+module.exports.testCount = testCount;
+module.exports.testEach = testEach;
