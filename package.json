@@ -19,7 +19,7 @@
     "mocha": "^1.17.1",
     "jshint": "^2.5.1",
     "istanbul": "^0.2.10",
-    "colors": "^0.6.2"
+    "joi": "^4.6.1"
   },
   "keywords": [
     "mongodb",
