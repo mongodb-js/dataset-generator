@@ -17,7 +17,7 @@ var debugQ = require('debug')('dataset:inserter:queue');
  * @param dataStream - a DataStream object as specified in generator.js
  * @param callback - the function to call when insertion is finished
  */
-var Inserter = function (collection, dataStream, callback) {
+function Inserter (collection, dataStream, callback) {
   if (!(this instanceof Inserter)) {
     return new Inserter(collection, dataStream, callback);
   }
@@ -66,7 +66,7 @@ var Inserter = function (collection, dataStream, callback) {
   };
 
   debug('INFO: Successfully built the inserter');
-};
+}
 
 Inserter.prototype.start = function () {
   debug('INFO: Inserter starts working');

@@ -10,7 +10,7 @@ var Generator = require('./generator');
 var schemaBuilder = require('./schema')();
 
 // assume these are the user input
-var main = function (options, callback) {
+function main (options, callback) {
   var size = typeof options.size === 'number' ? options.size : 100;
   var host = options.host || 'localhost';
   var port = options.port || 27017;
@@ -58,6 +58,6 @@ var main = function (options, callback) {
       inserter.start();
     });
   });
-};
+}
 
 module.exports = main;

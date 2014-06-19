@@ -17,13 +17,13 @@
  * collection should correspond to 'id' in Manager collection
  */
 
-var Schema = function () {
+function Schema () {
 	if (!(this instanceof Schema)) return new Schema();
 
 	this._schema = {};
 	this._parts = [];
 	this._relationships = [];
-};
+}
 
 Schema.prototype.build = function (s) {
 	this._schema = s;

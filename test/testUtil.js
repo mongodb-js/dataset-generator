@@ -16,7 +16,7 @@ var defaultOptions = {
 };
 
 // connects to the target collection, and possibly clear its content
-var setUp = function (inputOptions, callback) {
+function setUp (inputOptions, callback) {
 	var options = merge_objects(defaultOptions, inputOptions);
 	var serverConfig = new Server(options.host, options.port,
 																options.serverOptions);
@@ -36,24 +36,24 @@ var setUp = function (inputOptions, callback) {
 			callback(null, connection);
 		});
 	});
-};
+}
 
 // close the connection, drop the test collection
-var tearDown = function (connection, callback) {
+function tearDown (connection, callback) {
 	connection.collection.drop();
 	connection.mongoclient.close();
 	callback();
-};
+}
 
-var testCount = function (connection, trueCount, callback) {
+function testCount (connection, trueCount, callback) {
 	connection.collection.count(function (err, count) {
 		assert.equal(null, err);
 		assert.equal(trueCount, count);
 		callback();
 	});
-};
+}
 
-var testEach = function (connection, schema, callback) {
+function testEach (connection, schema, callback) {
 	connection.collection.find().each(function (err, item) {
 		assert.equal(null, err);
 		if(item === null) return callback();
@@ -61,7 +61,7 @@ var testEach = function (connection, schema, callback) {
 			assert.equal(null, err);
 		});
 	});
-};
+}
 
 function merge_objects(defaults, instance) {
     var obj3 = {}, attrname;
