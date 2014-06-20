@@ -9,58 +9,58 @@ var MongoClient = require('mongodb').MongoClient;
 var Server = require('mongodb').Server;
 
 var defaultOptions = {
-	host: 'localhost',
-	port: '27017',
-	db: 'test',
-	collection: 'dataset'
+  host: 'localhost',
+  port: '27017',
+  db: 'test',
+  collection: 'dataset'
 };
 
 // connects to the target collection, and possibly clear its content
 function setUp (inputOptions, callback) {
-	var options = merge_objects(defaultOptions, inputOptions);
-	var serverConfig = new Server(options.host, options.port,
-																options.serverOptions);
-	var mongoclient = new MongoClient(serverConfig, options.clientOptions);
-	mongoclient.open(function(err, mongoclient) {
-		if(err) return callback(err);
-		var db = mongoclient.db(options.db);
-		var collection = db.collection(options.collection);
-		collection.remove({}, function(err, res) {
-			if(err) return callback(err);
-			var connection = {
-				serverConfig: serverConfig,
-				mongoclient: mongoclient,
-				db: db,
-				collection: collection
-			};
-			callback(null, connection);
-		});
-	});
+  var options = merge_objects(defaultOptions, inputOptions);
+  var serverConfig = new Server(options.host, options.port,
+                                options.serverOptions);
+  var mongoclient = new MongoClient(serverConfig, options.clientOptions);
+  mongoclient.open(function(err, mongoclient) {
+    if(err) return callback(err);
+    var db = mongoclient.db(options.db);
+    var collection = db.collection(options.collection);
+    collection.remove({}, function(err, res) {
+      if(err) return callback(err);
+      var connection = {
+        serverConfig: serverConfig,
+        mongoclient: mongoclient,
+        db: db,
+        collection: collection
+      };
+      callback(null, connection);
+    });
+  });
 }
 
 // close the connection, drop the test collection
 function tearDown (connection, callback) {
-	connection.collection.drop();
-	connection.mongoclient.close();
-	callback();
+  connection.collection.drop();
+  connection.mongoclient.close();
+  callback();
 }
 
 function testCount (connection, trueCount, callback) {
-	connection.collection.count(function (err, count) {
-		assert.equal(null, err);
-		assert.equal(trueCount, count);
-		callback();
-	});
+  connection.collection.count(function (err, count) {
+    assert.equal(null, err);
+    assert.equal(trueCount, count);
+    callback();
+  });
 }
 
 function testEach (connection, schema, callback) {
-	connection.collection.find().each(function (err, item) {
-		assert.equal(null, err);
-		if(item === null) return callback();
-		Joi.validate(item, schema, function(err, val) {
-			assert.equal(null, err);
-		});
-	});
+  connection.collection.find().each(function (err, item) {
+    assert.equal(null, err);
+    if(item === null) return callback();
+    Joi.validate(item, schema, function(err, val) {
+      assert.equal(null, err);
+    });
+  });
 }
 
 function merge_objects(defaults, instance) {
