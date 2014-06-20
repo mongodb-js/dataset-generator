@@ -10,21 +10,21 @@ var Generator = require('./generator');
 var schemaBuilder = require('./schema')();
 
 // assume these are the user input
-function main (options, callback) {
-  var size = typeof options.size === 'number' ? options.size : 100;
-  var host = options.host || 'localhost';
-  var port = options.port || 27017;
-  var db = options.db || 'test';
-  var collection = options.collection || 'dataset';
+module.exports = function (opts, fn) {
+  var size = typeof opts.size === 'number' ? opts.size : 100;
+  var host = opts.host || 'localhost';
+  var port = opts.port || 27017;
+  var db = opts.db || 'test';
+  var collection = opts.collection || 'dataset';
   var schemaPath = __dirname + '/' +
-                  (options.schemaPath || 'schema_example.json');
-  var serverOptions = options.serverOptions || {};
-  var clientOptions = options.clientOptions || {};
+                  (opts.schemaPath || 'schema_example.json');
+  var serverOptions = opts.serverOptions || {};
+  var clientOptions = opts.clientOptions || {};
 
   // to build a Schema object from user input
   var schema, dataStream;
   fs.readFile(schemaPath, 'utf8', function (err, data) {
-    debug('Schema file path: %j', schemaPath);
+    debug('Schema file path: ', schemaPath);
     if (err) {
       debug('No schema file is specified. Using default.');
       schema = { first_name: 'first',
@@ -37,7 +37,7 @@ function main (options, callback) {
     } else {
       schema = schemaBuilder.build(JSON.parse(data));
     }
-    debug('Schema built as %j', schema);
+    debug('Schema built as ', schema);
     dataStream = new Generator(schema, size);
 
     // core
@@ -51,13 +51,11 @@ function main (options, callback) {
       var _collection = _db.collection(collection);
       // initiate the inserter to do the job
       var inserter = new Inserter(_collection, dataStream, function() {
-        callback();
+        fn();
         mongoclient.close();
       });
       // start the inserter
       inserter.start();
     });
   });
-}
-
-module.exports = main;
+};
