@@ -1,6 +1,6 @@
 var debug = require('debug')('dataset:index');
 var Inserter = require('./inserter');
-var parser = require('./parser');
+var parser = require('./dbUtil');
 
 // assume these are the user input
 module.exports = function (opts, fn) {
