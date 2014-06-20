@@ -10,13 +10,9 @@ var Server = require('mongodb').Server;
 var mongodbUri = require('mongodb-uri');
 
 var defaultOptions = {
-  hosts: [
-    {
-      host: 'localhost',
-      port: '27017'
-    }
-  ],
-  database: 'test',
+  host: 'localhost',
+  port: '27017',
+  db: 'test',
   collection: 'dataset'
 };
 
