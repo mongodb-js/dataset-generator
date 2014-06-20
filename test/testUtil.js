@@ -32,10 +32,10 @@ function setUp (inputOptions, fn) {
 }
 
 // close the connection, drop the test collection
-function tearDown (connection, callback) {
+function tearDown (connection, fn) {
   connection.collection.drop();
   connection.db.close();
-  callback();
+  fn();
 }
 
 function merge_objects(defaults, instance) {
