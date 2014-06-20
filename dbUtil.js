@@ -1,6 +1,6 @@
 // external packages
 var fs = require('fs');
-var debug = require('debug')('dataset:parser');
+var debug = require('debug')('dataset:dbUtil');
 var MongoClient = require('mongodb').MongoClient;
 var mongodbUri = require('mongodb-uri');
 // internal packages
@@ -8,27 +8,23 @@ var Generator = require('./generator');
 var schemaBuilder = require('./schema')();
 
 // parse user input, get components ready, connect to mongo
-module.exports.connect = function (opts, fn) {
-  var user = parseInput(opts);
-  readSchema(user, function(schema, dataStream) {
-    MongoClient.connect(user.uri, user.clientOptions, function(err, db) {
-      debug('INFO: connected to MongoDB @ ', user.uri);
-      if(err) throw err;
-      var collection = db.collection(user.collection);
-      fn(collection, schema, dataStream);
-    });
+module.exports.connect = function (user, fn) {
+  MongoClient.connect(user.uri, user.clientOptions, function(err, db) {
+    debug('INFO: connected to MongoDB @ ', user.uri);
+    if(err) throw err;
+    var collection = db.collection(user.collection);
+    fn(collection);
   });
 };
 
-module.exports.close = function (opts, fn) {
-  var user = parseInput(opts);
+module.exports.close = function (user, fn) {
   MongoClient.connect(user.uri, function(err, db) {
     db.close();
     fn();
   });
 };
 
-function readSchema(user, fn) {
+module.exports.readSchema = function (user, fn) {
   var schema, dataStream;
   fs.readFile(user.schemaPath, 'utf8', function (err, data) {
     debug('Schema file path: ', user.schemaPath);
@@ -38,9 +34,9 @@ function readSchema(user, fn) {
     dataStream = new Generator(schema, user.size);
     fn(schema, dataStream);
   });
-}
+};
 
-function parseInput(opts) {
+module.exports.parseInput = function (opts) {
   // parse uri
   var uri;
   if (typeof opts.uri === 'undefined') {
@@ -68,4 +64,4 @@ function parseInput(opts) {
                     (opts.schemaPath || 'schema_example.json')
 
   };
-}
+};

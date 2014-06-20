@@ -1,14 +1,17 @@
 var debug = require('debug')('dataset:index');
 var Inserter = require('./inserter');
-var parser = require('./dbUtil');
+var dbUtil = require('./dbUtil');
 
 // assume these are the user input
 module.exports = function (opts, fn) {
-  parser.connect(opts, function(collection, schema, dataStream) {
-    var inserter = new Inserter(collection, dataStream, function() {
-      fn();
-      parser.close(opts, function() {});
+  var user = dbUtil.parseInput(opts);
+  dbUtil.readSchema(user, function(schema, dataStream) {
+    dbUtil.connect(user, function(collection) {
+      var inserter = new Inserter(collection, dataStream, function() {
+        fn();
+        dbUtil.close(user, function() {});
+      });
+      inserter.start();
     });
-    inserter.start();
   });
 };
