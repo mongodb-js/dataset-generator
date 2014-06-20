@@ -1,0 +1,13 @@
+{
+  "user_email": "email",
+  "job": {
+    "company": "word",
+    "phone": "telephone",
+    "duties": "sentence"
+  },
+  "payment_method": {
+    "type": "cc_type",
+    "card": "cc",
+    "expiration": "exp"
+  }
+}

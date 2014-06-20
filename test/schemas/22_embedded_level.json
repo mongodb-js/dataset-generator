@@ -1,0 +1,11 @@
+{
+  "user_email": "email",
+  "personalities": {
+    "favorites": {
+      "number": "d10",
+      "city": "city",
+      "radio": "radio"
+    },
+    "rating": "d6"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "name": "name",
+  "friends": [{
+    "name": "name",
+    "phone": "phone"
+  }]
+}
