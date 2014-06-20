@@ -38,24 +38,6 @@ function tearDown (connection, callback) {
   callback();
 }
 
-function testCount (connection, trueCount, callback) {
-  connection.collection.count(function (err, count) {
-    assert.equal(null, err);
-    assert.equal(trueCount, count);
-    callback();
-  });
-}
-
-function testEach (connection, schema, callback) {
-  connection.collection.find().each(function (err, item) {
-    assert.equal(null, err);
-    if(item === null) return callback();
-    Joi.validate(item, schema, function(err, val) {
-      assert.equal(null, err);
-    });
-  });
-}
-
 function merge_objects(defaults, instance) {
     var obj3 = {}, attrname;
     for (attrname in defaults) { obj3[attrname] = defaults[attrname]; }
@@ -71,5 +53,3 @@ module.exports.populator = populator;
 // test utility functions
 module.exports.setUp = setUp;
 module.exports.tearDown = tearDown;
-module.exports.testCount = testCount;
-module.exports.testEach = testEach;
