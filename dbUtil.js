@@ -13,16 +13,16 @@ module.exports.connect = function (user, fn) {
     debug('INFO: connected to MongoDB @ ', user.uri);
     if(err) throw err;
     var collection = db.collection(user.collection);
-    fn(collection);
+    fn(collection, db);
   });
 };
 
-module.exports.close = function (user, fn) {
-  MongoClient.connect(user.uri, function(err, db) {
-    db.close();
-    fn();
-  });
-};
+// module.exports.close = function (user, fn) {
+//   MongoClient.connect(user.uri, function(err, db) {
+//     db.close();
+//     fn();
+//   });
+// };
 
 module.exports.readSchema = function (user, fn) {
   var schema, dataStream;

@@ -6,10 +6,10 @@ var dbUtil = require('./dbUtil');
 module.exports = function (opts, fn) {
   var user = dbUtil.parseInput(opts);
   dbUtil.readSchema(user, function(schema, dataStream) {
-    dbUtil.connect(user, function(collection) {
+    dbUtil.connect(user, function(collection, db) {
       var inserter = new Inserter(collection, dataStream, function() {
         fn();
-        dbUtil.close(user, function() {});
+        db.close()
       });
       inserter.start();
     });

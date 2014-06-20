@@ -5,9 +5,7 @@
 var assert = require('assert');
 var populator = require('../index.js');
 var Joi = require('joi');
-var MongoClient = require('mongodb').MongoClient;
-var Server = require('mongodb').Server;
-var mongodbUri = require('mongodb-uri');
+var dbUtil = require('../dbUtil');
 
 var defaultOptions = {
   host: 'localhost',
@@ -17,24 +15,18 @@ var defaultOptions = {
 };
 
 // connects to the target collection, and possibly clear its content
-function setUp (inputOptions, callback) {
+function setUp (inputOptions, fn) {
   var options = merge_objects(defaultOptions, inputOptions);
-  var serverConfig = new Server(options.host, options.port,
-                                options.serverOptions);
-  var mongoclient = new MongoClient(serverConfig, options.clientOptions);
-  mongoclient.open(function(err, mongoclient) {
-    if(err) return callback(err);
-    var db = mongoclient.db(options.db);
-    var collection = db.collection(options.collection);
+  var user = dbUtil.parseInput(options);
+  dbUtil.connect(user, function(collection, db) {
     collection.remove({}, function(err, res) {
-      if(err) return callback(err);
+      if(err) return fn(err);
       var connection = {
-        serverConfig: serverConfig,
-        mongoclient: mongoclient,
+        user: user,
         db: db,
         collection: collection
       };
-      callback(null, connection);
+      fn(null, connection);
     });
   });
 }
@@ -42,7 +34,7 @@ function setUp (inputOptions, callback) {
 // close the connection, drop the test collection
 function tearDown (connection, callback) {
   connection.collection.drop();
-  connection.mongoclient.close();
+  connection.db.close();
   callback();
 }
 
