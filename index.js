@@ -4,8 +4,7 @@ var parser = require('./parser');
 
 // assume these are the user input
 module.exports = function (opts, fn) {
-  parser.connect(opts, function(err, collection, schema, dataStream) {
-    if(err) throw err;
+  parser.connect(opts, function(collection, schema, dataStream) {
     var inserter = new Inserter(collection, dataStream, function() {
       fn();
       parser.close(opts, function() {});

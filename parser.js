@@ -49,11 +49,11 @@ function parseInput(opts) {
       password: '',
       hosts: [
         {
-          host: opts.host,
-          port: opts.port
+          host: opts.host || 'localhost',
+          port: opts.port || 27017
         }
       ],
-      database: opts.db,
+      database: opts.db || 'test',
       options: opts.serverOptions
     });
   } else {
