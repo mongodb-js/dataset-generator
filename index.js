@@ -2,7 +2,7 @@
 var fs = require('fs');
 var debug = require('debug')('dataset:index');
 var MongoClient = require('mongodb').MongoClient;
-var Server = require('mongodb').Server;
+var mongodbUri = require('mongodb-uri');
 // var argv = require('minimist')(process.argv.slice(2));
 // internal packages
 var Inserter = require('./inserter');
@@ -11,20 +11,24 @@ var schemaBuilder = require('./schema')();
 
 // assume these are the user input
 module.exports = function (opts, fn) {
-  var size = typeof opts.size === 'number' ? opts.size : 100;
-  var host = opts.host || 'localhost';
-  var port = opts.port || 27017;
-  var db = opts.db || 'test';
-  var collection = opts.collection || 'dataset';
-  var schemaPath = __dirname + '/' +
+  // uri
+  var userUri = opts.uri;
+  // legacy support for uri
+  var userHost = opts.host || 'localhost';
+  var userPort = opts.port || 27017;
+  var userDb = opts.db || 'test';
+  var userServerOptions = opts.serverOptions || {};
+  var userClientOptions = opts.clientOptions || {};
+  // other config
+  var userSize = typeof opts.size === 'number' ? opts.size : 100;
+  var userCollection = opts.collection || 'dataset';
+  var userSchemaPath = __dirname + '/' +
                   (opts.schemaPath || 'schema_example.json');
-  var serverOptions = opts.serverOptions || {};
-  var clientOptions = opts.clientOptions || {};
 
-  // to build a Schema object from user input
+  // build a Schema object from user input
   var schema, dataStream;
-  fs.readFile(schemaPath, 'utf8', function (err, data) {
-    debug('Schema file path: ', schemaPath);
+  fs.readFile(userSchemaPath, 'utf8', function (err, data) {
+    debug('Schema file path: ', userSchemaPath);
     if (err) {
       debug('No schema file is specified. Using default.');
       schema = { first_name: 'first',
@@ -38,21 +42,33 @@ module.exports = function (opts, fn) {
       schema = schemaBuilder.build(JSON.parse(data));
     }
     debug('Schema built as ', schema);
-    dataStream = new Generator(schema, size);
+    dataStream = new Generator(schema, userSize);
 
-    // core
-    var serverConfig = new Server(host, port, serverOptions);
-    var mongoclient = new MongoClient(serverConfig, clientOptions);
-    mongoclient.open(function(err, mongoclient) {
-      debug('INFO: connected to MongoDB');
+    // parse uri
+    if (typeof userUri === 'undefined') {
+      userUri = mongodbUri.format({
+        username: '',
+        password: '',
+        hosts: [
+          {
+            host: userHost,
+            port: userPort
+          }
+        ],
+        database: userDb,
+        options: userServerOptions
+      });
+    }
+
+    // start the job
+    MongoClient.connect(userUri, userClientOptions, function(err, db) {
+      debug('INFO: connected to MongoDB @ ', userUri);
       if(err) throw err;
-      // the collection to dump the generated data
-      var _db = mongoclient.db(db);
-      var _collection = _db.collection(collection);
+      var collection = db.collection(userCollection);
       // initiate the inserter to do the job
-      var inserter = new Inserter(_collection, dataStream, function() {
+      var inserter = new Inserter(collection, dataStream, function() {
         fn();
-        mongoclient.close();
+        db.close();
       });
       // start the inserter
       inserter.start();

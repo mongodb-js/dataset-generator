@@ -7,11 +7,16 @@ var populator = require('../index.js');
 var Joi = require('joi');
 var MongoClient = require('mongodb').MongoClient;
 var Server = require('mongodb').Server;
+var mongodbUri = require('mongodb-uri');
 
 var defaultOptions = {
-  host: 'localhost',
-  port: '27017',
-  db: 'test',
+  hosts: [
+    {
+      host: 'localhost',
+      port: '27017'
+    }
+  ],
+  database: 'test',
   collection: 'dataset'
 };
 
