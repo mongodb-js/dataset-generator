@@ -4,6 +4,15 @@
 
 What's a database without any data?
 
+# Table of Contents
+
+- [Example](#example)
+- [Overview](#overview)
+- [Usage](#usage)
+- [Milestones](#milestones)
+- [Implementation Plan](#implementation-plan)
+- [Resources](#resources)
+
 ## Example
 
 ```javascript
