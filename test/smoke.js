@@ -5,7 +5,7 @@ describe('Populator with empty schema', function () {
   var testOptions = {};
 
   before(function(done) {
-    testOptions.schemaPath = 'test/schemas/00_empty.json';
+    testOptions.schema = 'test/schemas/00_empty.json';
     util.setUp(testOptions, function(err, connection) {
       if(err) return done(err);
       testConnection = connection;

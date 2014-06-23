@@ -1,6 +1,7 @@
 var debug = require('debug')('dataset:index');
 var Inserter = require('./inserter');
 var util = require('./dbUtil');
+var argv = require('minimist')(process.argv.slice(2));
 
 // assume these are the user input
 module.exports = function (opts, fn) {

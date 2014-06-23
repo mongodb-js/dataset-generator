@@ -26,8 +26,8 @@ module.exports.connect = function (user, fn) {
 
 module.exports.readSchema = function (user, fn) {
   var schema, dataStream;
-  fs.readFile(user.schemaPath, 'utf8', function (err, data) {
-    debug('Schema file path: ', user.schemaPath);
+  fs.readFile(user.schema, 'utf8', function (err, data) {
+    debug('Schema file path: ', user.schema);
     if (err) throw err;
     schema = schemaBuilder.build(JSON.parse(data));
     debug('Schema built as ', schema);
@@ -60,8 +60,8 @@ module.exports.parseInput = function (opts) {
     clientOptions: opts.clientOptions || {},
     size: typeof opts.size === 'number' ? opts.size : 100,
     collection: opts.collection || 'dataset',
-    schemaPath: __dirname + '/' +
-                    (opts.schemaPath || 'schema_example.json')
+    schema: __dirname + '/' +
+                    (opts.schema || 'schema_example.json')
 
   };
 };
