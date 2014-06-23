@@ -4,7 +4,7 @@
 
 What's a database without any data?
 
-# Table of Contents
+## Table of Contents
 
 - [Example](#example)
 - [Overview](#overview)
@@ -18,6 +18,8 @@ What's a database without any data?
 ```javascript
 // @todo
 ```
+
+## Usage
 
 ## Overview
 
