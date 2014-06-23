@@ -15,8 +15,8 @@ What's a database without any data?
 
 ## Example
 
+Example _schema.json_:
 ```javascript
-// @todo
 {
   "user_email": "email",
   "job": {
@@ -39,6 +39,53 @@ What's a database without any data?
     "name": "name",
     "phones": ["phone"]
   }]
+}
+```
+
+Example _app.js_:
+```javascript
+var main = require('./index');
+var opts = {
+  host: 'localhost',
+  port: '27017',
+  db: 'test',
+  collection: 'dataset',
+  schema: './schema.json',
+  size: 5
+};
+
+main(opts, function () {
+  console.log('Done! Check out the collection you specified!');
+});
+```
+
+Sample entry in the collection:
+```javascript
+{
+  "_id" : ObjectId("53a88e43d314cb321b2e8dd9"),
+  "user_email" : "firah@wukmodru.gov",
+  "job" : {
+    "company" : "cev",
+    "phone" : "(324) 205-3844",
+    "duties" : "Zeanerir lodon jeticu mako vucfakej hoger nebi wistedmi et ociipcu fi sil roitu rekco irzezje gow."
+  },
+  "personalities" : {
+    "favorites" : {
+      "number" : 7,
+      "city" : "Tagweclew",
+      "radio" : "KSIK"
+    },
+    "violence-rating" : 2
+  },
+  "friends" : [
+    {
+      "name" : "Duane Robertson",
+      "contacts" : [
+        "(449) 364-4977",
+        "(568) 695-2674"
+      ]
+    }
+  ]
 }
 ```
 
