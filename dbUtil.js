@@ -36,8 +36,8 @@ module.exports.parseInput = function (opts) {
   var uri;
   if (typeof opts.uri === 'undefined') {
     uri = mongodbUri.format({
-      username: '',
-      password: '',
+      username: opts.username ? opts.username : '',
+      password: opts.password ? opts.password : '',
       hosts: [
         {
           host: opts.host || 'localhost',
