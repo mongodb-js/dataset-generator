@@ -62,27 +62,51 @@ main(opts, function () {
 Sample entry in the collection:
 ```javascript
 {
-  "_id" : ObjectId("53a88e43d314cb321b2e8dd9"),
-  "user_email" : "firah@wukmodru.gov",
+  "_id" : ObjectId("53a89211734538741c4bde5e"),
+  "user_email" : "jofowpat@asose.edu",
   "job" : {
-    "company" : "cev",
-    "phone" : "(324) 205-3844",
-    "duties" : "Zeanerir lodon jeticu mako vucfakej hoger nebi wistedmi et ociipcu fi sil roitu rekco irzezje gow."
+    "company" : "wapez",
+    "phones" : {
+      "mobile" : "(311) 692-8852",
+      "work" : "(417) 927-3203"
+    },
+    "duties" : "Hu zaib diftu jujepme joulemo gib jip oboto."
   },
   "personalities" : {
     "favorites" : {
-      "number" : 7,
-      "city" : "Tagweclew",
-      "radio" : "KSIK"
+      "number" : 5,
+      "city" : "Hapkugbub",
+      "radio" : "KCWL"
     },
-    "violence-rating" : 2
+    "violence-rating" : 3
   },
   "friends" : [
     {
-      "name" : "Duane Robertson",
-      "contacts" : [
-        "(449) 364-4977",
-        "(568) 695-2674"
+      "name" : "Edna Perez",
+      "phones" : [
+        "(313) 206-6936",
+        "(924) 655-6886"
+      ]
+    },
+    {
+      "name" : "Etta Parsons",
+      "phones" : [
+        "(719) 313-2275",
+        "(545) 706-7688"
+      ]
+    },
+    {
+      "name" : "Thomas Cummings",
+      "phones" : [
+        "(343) 550-2924",
+        "(205) 513-1057",
+        "(388) 242-1740"
+      ]
+    },
+    {
+      "name" : "Maria Hunter",
+      "phones" : [
+        "(501) 629-3251"
       ]
     }
   ]
