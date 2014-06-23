@@ -2,7 +2,7 @@
   "user_email": "email",
   "job": {
     "company": "word",
-    "phone": "telephone",
+    "phone": "phone",
     "duties": "sentence"
   }
 }
