@@ -1,5 +1,6 @@
 // external packages
 var fs = require('fs');
+var path = require('path');
 var debug = require('debug')('dataset:dbUtil');
 var MongoClient = require('mongodb').MongoClient;
 var mongodbUri = require('mongodb-uri');
@@ -17,17 +18,11 @@ module.exports.connect = function (user, fn) {
   });
 };
 
-// module.exports.close = function (user, fn) {
-//   MongoClient.connect(user.uri, function(err, db) {
-//     db.close();
-//     fn();
-//   });
-// };
-
 module.exports.readSchema = function (user, fn) {
   var schema, dataStream;
-  fs.readFile(user.schema, 'utf8', function (err, data) {
-    debug('Schema file path: ', user.schema);
+  var filePath = path.resolve(user.schema);
+  fs.readFile(filePath, 'utf8', function (err, data) {
+    debug('Schema file path: ', filePath);
     if (err) throw err;
     schema = schemaBuilder.build(JSON.parse(data));
     debug('Schema built as ', schema);
@@ -60,8 +55,7 @@ module.exports.parseInput = function (opts) {
     clientOptions: opts.clientOptions || {},
     size: typeof opts.size === 'number' ? opts.size : 100,
     collection: opts.collection || 'dataset',
-    schema: __dirname + '/' +
-                    (opts.schema || 'schema_example.json')
+    schema: opts.schema || 'schema_example.json'
 
   };
 };
