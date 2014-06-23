@@ -1,10 +1,12 @@
-var chance = require('chance').Chance();
+var Chance = require('chance');
 var debug = require('debug')('dataset:myChance');
+var chance;
 /**
  * A utility method to build the mixin needed for the input schema
  */
 module.exports = function buildMixin (schema) {
   debug('Start building schema -> %j', schema);
+  chance = new Chance();
   buildMixinHelper(schema, 0);
   return chance;
 };
