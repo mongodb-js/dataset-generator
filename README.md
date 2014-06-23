@@ -17,6 +17,29 @@ What's a database without any data?
 
 ```javascript
 // @todo
+{
+  "user_email": "email",
+  "job": {
+    "company": "word",
+    "phones": {
+      "mobile": "phone",
+      "work": "phone"
+    },
+    "duties": "sentence"
+  },
+  "personalities": {
+    "favorites": {
+      "number": "d10",
+      "city": "city",
+      "radio": "radio"
+    },
+    "violence-rating": "d6"
+  },
+  "friends" : [{
+    "name": "name",
+    "phones": ["phone"]
+  }]
+}
 ```
 
 ## Usage
