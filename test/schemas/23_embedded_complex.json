@@ -1,0 +1,21 @@
+{
+  "user_email": "email",
+  "job": {
+    "company": "word",
+    "phone": "phone",
+    "duties": "sentence"
+  },
+  "personalities": {
+    "favorites": {
+      "number": "d10",
+      "city": "city",
+      "radio": "radio"
+    },
+    "rating": "d6"
+  },
+  "payment_method": {
+    "type": "cc_type",
+    "card": "cc",
+    "expiration": "exp"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "name": "name",
+  "friends": [{
+    "name": "name",
+    "payment_method": {
+      "type": "cc_type",
+      "card": "cc",
+      "expiration": "exp"
+    }
+  }]
+}

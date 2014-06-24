@@ -1,0 +1,18 @@
+{
+  "full_name": "name",
+  "user_email": "email",
+  "cell_phone": "phone",
+  "birthday": "birthday",
+  "credentials": {
+    "domain": "domain",
+    "user_name": "word",
+    "password": "hash"
+  },
+  "friends": [
+    {
+      "name": "name",
+      "telephone": "phone"
+    }
+  ],
+  "description": "sentence"
+}
