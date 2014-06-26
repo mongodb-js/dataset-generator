@@ -45,7 +45,7 @@ describe('Populator with embedded schema', function () {
           company: util.Joi.string().required(),
           phone: util.Joi.string().regex(util.regex.phone).required(),
           duties: util.Joi.string().required(),
-        }).length(3)
+        }).length(3).required()
       }).length(3);
       testConnection.collection.find().each(function (err, item) {
         util.assert.equal(null, err);
@@ -153,9 +153,9 @@ describe('Populator with embedded schema', function () {
             number: util.Joi.number().integer().max(10).required(),
             city: util.Joi.string().required(),
             radio: util.Joi.string().required()
-          }).length(3),
+          }).length(3).required(),
           rating: util.Joi.number().integer().max(6).required(),
-        }).length(2)
+        }).length(2).required()
       }).length(3);
       testConnection.collection.find().each(function (err, item) {
         util.assert.equal(null, err);
@@ -206,20 +206,20 @@ describe('Populator with embedded schema', function () {
           company: util.Joi.string().required(),
           phone: util.Joi.string().regex(util.regex.phone).required(),
           duties: util.Joi.string().required(),
-        }).length(3),
+        }).length(3).required(),
         personalities: util.Joi.object().keys({
           favorites: util.Joi.object().keys({
             number: util.Joi.number().integer().max(10).required(),
             city: util.Joi.string().required(),
             radio: util.Joi.string().required()
-          }).length(3),
+          }).length(3).required(),
           rating: util.Joi.number().integer().max(6).required(),
-        }).length(2),
+        }).length(2).required(),
         payment_method: util.Joi.object().keys({
           type: util.Joi.string().required(),
           card: util.Joi.number().integer().required(),
           expiration: util.Joi.string().regex(util.regex.exp).required()
-        }).length(3)
+        }).length(3).required()
       }).length(5);
       testConnection.collection.find().each(function (err, item) {
         util.assert.equal(null, err);
