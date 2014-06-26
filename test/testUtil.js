@@ -64,6 +64,11 @@ function sampleAndStrip(array, count, fn) {
              });
 }
 
+function testWithTolerance(tolerance, count, testFn) {
+  var numFailed = 0;
+  // async.times(count, function
+}
+
 // external modules
 module.exports.Joi = Joi;
 module.exports.chance = chance;
