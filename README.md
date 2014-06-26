@@ -4,19 +4,10 @@
 
 What's a database without any data?
 
-## Table of Contents
-
-- [Example](#example)
-- [Overview](#overview)
-- [Usage](#usage)
-- [Milestones](#milestones)
-- [Implementation Plan](#implementation-plan)
-- [Resources](#resources)
-
 ## Example
 
 Example _schema.json_:
-```javascript
+```json
 {
   "user_email": "email",
   "job": {
@@ -44,7 +35,7 @@ Example _schema.json_:
 
 Example _app.js_:
 ```javascript
-var main = require('./index');
+var datasets = require('mongodb-datasets');
 var opts = {
   host: 'localhost',
   port: '27017',
@@ -54,7 +45,7 @@ var opts = {
   size: 5
 };
 
-main(opts, function () {
+datasets(opts, function () {
   console.log('Done! Check out the collection you specified!');
 });
 ```
