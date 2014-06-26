@@ -15,12 +15,9 @@ var defaultOptions = {
   collection: 'dataset'
 };
 
-var chanceJoi = {
-  email: Joi.string().email(),
-  phone: Joi.string().regex(/(\(\d{3}\)\s*)(\d{3})-(\d{4})/),
-  word: Joi.string(),
-  sentence: Joi.string()
-
+var regex = {
+  phone: /(\(\d{3}\)\s*)(\d{3})-(\d{4})/,
+  exp: /(\d{2})\/(\d{4})/
 };
 
 // connects to the target collection, and possibly clear its content
@@ -79,4 +76,4 @@ module.exports.setUp = setUp;
 module.exports.tearDown = tearDown;
 // general utilities
 module.exports.sampleAndStrip = sampleAndStrip;
-module.exports.chanceJoi = chanceJoi;
+module.exports.regex = regex;
