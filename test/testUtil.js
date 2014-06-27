@@ -2,16 +2,22 @@
  * Common tools for test
  */
 
-var assert = require('assert');
+var chance = require('chance').Chance();
 var populator = require('../index.js');
-var Joi = require('joi');
 var dbUtil = require('../dbUtil');
+var Joi = require('joi');
+var async = require('async');
 
 var defaultOptions = {
   host: 'localhost',
   port: '27017',
   db: 'test',
   collection: 'dataset'
+};
+
+var regex = {
+  phone: /(\(\d{3}\)\s*)(\d{3})-(\d{4})/,
+  exp: /(\d{2})\/(\d{4})/
 };
 
 // connects to the target collection, and possibly clear its content
@@ -39,17 +45,35 @@ function tearDown (connection, fn) {
 }
 
 function merge_objects(defaults, instance) {
-    var obj3 = {}, attrname;
-    for (attrname in defaults) { obj3[attrname] = defaults[attrname]; }
-    for (attrname in instance) { obj3[attrname] = instance[attrname]; }
-    return obj3;
+  var obj3 = {}, attrname;
+  for (attrname in defaults) { obj3[attrname] = defaults[attrname]; }
+  for (attrname in instance) { obj3[attrname] = instance[attrname]; }
+  return obj3;
+}
+
+function sampleAndStrip(array, count, fn) {
+  var sample = chance.pick(array, count);
+  async.each(sample,
+    function (item, callback) {
+      item._id = undefined;
+      callback();
+    },
+    function (err) {
+      if (err) throw err;
+      fn(sample);
+  });
 }
 
 // external modules
 module.exports.Joi = Joi;
-module.exports.assert = assert;
+module.exports.chance = chance;
+module.exports.assert = require('assert');
+module.exports.async = async;
 // modules to test
 module.exports.populator = populator;
 // test utility functions
 module.exports.setUp = setUp;
 module.exports.tearDown = tearDown;
+// general utilities
+module.exports.sampleAndStrip = sampleAndStrip;
+module.exports.regex = regex;
