@@ -66,8 +66,10 @@ describe('Populator with schema involved arrays', function () {
     it('should produce arrays with random content', function (done) {
       testConnection.collection.find().toArray(function (err, items) {
         util.assert.equal(null, err);
-        util.sampleAndStrip(items, 1, function (sample) {
-          // what if array is of length 1
+        var validItems = items.filter(function (item) {
+          return item.friends.length > 1;
+        });
+        util.sampleAndStrip(validItems, 1, function (sample) {
           var friends = sample.friends;
           util.assert.notDeepEqual(friends[0], friends[1]);
           done();
@@ -128,7 +130,10 @@ describe('Populator with schema involved arrays', function () {
     it('should produce arrays with random content', function (done) {
       testConnection.collection.find().toArray(function (err, items) {
         util.assert.equal(null, err);
-        util.sampleAndStrip(items, 1, function (sample) {
+        var validItems = items.filter(function (item) {
+          return item.friends.length > 1;
+        });
+        util.sampleAndStrip(validItems, 1, function (sample) {
           var friends = sample.friends;
           util.assert.notDeepEqual(friends[0], friends[1]);
           done();
@@ -193,7 +198,10 @@ describe('Populator with schema involved arrays', function () {
     it('should produce arrays with random content', function (done) {
       testConnection.collection.find().toArray(function (err, items) {
         util.assert.equal(null, err);
-        util.sampleAndStrip(items, 1, function (sample) {
+        var validItems = items.filter(function (item) {
+          return item.friends.length > 1;
+        });
+        util.sampleAndStrip(validItems, 1, function (sample) {
           var friends = sample.friends;
           util.assert.notDeepEqual(friends[0], friends[1]);
           done();
@@ -258,7 +266,10 @@ describe('Populator with schema involved arrays', function () {
     it('should produce arrays with random content', function (done) {
       testConnection.collection.find().toArray(function (err, items) {
         util.assert.equal(null, err);
-        util.sampleAndStrip(items, 1, function (sample) {
+        var validItems = items.filter(function (item) {
+          return item.friends.length > 1;
+        });
+        util.sampleAndStrip(validItems, 1, function (sample) {
           var friends = sample.friends;
           util.assert.notDeepEqual(friends[0], friends[1]);
           done();
@@ -269,8 +280,16 @@ describe('Populator with schema involved arrays', function () {
     it('should produce embedded arrays with random content', function (done) {
       testConnection.collection.find().toArray(function (err, items) {
         util.assert.equal(null, err);
-        util.sampleAndStrip(items, 1, function (sample) {
-          util.sampleAndStrip(sample.friends, 1, function (sample) {
+        var validItems = items.filter(function (item) {
+          return item.friends.filter(function (item) {
+            return item.payment_method.length > 1;
+          }).length > 0;
+        });
+        util.sampleAndStrip(validItems, 1, function (sample) {
+          var validSubItems = sample.friends.filter(function (item) {
+            return item.payment_method.length > 1;
+          });
+          util.sampleAndStrip(validSubItems, 1, function (sample) {
             var payments = sample.payment_method;
             util.assert.notDeepEqual(payments[0], payments[1]);
             done();
