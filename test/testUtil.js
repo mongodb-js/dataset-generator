@@ -45,23 +45,23 @@ function tearDown (connection, fn) {
 }
 
 function merge_objects(defaults, instance) {
-    var obj3 = {}, attrname;
-    for (attrname in defaults) { obj3[attrname] = defaults[attrname]; }
-    for (attrname in instance) { obj3[attrname] = instance[attrname]; }
-    return obj3;
+  var obj3 = {}, attrname;
+  for (attrname in defaults) { obj3[attrname] = defaults[attrname]; }
+  for (attrname in instance) { obj3[attrname] = instance[attrname]; }
+  return obj3;
 }
 
 function sampleAndStrip(array, count, fn) {
   var sample = chance.pick(array, count);
   async.each(sample,
-             function (item, callback) {
-               item._id = undefined;
-               callback(null);
-             },
-             function (err) {
-              if (err) throw err;
-              fn(sample);
-             });
+    function (item, callback) {
+      item._id = undefined;
+      callback();
+    },
+    function (err) {
+      if (err) throw err;
+      fn(sample);
+  });
 }
 
 // external modules
