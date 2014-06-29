@@ -123,8 +123,9 @@ establish MongoDB as a leader in this emerging market.
 
 ## Milestones
 
+- [x] Set up skeleton code that abstracts each module
 - [ ] Collect example schemas from documentation
-- [ ] Generate random data to populate the example schemas
+- [x] Generate random data to populate the example schemas
 - [ ] Select datasets to add support for prototyping
 - [ ] Design efficient schemas for the selected datasets
 - [ ] Scripts to import from data sources to specified user database
