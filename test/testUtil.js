@@ -21,23 +21,6 @@ var regex = {
   exp: /(\d{2})\/(\d{4})/
 };
 
-// connects to the target collection, and possibly clear its content
-function setUp (inputOptions, fn) {
-  var options = merge_objects(defaultOptions, inputOptions);
-  dbUtil.parseUserOpts(options, function (opts) {
-    dbUtil.connect(opts, function(collection, db) {
-      collection.remove({}, function(err, res) {
-        if(err) return fn(err);
-        var connection = {
-          db: db,
-          collection: collection
-        };
-        fn(null, connection);
-      });
-    });
-  });
-}
-
 // close the connection, drop the test collection
 function tearDown (connection, fn) {
   connection.collection.drop();
@@ -45,8 +28,8 @@ function tearDown (connection, fn) {
   if (typeof fn === 'function') fn();
 }
 
-// set up db connection
-function before (testOpts, callback) {
+// connects to the target collection, and possibly clear its content
+function setUp (testOpts, callback) {
   var opts = merge_objects(defaultOptions, testOpts);
   dbUtil.parseUserOpts(opts, function (opts) {
     MongoClient.connect(opts.uri, opts.clientOptions, function(err, db) {
@@ -68,7 +51,7 @@ function before (testOpts, callback) {
 }
 
 function getResults (testOpts, callback) {
-  before(testOpts, function (err, connection) {
+  setUp(testOpts, function (err, connection) {
     if (err) return callback(err);
     connection.collection.find().toArray(function (err, items) {
       if (err) return callback(err);
@@ -103,7 +86,6 @@ module.exports.populator = populator;
 // test utility functions
 module.exports.setUp = setUp;
 module.exports.tearDown = tearDown;
-module.exports.before = before;
 // general utilities
 module.exports.sampleAndStrip = sampleAndStrip;
 module.exports.regex = regex;

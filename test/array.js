@@ -1,4 +1,4 @@
-var util = require('./testUtil');
+var helper = require('./testUtil');
 var Joi = require('joi');
 var assert = require('assert');
 
@@ -19,7 +19,7 @@ describe('array of primitive types', function() {
       size: 31,
       schemaPath: 'test/schemas/30_array_field.json'
     };
-    util.getResults(opts, function (err, items) {
+    helper.getResults(opts, function (err, items) {
       if (err) return done(err);
       res.items = items;
       done();
@@ -39,7 +39,7 @@ describe('array of primitive types', function() {
   });
 
   it('should produce entries with random content', function (done) {
-    util.sampleAndStrip(res.items, 2, function (sample) {
+    helper.sampleAndStrip(res.items, 2, function (sample) {
       assert.notDeepEqual(sample[0], sample[1]);
       done();
     });
@@ -49,7 +49,7 @@ describe('array of primitive types', function() {
     var validItems = res.items.filter(function (item) {
       return item.friends.length > 1;
     });
-    util.sampleAndStrip(validItems, 1, function (sample) {
+    helper.sampleAndStrip(validItems, 1, function (sample) {
       var friends = sample.friends;
       assert.notDeepEqual(friends[0], friends[1]);
       done();
@@ -67,7 +67,7 @@ describe('array of documents', function() {
       name: Joi.string().required(),
       friends: Joi.array().includes(Joi.object().keys({
         name: Joi.string().required(),
-        phone: Joi.string().regex(util.regex.phone).required()
+        phone: Joi.string().regex(helper.regex.phone).required()
       }).length(2)).required()
     }).length(3)
   };
@@ -77,7 +77,7 @@ describe('array of documents', function() {
       size: 99,
       schemaPath: 'test/schemas/31_array_doc.json'
     };
-    util.getResults(opts, function (err, items) {
+    helper.getResults(opts, function (err, items) {
       if (err) return done(err);
       res.items = items;
       done();
@@ -97,7 +97,7 @@ describe('array of documents', function() {
   });
 
   it('should produce entries with random content', function (done) {
-    util.sampleAndStrip(res.items, 2, function (sample) {
+    helper.sampleAndStrip(res.items, 2, function (sample) {
       assert.notDeepEqual(sample[0], sample[1]);
       done();
     });
@@ -107,7 +107,7 @@ describe('array of documents', function() {
     var validItems = res.items.filter(function (item) {
       return item.friends.length > 1;
     });
-    util.sampleAndStrip(validItems, 1, function (sample) {
+    helper.sampleAndStrip(validItems, 1, function (sample) {
       var friends = sample.friends;
       assert.notDeepEqual(friends[0], friends[1]);
       done();
@@ -128,7 +128,7 @@ describe('array of embedded docs', function() {
         payment_method: Joi.object().keys({
           type: Joi.string().required(),
           card: Joi.number().integer().required(),
-          expiration: Joi.string().regex(util.regex.exp).required()
+          expiration: Joi.string().regex(helper.regex.exp).required()
         }).length(3).required()
       }).length(2)).required()
     }).length(3)
@@ -139,7 +139,7 @@ describe('array of embedded docs', function() {
       size: 19,
       schemaPath: 'test/schemas/32_array_embed.json'
     };
-    util.getResults(opts, function (err, items) {
+    helper.getResults(opts, function (err, items) {
       if (err) return done(err);
       res.items = items;
       done();
@@ -159,7 +159,7 @@ describe('array of embedded docs', function() {
   });
 
   it('should produce entries with random content', function (done) {
-    util.sampleAndStrip(res.items, 2, function (sample) {
+    helper.sampleAndStrip(res.items, 2, function (sample) {
       assert.notDeepEqual(sample[0], sample[1]);
       done();
     });
@@ -169,7 +169,7 @@ describe('array of embedded docs', function() {
     var validItems = res.items.filter(function (item) {
       return item.friends.length > 1;
     });
-    util.sampleAndStrip(validItems, 1, function (sample) {
+    helper.sampleAndStrip(validItems, 1, function (sample) {
       var friends = sample.friends;
       assert.notDeepEqual(friends[0], friends[1]);
       done();
@@ -190,7 +190,7 @@ describe('embedded arrays', function() {
         payment_method: Joi.array().includes(Joi.object().keys({
           type: Joi.string().required(),
           card: Joi.number().integer().required(),
-          expiration: Joi.string().regex(util.regex.exp).required()
+          expiration: Joi.string().regex(helper.regex.exp).required()
         }).length(3)).required()
       }).length(2)).required()
     }).length(3)
@@ -201,7 +201,7 @@ describe('embedded arrays', function() {
       size: 11,
       schemaPath: 'test/schemas/33_array_arrays.json'
     };
-    util.getResults(opts, function (err, items) {
+    helper.getResults(opts, function (err, items) {
       if (err) return done(err);
       res.items = items;
       done();
@@ -221,7 +221,7 @@ describe('embedded arrays', function() {
   });
 
   it('should produce entries with random content', function (done) {
-    util.sampleAndStrip(res.items, 2, function (sample) {
+    helper.sampleAndStrip(res.items, 2, function (sample) {
       assert.notDeepEqual(sample[0], sample[1]);
       done();
     });
@@ -231,7 +231,7 @@ describe('embedded arrays', function() {
     var validItems = res.items.filter(function (item) {
       return item.friends.length > 1;
     });
-    util.sampleAndStrip(validItems, 1, function (sample) {
+    helper.sampleAndStrip(validItems, 1, function (sample) {
       var friends = sample.friends;
       assert.notDeepEqual(friends[0], friends[1]);
       done();
@@ -244,11 +244,11 @@ describe('embedded arrays', function() {
         return item.payment_method.length > 1;
       }).length > 0;
     });
-    util.sampleAndStrip(validItems, 1, function (sample) {
+    helper.sampleAndStrip(validItems, 1, function (sample) {
       var validSubItems = sample.friends.filter(function (item) {
         return item.payment_method.length > 1;
       });
-      util.sampleAndStrip(validSubItems, 1, function (sample) {
+      helper.sampleAndStrip(validSubItems, 1, function (sample) {
         var payment_methods = sample.payment_method;
         assert.notDeepEqual(payment_methods[0], payment_methods[1]);
         done();

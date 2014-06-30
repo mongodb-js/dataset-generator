@@ -1,4 +1,4 @@
-var util = require('./testUtil');
+var helper = require('./testUtil');
 var Joi = require('joi');
 var assert = require('assert');
 
@@ -12,8 +12,8 @@ describe('complex schema', function() {
       job: Joi.object().keys({
         company: Joi.string().required(),
         phones: Joi.object().keys({
-          mobile: Joi.string().regex(util.regex.phone).required(),
-          work: Joi.string().regex(util.regex.phone).required()
+          mobile: Joi.string().regex(helper.regex.phone).required(),
+          work: Joi.string().regex(helper.regex.phone).required()
         }).length(2).required(),
         duties: Joi.string().required(),
       }).length(3).required(),
@@ -28,7 +28,7 @@ describe('complex schema', function() {
       friends: Joi.array().includes(Joi.object().keys({
         name: Joi.string().required(),
         phones: Joi.array()
-          .includes(Joi.string().regex(util.regex.phone))
+          .includes(Joi.string().regex(helper.regex.phone))
           .excludes(Joi.object()).required()
       }).length(2)).required()
     }).length(5)
@@ -39,7 +39,7 @@ describe('complex schema', function() {
       size: 31,
       schemaPath: 'test/schemas/91_complex.json'
     };
-    util.getResults(opts, function (err, items) {
+    helper.getResults(opts, function (err, items) {
       if (err) return done(err);
       res.items = items;
       done();
@@ -59,7 +59,7 @@ describe('complex schema', function() {
   });
 
   it('should produce entries with random content', function (done) {
-    util.sampleAndStrip(res.items, 2, function (sample) {
+    helper.sampleAndStrip(res.items, 2, function (sample) {
       assert.notDeepEqual(sample[0], sample[1]);
       done();
     });
@@ -69,7 +69,7 @@ describe('complex schema', function() {
     var validItems = res.items.filter(function (item) {
       return item.friends.length > 1;
     });
-    util.sampleAndStrip(validItems, 1, function (sample) {
+    helper.sampleAndStrip(validItems, 1, function (sample) {
       var friends = sample.friends;
       assert.notDeepEqual(friends[0], friends[1]);
       done();
@@ -82,11 +82,11 @@ describe('complex schema', function() {
         return item.phones.length > 1;
       }).length > 0;
     });
-    util.sampleAndStrip(validItems, 1, function (sample) {
+    helper.sampleAndStrip(validItems, 1, function (sample) {
       var validSubItems = sample.friends.filter(function (item) {
         return item.phones.length > 1;
       });
-      util.sampleAndStrip(validSubItems, 1, function (sample) {
+      helper.sampleAndStrip(validSubItems, 1, function (sample) {
         var phones = sample.phones;
         assert.notDeepEqual(phones[0], phones[1]);
         done();

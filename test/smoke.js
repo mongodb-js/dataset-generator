@@ -1,4 +1,4 @@
-var util = require('./testUtil');
+var helper = require('./testUtil');
 var Joi = require('joi');
 var assert = require('assert');
 
@@ -10,7 +10,7 @@ describe('Populator with empty schema', function () {
 
     before(function(done) {
       var opts = { schema: {}, size: 0 };
-      util.getResults(opts, function (err, items) {
+      helper.getResults(opts, function (err, items) {
         if (err) return done(err);
         res.items = items;
         done();
@@ -33,7 +33,7 @@ describe('Populator with empty schema', function () {
 
     before(function(done) {
       var opts = { schema: {}, size: 5 };
-      util.getResults(opts, function (err, items) {
+      helper.getResults(opts, function (err, items) {
         if (err) return done(err);
         res.items = items;
         done();
@@ -72,7 +72,7 @@ describe('Populator with empty schema', function () {
           email: 'email'
         }
       };
-      util.getResults(opts, function (err, items) {
+      helper.getResults(opts, function (err, items) {
         if (err) return done(err);
         res.items = items;
         done();
@@ -92,7 +92,7 @@ describe('Populator with empty schema', function () {
     });
 
     it('should produce entries with random content', function (done) {
-      util.sampleAndStrip(res.items, 2, function (sample) {
+      helper.sampleAndStrip(res.items, 2, function (sample) {
         assert.notDeepEqual(sample[0], sample[1]);
         done();
       });
