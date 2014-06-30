@@ -17,10 +17,6 @@ describe('Populator with empty schema', function () {
       });
     });
 
-    it('should run', function () {
-      assert.notEqual(null, res.items);
-    });
-
     it('should not insert any entry', function () {
       assert.equal(expected.count, res.items.length);
     });

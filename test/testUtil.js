@@ -7,7 +7,7 @@ var populator = require('../index.js');
 var dbUtil = require('../dbUtil');
 var async = require('async');
 var MongoClient = require('mongodb').MongoClient;
-var debug = require('debug')('dataset:testUtil')
+var debug = require('debug')('dataset:testUtil');
 
 var defaultOptions = {
   host: 'localhost',
