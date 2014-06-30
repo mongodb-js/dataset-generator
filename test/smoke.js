@@ -19,7 +19,7 @@ describe('Populator with empty schema', function () {
   describe('when size = 0 (smoke test)', function() {
     before(function(done) {
       testOptions.size = 0;
-      testOptions.schema = 'test/schemas/00_empty.json';
+      testOptions.schemaPath = 'test/schemas/00_empty.json';
       testConnection.collection.remove({}, function(err, res) {
         if(err) return done(err);
         util.populator(testOptions, function() {
@@ -41,7 +41,7 @@ describe('Populator with empty schema', function () {
   describe('when size is small', function() {
     before(function(done) {
       testOptions.size = 5;
-      testOptions.schema = 'test/schemas/00_empty.json';
+      testOptions.schemaPath = 'test/schemas/00_empty.json';
       util.populator(testOptions, function() {
         done();
       });
@@ -73,7 +73,7 @@ describe('Populator with empty schema', function () {
   describe('basic schema', function() {
     before(function (done) {
       testOptions.size = 111;
-      testOptions.schema = 'test/schemas/10_flat.json';
+      testOptions.schemaPath = 'test/schemas/10_flat.json';
       testConnection.collection.remove({}, function (err, res) {
         if(err) return done(err);
         util.populator(testOptions, function () {

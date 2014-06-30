@@ -19,7 +19,7 @@ describe('Populator', function () {
   describe('complex schema', function() {
     before(function (done) {
       testOptions.size = 31;
-      testOptions.schema = 'test/schemas/91_complex.json';
+      testOptions.schemaPath = 'test/schemas/91_complex.json';
       testConnection.collection.remove({}, function (err, res) {
         if(err) return done(err);
         util.populator(testOptions, function () {

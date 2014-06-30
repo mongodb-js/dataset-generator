@@ -19,7 +19,7 @@ describe('Populator with embedded schema', function () {
   describe('basic embedded schema', function() {
     before(function (done) {
       testOptions.size = 50;
-      testOptions.schema = 'test/schemas/20_embedded_basic.json';
+      testOptions.schemaPath = 'test/schemas/20_embedded_basic.json';
       testConnection.collection.remove({}, function (err, res) {
         if(err) return done(err);
         util.populator(testOptions, function () {
@@ -70,7 +70,7 @@ describe('Populator with embedded schema', function () {
   describe('schema with parallel embedded fields', function() {
     before(function (done) {
       testOptions.size = 33;
-      testOptions.schema = 'test/schemas/21_embedded_multi.json';
+      testOptions.schemaPath = 'test/schemas/21_embedded_multi.json';
       testConnection.collection.remove({}, function (err, res) {
         if(err) return done(err);
         util.populator(testOptions, function () {
@@ -126,7 +126,7 @@ describe('Populator with embedded schema', function () {
   describe('schema with high level of embedding', function() {
     before(function (done) {
       testOptions.size = 23;
-      testOptions.schema = 'test/schemas/22_embedded_level.json';
+      testOptions.schemaPath = 'test/schemas/22_embedded_level.json';
       testConnection.collection.remove({}, function (err, res) {
         if(err) return done(err);
         util.populator(testOptions, function () {
@@ -180,7 +180,7 @@ describe('Populator with embedded schema', function () {
   describe('complex embedded schema', function() {
     before(function (done) {
       testOptions.size = 19;
-      testOptions.schema = 'test/schemas/23_embedded_complex.json';
+      testOptions.schemaPath = 'test/schemas/23_embedded_complex.json';
       testConnection.collection.remove({}, function (err, res) {
         if(err) return done(err);
         util.populator(testOptions, function () {

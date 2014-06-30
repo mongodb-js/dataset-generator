@@ -19,7 +19,7 @@ describe('Populator with schema involved arrays', function () {
   describe('array of raw types', function() {
     before(function (done) {
       testOptions.size = 50;
-      testOptions.schema = 'test/schemas/30_array_field.json';
+      testOptions.schemaPath = 'test/schemas/30_array_field.json';
       testConnection.collection.remove({}, function (err, res) {
         if(err) return done(err);
         util.populator(testOptions, function () {
@@ -81,7 +81,7 @@ describe('Populator with schema involved arrays', function () {
   describe('array of documents', function() {
     before(function (done) {
       testOptions.size = 99;
-      testOptions.schema = 'test/schemas/31_array_doc.json';
+      testOptions.schemaPath = 'test/schemas/31_array_doc.json';
       testConnection.collection.remove({}, function (err, res) {
         if(err) return done(err);
         util.populator(testOptions, function () {
@@ -145,7 +145,7 @@ describe('Populator with schema involved arrays', function () {
   describe('array of embedded docs', function() {
     before(function (done) {
       testOptions.size = 13;
-      testOptions.schema = 'test/schemas/32_array_embed.json';
+      testOptions.schemaPath = 'test/schemas/32_array_embed.json';
       testConnection.collection.remove({}, function (err, res) {
         if(err) return done(err);
         util.populator(testOptions, function () {
@@ -213,7 +213,7 @@ describe('Populator with schema involved arrays', function () {
   describe('array of arrays', function() {
     before(function (done) {
       testOptions.size = 9;
-      testOptions.schema = 'test/schemas/33_array_arrays.json';
+      testOptions.schemaPath = 'test/schemas/33_array_arrays.json';
       testConnection.collection.remove({}, function (err, res) {
         if(err) return done(err);
         util.populator(testOptions, function () {
