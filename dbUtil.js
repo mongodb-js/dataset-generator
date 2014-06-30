@@ -59,11 +59,18 @@ module.exports.parseInput = function (opts) {
   };
 };
 
-module.exports.parseUserOpts = function (opts) {
+module.exports.parseUserOpts = function (opts, callback) {
+  var rtn = {
+    uri: opts.uri,
+    clientOptions: opts.clientOptions || {},
+    size: typeof opts.size === 'number' ? opts.size : 100,
+    collection: opts.collection || 'dataset',
+    schema: opts.schema,
+    schemaPath: opts.schemaPath || 'schema_example.json'
+  };
   // parse uri
-  var uri;
-  if (typeof opts.uri === 'undefined') {
-    uri = mongodbUri.format({
+  if (typeof rtn.uri === 'undefined') {
+    rtn.uri = mongodbUri.format({
       username: opts.username ? opts.username : '',
       password: opts.password ? opts.password : '',
       hosts: [
@@ -75,14 +82,16 @@ module.exports.parseUserOpts = function (opts) {
       database: opts.db || 'test',
       options: opts.serverOptions
     });
-  } else {
-    uri = opts.uri;
   }
-  return {
-    uri: uri,
-    clientOptions: opts.clientOptions || {},
-    size: typeof opts.size === 'number' ? opts.size : 100,
-    collection: opts.collection || 'dataset',
-    schemaPath: opts.schemaPath || 'schema_example.json'
-  };
+  // construct schema
+  if (typeof rtn.schema !== 'undefined') {
+    return callback(rtn);
+  }
+  var filePath = path.resolve(rtn.schemaPath);
+  fs.readFile(filePath, 'utf8', function (err, data) {
+    debug('Schema file path: ', filePath);
+    if (err) throw err;
+    rtn.schema = JSON.parse(data);
+    callback(rtn);
+  });
 };
