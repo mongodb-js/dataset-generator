@@ -23,16 +23,16 @@ var regex = {
 // connects to the target collection, and possibly clear its content
 function setUp (inputOptions, fn) {
   var options = merge_objects(defaultOptions, inputOptions);
-  var user = dbUtil.parseInput(options);
-  dbUtil.connect(user, function(collection, db) {
-    collection.remove({}, function(err, res) {
-      if(err) return fn(err);
-      var connection = {
-        user: user,
-        db: db,
-        collection: collection
-      };
-      fn(null, connection);
+  dbUtil.parseUserOpts(options, function (opts) {
+    dbUtil.connect(opts, function(collection, db) {
+      collection.remove({}, function(err, res) {
+        if(err) return fn(err);
+        var connection = {
+          db: db,
+          collection: collection
+        };
+        fn(null, connection);
+      });
     });
   });
 }
