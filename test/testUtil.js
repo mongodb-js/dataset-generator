@@ -6,6 +6,8 @@ var chance = require('chance').Chance();
 var populator = require('../index.js');
 var dbUtil = require('../dbUtil');
 var async = require('async');
+var MongoClient = require('mongodb').MongoClient;
+var debug = require('debug')('dataset:testUtil')
 
 var defaultOptions = {
   host: 'localhost',
@@ -40,7 +42,40 @@ function setUp (inputOptions, fn) {
 function tearDown (connection, fn) {
   connection.collection.drop();
   connection.db.close();
-  fn();
+  if (typeof fn === 'function') fn();
+}
+
+// set up db connection
+function before (testOpts, callback) {
+  var opts = merge_objects(defaultOptions, testOpts);
+  dbUtil.parseUserOpts(opts, function (opts) {
+    MongoClient.connect(opts.uri, opts.clientOptions, function(err, db) {
+      debug('INFO: connected to MongoDB @ ', opts.uri);
+      if(err) return callback(err);
+      var collection = db.collection(opts.collection);
+      collection.remove({}, function(err, res) {
+        if(err) return callback(err);
+        populator(opts, function () {
+          var connection = {
+            db: db,
+            collection: collection
+          };
+          callback(null, connection);
+        });
+      });
+    });
+  });
+}
+
+function getResults (testOpts, callback) {
+  before(testOpts, function (err, connection) {
+    if (err) return callback(err);
+    connection.collection.find().toArray(function (err, items) {
+      if (err) return callback(err);
+      callback(null, items);
+      tearDown(connection);
+    });
+  });
 }
 
 function merge_objects(defaults, instance) {
@@ -68,6 +103,9 @@ module.exports.populator = populator;
 // test utility functions
 module.exports.setUp = setUp;
 module.exports.tearDown = tearDown;
+module.exports.before = before;
 // general utilities
 module.exports.sampleAndStrip = sampleAndStrip;
 module.exports.regex = regex;
+module.exports.mergeObjects = merge_objects;
+module.exports.getResults = getResults;
