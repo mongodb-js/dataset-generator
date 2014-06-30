@@ -153,6 +153,13 @@ establish MongoDB as a leader in this emerging market.
 
 ## Resources
 
++ Some handy references
+  * [Chance.js](http://chancejs.com/)
+  * [Joi](https://github.com/spumko/joi)
+  * [Node.js Stream](http://nodejs.org/api/stream.html)
+  * [Async](https://github.com/caolan/async)
+  * [Stream Handbook](https://github.com/substack/stream-handbook)
+
 + Random data generator
   * MongoDB official doc: [Generate Test Data](http://docs.mongodb.org/manual/tutorial/generate-test-data)
   * community question [random k-v pair](https://groups.google.com/forum/#!topic/mongodb-user/o0AmMt9i3Zc)
