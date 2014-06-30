@@ -123,12 +123,11 @@ establish MongoDB as a leader in this emerging market.
 
 ## Milestones
 
-- [x] Set up skeleton code that abstracts each module
+- [x] Set up generalizable skeleton code that abstracts each module
+- [x] Support user defined schemas with arbitrary structure
 - [ ] Collect example schemas from documentation
-- [x] Generate random data to populate the example schemas
+- [ ] Extend the current code base to support replicating common datasets
 - [ ] Select datasets to add support for prototyping
-- [ ] Design efficient schemas for the selected datasets
-- [ ] Scripts to import from data sources to specified user database
 
 ## Implementation Plan
 
