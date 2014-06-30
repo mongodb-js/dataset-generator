@@ -149,6 +149,10 @@ establish MongoDB as a leader in this emerging market.
 + Add peripheral support for individual schemas, based on the skeleton
   1. identify types and/or reasonable range for data in each field
   2. write up configuration files for each schema
++ Enhance user experience
+  1. generate user defined (as opposed to random) data, such as
+     constant strings, enums, and incrementor
+  2. allow user pass in config arguments to underlying Chance.js methods
 + @todo: plans for replicating datasets
 
 ## Resources
@@ -160,17 +164,9 @@ establish MongoDB as a leader in this emerging market.
   * [Async](https://github.com/caolan/async)
   * [Stream Handbook](https://github.com/substack/stream-handbook)
 
-+ Random data generator
++ Other potential userful docs
   * MongoDB official doc: [Generate Test Data](http://docs.mongodb.org/manual/tutorial/generate-test-data)
-  * community question [random k-v pair](https://groups.google.com/forum/#!topic/mongodb-user/o0AmMt9i3Zc)
-  * API: [chance.js](http://chancejs.com/)
-
-+ Schema Design
   * [Time Series](http://blog.mongodb.org/post/65517193370/schema-design-for-time-series-data-in-mongodb)[same topic ppt](http://www.mongodb.com/presentations/webinar-time-series-data-mongodb)
-    1. granularity: a doc per hour or min or event, level of embedded
-    2. sparse data?
-    3. capped collection?
-    - notes: [Cassandra](http://stackoverflow.com/questions/11166441/nosql-for-time-series-logged-instrument-reading-data-that-is-also-versioned)
   * [User Management](http://www.slideshare.net/mongodb/webinar-user-data-management-with-mongodb)
 
 ## License
