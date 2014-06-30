@@ -1,4 +1,4 @@
-var helper = require('./testUtil');
+var helper = require('./helper');
 var Joi = require('joi');
 var assert = require('assert');
 
