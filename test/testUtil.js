@@ -5,7 +5,6 @@
 var chance = require('chance').Chance();
 var populator = require('../index.js');
 var dbUtil = require('../dbUtil');
-var Joi = require('joi');
 var async = require('async');
 
 var defaultOptions = {
@@ -64,11 +63,6 @@ function sampleAndStrip(array, count, fn) {
   });
 }
 
-// external modules
-module.exports.Joi = Joi;
-module.exports.chance = chance;
-module.exports.assert = require('assert');
-module.exports.async = async;
 // modules to test
 module.exports.populator = populator;
 // test utility functions

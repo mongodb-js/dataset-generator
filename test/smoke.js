@@ -1,4 +1,6 @@
 var util = require('./testUtil');
+var Joi = require('joi');
+var assert = require('assert');
 
 describe('Populator with empty schema', function () {
   var testConnection = {};
@@ -31,8 +33,8 @@ describe('Populator with empty schema', function () {
     it('should not insert any entry', function (done) {
       var trueCount = 0;
       testConnection.collection.count(function(err, count) {
-        util.assert.equal(null, err);
-        util.assert.equal(trueCount, count);
+        assert.equal(null, err);
+        assert.equal(trueCount, count);
         done();
       });
     });
@@ -50,21 +52,21 @@ describe('Populator with empty schema', function () {
     it('should have the correct size', function (done) {
       var trueCount = 5;
       testConnection.collection.count(function(err, count) {
-        util.assert.equal(null, err);
-        util.assert.equal(trueCount, count);
+        assert.equal(null, err);
+        assert.equal(trueCount, count);
         done();
       });
     });
 
     it('should have entries with only _id field', function (done) {
-      var schema = util.Joi.object().keys({
-        _id: util.Joi.any().required()
+      var schema = Joi.object().keys({
+        _id: Joi.any().required()
       }).length(1);
       testConnection.collection.find().each(function(err, item) {
-        util.assert.equal(null, err);
+        assert.equal(null, err);
         if(item === null) return done();
-        util.Joi.validate(item, schema, function(err, val) {
-          util.assert.equal(null, err);
+        Joi.validate(item, schema, function(err, val) {
+          assert.equal(null, err);
         });
       });
     });
@@ -88,32 +90,32 @@ describe('Populator with empty schema', function () {
     it('should produce correct number of entries', function (done) {
       var trueCount = 111;
       testConnection.collection.count(function (err, count) {
-        util.assert.equal(null, err);
-        util.assert.equal(trueCount, count);
+        assert.equal(null, err);
+        assert.equal(trueCount, count);
         done();
       });
     });
 
     it('should produce correct schema structure', function (done) {
-      var schema = util.Joi.object().keys({
-        _id: util.Joi.any().required(),
-        username: util.Joi.string().required(),
-        email: util.Joi.string().email().required(),
+      var schema = Joi.object().keys({
+        _id: Joi.any().required(),
+        username: Joi.string().required(),
+        email: Joi.string().email().required(),
       }).length(3);
       testConnection.collection.find().each(function (err, item) {
-        util.assert.equal(null, err);
+        assert.equal(null, err);
         if(item === null) return done();
-        util.Joi.validate(item, schema, function (err, val) {
-          util.assert.equal(null, err);
+        Joi.validate(item, schema, function (err, val) {
+          assert.equal(null, err);
         });
       });
     });
 
     it('should produce entries with random content', function (done) {
       testConnection.collection.find().toArray(function (err, items) {
-        util.assert.equal(null, err);
+        assert.equal(null, err);
         util.sampleAndStrip(items, 2, function (sample) {
-          util.assert.notDeepEqual(sample[0], sample[1]);
+          assert.notDeepEqual(sample[0], sample[1]);
           done();
         });
       });

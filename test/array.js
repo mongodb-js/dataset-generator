@@ -1,4 +1,6 @@
 var util = require('./testUtil');
+var Joi = require('joi');
+var assert = require('assert');
 
 describe('Populator with schema involved arrays', function () {
   var testConnection = {};
@@ -31,33 +33,33 @@ describe('Populator with schema involved arrays', function () {
     it('should produce correct number of entries', function (done) {
       var trueCount = 50;
       testConnection.collection.count(function (err, count) {
-        util.assert.equal(null, err);
-        util.assert.equal(trueCount, count);
+        assert.equal(null, err);
+        assert.equal(trueCount, count);
         done();
       });
     });
 
     it('should produce correct schema structure', function (done) {
-      var schema = util.Joi.object().keys({
-        _id: util.Joi.any().required(),
-        name: util.Joi.string().required(),
-        friends: util.Joi.array().includes(util.Joi.string()).
-                                  excludes(util.Joi.object()).required()
+      var schema = Joi.object().keys({
+        _id: Joi.any().required(),
+        name: Joi.string().required(),
+        friends: Joi.array().includes(Joi.string()).
+                                  excludes(Joi.object()).required()
       }).length(3);
       testConnection.collection.find().each(function (err, item) {
-        util.assert.equal(null, err);
+        assert.equal(null, err);
         if(item === null) return done();
-        util.Joi.validate(item, schema, function (err, val) {
-          util.assert.equal(null, err);
+        Joi.validate(item, schema, function (err, val) {
+          assert.equal(null, err);
         });
       });
     });
 
     it('should produce docs with random content', function (done) {
       testConnection.collection.find().toArray(function (err, items) {
-        util.assert.equal(null, err);
+        assert.equal(null, err);
         util.sampleAndStrip(items, 2, function (sample) {
-          util.assert.notDeepEqual(sample[0], sample[1]);
+          assert.notDeepEqual(sample[0], sample[1]);
           done();
         });
       });
@@ -65,13 +67,13 @@ describe('Populator with schema involved arrays', function () {
 
     it('should produce arrays with random content', function (done) {
       testConnection.collection.find().toArray(function (err, items) {
-        util.assert.equal(null, err);
+        assert.equal(null, err);
         var validItems = items.filter(function (item) {
           return item.friends.length > 1;
         });
         util.sampleAndStrip(validItems, 1, function (sample) {
           var friends = sample.friends;
-          util.assert.notDeepEqual(friends[0], friends[1]);
+          assert.notDeepEqual(friends[0], friends[1]);
           done();
         });
       });
@@ -93,35 +95,35 @@ describe('Populator with schema involved arrays', function () {
     it('should produce correct number of entries', function (done) {
       var trueCount = 99;
       testConnection.collection.count(function (err, count) {
-        util.assert.equal(null, err);
-        util.assert.equal(trueCount, count);
+        assert.equal(null, err);
+        assert.equal(trueCount, count);
         done();
       });
     });
 
     it('should produce correct schema structure', function (done) {
-      var schema = util.Joi.object().keys({
-        _id: util.Joi.any().required(),
-        name: util.Joi.string().required(),
-        friends: util.Joi.array().includes(util.Joi.object().keys({
-          name: util.Joi.string().required(),
-          phone: util.Joi.string().regex(util.regex.phone).required()
+      var schema = Joi.object().keys({
+        _id: Joi.any().required(),
+        name: Joi.string().required(),
+        friends: Joi.array().includes(Joi.object().keys({
+          name: Joi.string().required(),
+          phone: Joi.string().regex(util.regex.phone).required()
         }).length(2)).required()
       }).length(3);
       testConnection.collection.find().each(function (err, item) {
-        util.assert.equal(null, err);
+        assert.equal(null, err);
         if(item === null) return done();
-        util.Joi.validate(item, schema, function (err, val) {
-          util.assert.equal(null, err);
+        Joi.validate(item, schema, function (err, val) {
+          assert.equal(null, err);
         });
       });
     });
 
     it('should produce docs with random content', function (done) {
       testConnection.collection.find().toArray(function (err, items) {
-        util.assert.equal(null, err);
+        assert.equal(null, err);
         util.sampleAndStrip(items, 2, function (sample) {
-          util.assert.notDeepEqual(sample[0], sample[1]);
+          assert.notDeepEqual(sample[0], sample[1]);
           done();
         });
       });
@@ -129,13 +131,13 @@ describe('Populator with schema involved arrays', function () {
 
     it('should produce arrays with random content', function (done) {
       testConnection.collection.find().toArray(function (err, items) {
-        util.assert.equal(null, err);
+        assert.equal(null, err);
         var validItems = items.filter(function (item) {
           return item.friends.length > 1;
         });
         util.sampleAndStrip(validItems, 1, function (sample) {
           var friends = sample.friends;
-          util.assert.notDeepEqual(friends[0], friends[1]);
+          assert.notDeepEqual(friends[0], friends[1]);
           done();
         });
       });
@@ -157,39 +159,39 @@ describe('Populator with schema involved arrays', function () {
     it('should produce correct number of entries', function (done) {
       var trueCount = 13;
       testConnection.collection.count(function (err, count) {
-        util.assert.equal(null, err);
-        util.assert.equal(trueCount, count);
+        assert.equal(null, err);
+        assert.equal(trueCount, count);
         done();
       });
     });
 
     it('should produce correct schema structure', function (done) {
-      var schema = util.Joi.object().keys({
-        _id: util.Joi.any().required(),
-        name: util.Joi.string().required(),
-        friends: util.Joi.array().includes(util.Joi.object().keys({
-          name: util.Joi.string().required(),
-          payment_method: util.Joi.object().keys({
-            type: util.Joi.string().required(),
-            card: util.Joi.number().integer().required(),
-            expiration: util.Joi.string().regex(util.regex.exp).required()
+      var schema = Joi.object().keys({
+        _id: Joi.any().required(),
+        name: Joi.string().required(),
+        friends: Joi.array().includes(Joi.object().keys({
+          name: Joi.string().required(),
+          payment_method: Joi.object().keys({
+            type: Joi.string().required(),
+            card: Joi.number().integer().required(),
+            expiration: Joi.string().regex(util.regex.exp).required()
           }).length(3).required()
         }).length(2)).required()
       }).length(3);
       testConnection.collection.find().each(function (err, item) {
-        util.assert.equal(null, err);
+        assert.equal(null, err);
         if(item === null) return done();
-        util.Joi.validate(item, schema, function (err, val) {
-          util.assert.equal(null, err);
+        Joi.validate(item, schema, function (err, val) {
+          assert.equal(null, err);
         });
       });
     });
 
     it('should produce docs with random content', function (done) {
       testConnection.collection.find().toArray(function (err, items) {
-        util.assert.equal(null, err);
+        assert.equal(null, err);
         util.sampleAndStrip(items, 2, function (sample) {
-          util.assert.notDeepEqual(sample[0], sample[1]);
+          assert.notDeepEqual(sample[0], sample[1]);
           done();
         });
       });
@@ -197,13 +199,13 @@ describe('Populator with schema involved arrays', function () {
 
     it('should produce arrays with random content', function (done) {
       testConnection.collection.find().toArray(function (err, items) {
-        util.assert.equal(null, err);
+        assert.equal(null, err);
         var validItems = items.filter(function (item) {
           return item.friends.length > 1;
         });
         util.sampleAndStrip(validItems, 1, function (sample) {
           var friends = sample.friends;
-          util.assert.notDeepEqual(friends[0], friends[1]);
+          assert.notDeepEqual(friends[0], friends[1]);
           done();
         });
       });
@@ -225,39 +227,39 @@ describe('Populator with schema involved arrays', function () {
     it('should produce correct number of entries', function (done) {
       var trueCount = 9;
       testConnection.collection.count(function (err, count) {
-        util.assert.equal(null, err);
-        util.assert.equal(trueCount, count);
+        assert.equal(null, err);
+        assert.equal(trueCount, count);
         done();
       });
     });
 
     it('should produce correct schema structure', function (done) {
-      var schema = util.Joi.object().keys({
-        _id: util.Joi.any().required(),
-        name: util.Joi.string().required(),
-        friends: util.Joi.array().includes(util.Joi.object().keys({
-          name: util.Joi.string().required(),
-          payment_method: util.Joi.array().includes(util.Joi.object().keys({
-            type: util.Joi.string().required(),
-            card: util.Joi.number().integer().required(),
-            expiration: util.Joi.string().regex(util.regex.exp).required()
+      var schema = Joi.object().keys({
+        _id: Joi.any().required(),
+        name: Joi.string().required(),
+        friends: Joi.array().includes(Joi.object().keys({
+          name: Joi.string().required(),
+          payment_method: Joi.array().includes(Joi.object().keys({
+            type: Joi.string().required(),
+            card: Joi.number().integer().required(),
+            expiration: Joi.string().regex(util.regex.exp).required()
           }).length(3)).required()
         }).length(2)).required()
       }).length(3);
       testConnection.collection.find().each(function (err, item) {
-        util.assert.equal(null, err);
+        assert.equal(null, err);
         if(item === null) return done();
-        util.Joi.validate(item, schema, function (err, val) {
-          util.assert.equal(null, err);
+        Joi.validate(item, schema, function (err, val) {
+          assert.equal(null, err);
         });
       });
     });
 
     it('should produce docs with random content', function (done) {
       testConnection.collection.find().toArray(function (err, items) {
-        util.assert.equal(null, err);
+        assert.equal(null, err);
         util.sampleAndStrip(items, 2, function (sample) {
-          util.assert.notDeepEqual(sample[0], sample[1]);
+          assert.notDeepEqual(sample[0], sample[1]);
           done();
         });
       });
@@ -265,13 +267,13 @@ describe('Populator with schema involved arrays', function () {
 
     it('should produce arrays with random content', function (done) {
       testConnection.collection.find().toArray(function (err, items) {
-        util.assert.equal(null, err);
+        assert.equal(null, err);
         var validItems = items.filter(function (item) {
           return item.friends.length > 1;
         });
         util.sampleAndStrip(validItems, 1, function (sample) {
           var friends = sample.friends;
-          util.assert.notDeepEqual(friends[0], friends[1]);
+          assert.notDeepEqual(friends[0], friends[1]);
           done();
         });
       });
@@ -279,7 +281,7 @@ describe('Populator with schema involved arrays', function () {
 
     it('should produce embedded arrays with random content', function (done) {
       testConnection.collection.find().toArray(function (err, items) {
-        util.assert.equal(null, err);
+        assert.equal(null, err);
         var validItems = items.filter(function (item) {
           return item.friends.filter(function (item) {
             return item.payment_method.length > 1;
@@ -291,7 +293,7 @@ describe('Populator with schema involved arrays', function () {
           });
           util.sampleAndStrip(validSubItems, 1, function (sample) {
             var payments = sample.payment_method;
-            util.assert.notDeepEqual(payments[0], payments[1]);
+            assert.notDeepEqual(payments[0], payments[1]);
             done();
           });
         });
