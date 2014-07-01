@@ -8,8 +8,9 @@ var dbUtil = require('../helper');
 var async = require('async');
 var MongoClient = require('mongodb').MongoClient;
 var debug = require('debug')('dataset:testUtil');
+var _ = require('underscore');
 
-var defaultOptions = {
+var defaults = {
   host: 'localhost',
   port: '27017',
   db: 'test',
@@ -30,7 +31,7 @@ function tearDown (connection, fn) {
 
 // connects to the target collection, and possibly clear its content
 function setUp (testOpts, callback) {
-  var opts = merge_objects(defaultOptions, testOpts);
+  var opts = _.defaults(testOpts, defaults);
   dbUtil.parseUserOpts(opts, function (opts) {
     MongoClient.connect(opts.uri, opts.clientOptions, function(err, db) {
       debug('INFO: connected to MongoDB @ ', opts.uri);
@@ -61,13 +62,6 @@ function getResults (testOpts, callback) {
   });
 }
 
-function merge_objects(defaults, instance) {
-  var obj3 = {}, attrname;
-  for (attrname in defaults) { obj3[attrname] = defaults[attrname]; }
-  for (attrname in instance) { obj3[attrname] = instance[attrname]; }
-  return obj3;
-}
-
 function sampleAndStrip(array, count, fn) {
   var sample = chance.pick(array, count);
   async.each(sample,
@@ -87,5 +81,4 @@ module.exports.tearDown = tearDown;
 // general utilities
 module.exports.sampleAndStrip = sampleAndStrip;
 module.exports.regex = regex;
-module.exports.mergeObjects = merge_objects;
 module.exports.getResults = getResults;
