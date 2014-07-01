@@ -36,7 +36,7 @@ describe('basic embedded schema', function() {
   it('should produce correct schema structure', function () {
     res.items.forEach(function (item) {
       Joi.validate(item, expected.schema, function(err, val) {
-        assert.equal(null, err);
+        assert.ifError(err);
       });
     });
   });
@@ -89,7 +89,7 @@ describe('schema with parallel embedded fields', function() {
   it('should produce correct schema structure', function () {
     res.items.forEach(function (item) {
       Joi.validate(item, expected.schema, function(err, val) {
-        assert.equal(null, err);
+        assert.ifError(err);
       });
     });
   });
@@ -140,7 +140,7 @@ describe('schema with high level of embedding', function() {
   it('should produce correct schema structure', function () {
     res.items.forEach(function (item) {
       Joi.validate(item, expected.schema, function(err, val) {
-        assert.equal(null, err);
+        assert.ifError(err);
       });
     });
   });
@@ -201,7 +201,7 @@ describe('complex embedded schema', function() {
   it('should produce correct schema structure', function () {
     res.items.forEach(function (item) {
       Joi.validate(item, expected.schema, function(err, val) {
-        assert.equal(null, err);
+        assert.ifError(err);
       });
     });
   });

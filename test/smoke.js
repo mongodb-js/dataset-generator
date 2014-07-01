@@ -45,7 +45,7 @@ describe('when size is small', function() {
   it('should have entries with only _id field', function () {
     res.items.forEach(function (item) {
       Joi.validate(item, expected.schema, function(err, val) {
-        assert.equal(null, err);
+        assert.ifError(err);
       });
     });
   });
@@ -84,7 +84,7 @@ describe('basic schema', function() {
   it('should produce correct schema structure', function () {
     res.items.forEach(function (item) {
       Joi.validate(item, expected.schema, function(err, val) {
-        assert.equal(null, err);
+        assert.ifError(err);
       });
     });
   });
