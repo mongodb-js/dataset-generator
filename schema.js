@@ -1,7 +1,12 @@
 /* schema.js */
 var Chance = require('chance');
 var debug = require('debug')('dataset:schema');
+var _ = require('underscore');
 var chance;
+_.templateSettings = {
+  variable: 'data',
+  interpolate: /\{\{(.+?)\}\}/g
+};
 
 /**
  * A representation of schema specified by user that records the name and
@@ -10,6 +15,7 @@ var chance;
  * that the data corresponding to the field 'user_email' is supplied by
  * chance.email()
  */
+
 
 /**
  * To-do's
