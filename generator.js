@@ -7,7 +7,7 @@
 
 var util = require('util');
 var stream = require('stream');
-var chanceBuilder = require('./chanceBuilder');
+// var chanceBuilder = require('./chanceBuilder');
 var format = require('util').format;
 var debug = require('debug')('dataset:generator');
 
@@ -24,7 +24,7 @@ function DataStream (schema, dataLength) {
   stream.Readable.call(this, {objectMode: true});
   this.dataLength = dataLength;
   this.restLength = dataLength;
-  this.chance = chanceBuilder(schema);
+  this.chance = schema.chance;
 
   // log
   debug('OP: DataStream successfully built');

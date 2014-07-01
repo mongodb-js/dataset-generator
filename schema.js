@@ -1,4 +1,5 @@
 /* schema.js */
+var chanceBuilder = require('./chanceBuilder');
 
 /**
  * A representation of schema specified by user that records the name and
@@ -17,19 +18,11 @@
  * collection should correspond to 'id' in Manager collection
  */
 
-function Schema () {
-  if (!(this instanceof Schema)) return new Schema();
+function Schema (s) {
+  if (!(this instanceof Schema)) return new Schema(s);
 
-  this._schema = {};
-  this._parts = [];
-  this._relationships = [];
+  this._schema = s;
+  this.chance = chanceBuilder(s);
 }
 
-Schema.prototype.build = function (s) {
-  this._schema = s;
-  return this._schema;
-};
-
-module.exports = function(){
-   return Schema._instance || (Schema._instance = new Schema());
-};
+module.exports = Schema;
