@@ -15,9 +15,18 @@ function Schema (sc) {
   this._context = {
     chance: new Chance(),
     faker: faker,
+    Date: function (date) {
+      this._temp._objectMode = true;
+      this._temp._objectCnst = Date;
+      this._temp._objectArg = date;
+    },
     util: {
       sample: _.sample
-    }
+    },
+    _state: {
+      clock: 0
+    },
+    _temp: {}
   };
 }
 
@@ -79,7 +88,14 @@ function Field (field, schema) {
 }
 
 Field.prototype._produce = function () {
-  return this._compiled(this._schema._context);
+  this._schema._context._temp = {};
+  var res = this._compiled(this._schema._context);
+  if (this._schema._context._temp._objectMode) {
+    var temp = this._schema._context._temp;
+    return new temp._objectCnst(temp._objectArg);
+  } else {
+    return res;
+  }
 };
 
 Field.prototype.emit = function () {
