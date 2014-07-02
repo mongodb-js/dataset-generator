@@ -3,7 +3,7 @@ var Inserter = require('./inserter');
 var helper = require('./helper');
 var Generator = require('./generator');
 // var Schema = require('./schema');
-var Schema = require('./sc');
+var Schema = require('./schema');
 
 // assume these are the user input
 module.exports = function (opts, fn) {

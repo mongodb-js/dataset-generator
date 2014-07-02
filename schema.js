@@ -1,87 +1,121 @@
-/* schema.js */
-var Chance = require('chance');
 var debug = require('debug')('dataset:schema');
+var _ = require('underscore');
 
-/**
- * A representation of schema specified by user that records the name and
- * the type of random data for each field. The type of random data must be
- * supported by Chance.js. For example, {user_email: 'email'} means
- * that the data corresponding to the field 'user_email' is supplied by
- * chance.email()
- */
+_.templateSettings = {
+  interpolate: /\{\{(.+?)\}\}/g
+};
 
+// random data
+var Chance = require('chance');
+var faker = require('faker');
 
-/**
- * To-do's
- * embedded schema, e.g. {user: {id: 'number', user_email: 'email'}}
- * complex random data, e.g. {products: 'number-text'} should
- * generate things like '3-foo', '234-bar'
- * reference relationship between schema, e.g. 'manager_id' in Employee
- * collection should correspond to 'id' in Manager collection
- */
-
-function Schema (s) {
-  if (!(this instanceof Schema)) return new Schema(s);
-
-  this._schema = s;
-  this.chance = buildMixin(s);
-}
-
-/**
- * A utility method to build the mixin needed for the input schema
- */
-var chance;
-function buildMixin (schema) {
-  debug('Start building schema -> %j', schema);
-  chance = new Chance();
-  buildMixinHelper(schema, 0);
-  return chance;
-}
-
-function buildMixinHelper (schema, id) {
-  debug('id=%d starts building, schema -> %j', id, schema);
-  var treeSize = 1; // count itself
-  var flatSchema = {};
-  var field, type;
-  var simplifyField = function (type) {
-    if (typeof type !== 'object') {
-      return type;
-    } else {
-      var childId = id + treeSize;
-      treeSize += buildMixinHelper(type, childId);
-      return '_' + childId;
-    }
+function Schema (sc) {
+  if (!(this instanceof Schema)) return new Schema(sc);
+  this._schema = new Document(sc, this);
+  this._context = {
+    chance: new Chance(),
+    faker: faker,
+    Date: function (date) {
+      this._temp._objectMode = true;
+      this._temp._objectCnst = Date;
+      this._temp._objectArg = date;
+    },
+    counter: function (id, start, step) {
+      id = id || 0; // though id=0 is false, does not matter
+      if (typeof this._state.counter[id] === 'undefined') {
+        return (this._state.counter[id] = start || 0);
+      }
+      return (this._state.counter[id] += (step || 1));
+    },
+    util: {
+      sample: _.sample
+    },
+    _state: {
+      clock: 0,
+      counter: []
+    },
+    _temp: {}
   };
-  for (field in schema) {
-    type = schema[field];
-    if (type instanceof Array) {
-      flatSchema[field] = [simplifyField(type[0])];
+}
+
+Schema.prototype.emit = function () {
+  return this._schema.emit();
+};
+
+// doc must be an object or an array of object
+function Document (document, schema) {
+  if (!(this instanceof Document)) return new Document(document, schema);
+
+  this._schema = schema;
+  this._array = document instanceof Array;
+  this._document = {};
+  var doc = this._array ? document[0] : document;
+  for (var name in doc) {
+    var data = doc[name];
+    if (typeof data === 'string' ||
+       (data instanceof Array && typeof data[0] === 'string')) {
+      this._document[name] = new Field(data, schema);
     } else {
-      flatSchema[field] = simplifyField(type);
+      this._document[name] = new Document(data, schema);
     }
   }
-  debug('id=%d, flatSchema -> %j', id, flatSchema);
-  // add new mixin corresponding to schema
-  var mixin = {};
-  mixin['_' + id] = function () {
-    var o = {};
-    var field, type;
-    for (field in flatSchema) {
-      type = flatSchema[field];
-      // calling chance must happen inside this function
-      if (type instanceof Array) {
-        o[field] = [];
-        for (var i = 0; i < chance.d6(); i++) {
-          o[field].push(chance[type]());
-        }
-      } else {
-        o[field] = chance[type]();
-      }
-    }
-    return o;
-  };
-  chance.mixin(mixin);
-  return treeSize;
 }
+
+Document.prototype._produce = function () {
+  var data = {};
+  for (var name in this._document) {
+    data[name] = this._document[name].emit();
+  }
+  return data;
+};
+
+Document.prototype.emit = function () {
+  if (this._array) {
+    var data = [];
+    for (var i = _.random(1, 3); i > 0; i--) {
+      data.push(this._produce());
+    }
+    return data;
+  } else {
+    return this._produce();
+  }
+};
+
+// field must be string or an array of string
+function Field (field, schema) {
+  if (!(this instanceof Field)) return new Field(field, schema);
+
+  this._schema = schema;
+  this._array = false;
+  this._field = field;
+  if (field instanceof Array) {
+    this._array = true;
+    this._field = field[0];
+  }
+  this._compiled = _.template(this._field);
+}
+
+Field.prototype._produce = function () {
+  this._schema._context._temp = {};
+  var res = this._compiled(this._schema._context);
+  if (this._schema._context._temp._objectMode) {
+    var temp = this._schema._context._temp;
+    return new temp._objectCnst(temp._objectArg);
+  } else {
+    return res;
+  }
+};
+
+Field.prototype.emit = function () {
+  if (this._array) {
+    var data = [];
+    for (var i = _.random(1, 3); i > 0; i--) {
+      data.push(this._produce());
+    }
+    return data;
+  } else {
+    return this._produce();
+  }
+};
 
 module.exports = Schema;
