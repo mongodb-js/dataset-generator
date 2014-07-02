@@ -1,18 +1,23 @@
 {
-  "full_name": "name",
-  "user_email": "email",
-  "cell_phone": "phone",
-  "birthday": "birthday",
-  "credentials": {
-    "domain": "domain",
-    "user_name": "word",
-    "password": "hash"
+  "user_email": "{{chance.email()}}",
+  "job": {
+    "company": "{{chance.word()}}",
+    "phones": {
+      "mobile": "{{chance.phone()}}",
+      "work": "{{chance.phone()}}"
+    },
+    "duties": "{{chance.sentence()}}"
   },
-  "friends": [
-    {
-      "name": "name",
-      "telephone": "phone"
-    }
-  ],
-  "description": "sentence"
+  "personalities": {
+    "favorites": {
+      "number": "{{chance.d10()}}",
+      "city": "{{chance.city()}}",
+      "radio": "{{chance.radio()}}"
+    },
+    "violence-rating": "{{chance.d6()}}"
+  },
+  "friends" : [{
+    "name": "{{chance.name()}}",
+    "phones": ["{{chance.phone()}}"]
+  }]
 }
