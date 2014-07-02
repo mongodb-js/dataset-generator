@@ -57,16 +57,16 @@ Document.prototype.emit = function () {
   }
 };
 
-// f must be string or an array of string
-function Field (f, schema) {
-  if (!(this instanceof Field)) return new Field(f, schema);
+// field must be string or an array of string
+function Field (field, schema) {
+  if (!(this instanceof Field)) return new Field(field, schema);
 
   this._schema = schema;
   this._array = false;
-  this._field = f;
-  if (f instanceof Array) {
+  this._field = field;
+  if (field instanceof Array) {
     this._array = true;
-    this._field = f[0];
+    this._field = field[0];
   }
   this._compiled = _.template(this._field);
 }

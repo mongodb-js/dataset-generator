@@ -7,8 +7,6 @@
 
 var util = require('util');
 var stream = require('stream');
-// var chanceBuilder = require('./chanceBuilder');
-var format = require('util').format;
 var debug = require('debug')('dataset:generator');
 
 /**
@@ -77,9 +75,9 @@ DataStream.prototype.hasEnough = function (n) {
   return n <= this.restLength;
 };
 
-DataStream.prototype.toString = function () {
-  return format('<DataStream:%d/%d,%j>',
-    this.restLength, this.dataLength, this.schema.emit());
-};
+// DataStream.prototype.toString = function () {
+//   return format('<DataStream:%d/%d,%j>',
+//     this.restLength, this.dataLength, this.schema.emit());
+// };
 
 module.exports = DataStream;
