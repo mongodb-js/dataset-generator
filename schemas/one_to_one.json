@@ -1,9 +1,9 @@
 {
-  "name": "name",
+  "name": "{{chance.name()}}",
   "address": {
-    "street": "address",
-    "city": "city",
-    "state": "state",
-    "zip": "zip"
+    "street": "{{chance.address()}}",
+    "city": "{{chance.city()}}",
+    "state": "{{chance.state()}}",
+    "zip": "{{chance.zip({plusfour: true})}}"
   }
 }
