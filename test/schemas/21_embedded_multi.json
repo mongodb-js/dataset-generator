@@ -1,13 +1,13 @@
 {
-  "user_email": "email",
+  "user_email": "{{chance.email()}}",
   "job": {
-    "company": "word",
-    "phone": "phone",
-    "duties": "sentence"
+    "company": "{{chance.word()}}",
+    "phone": "{{chance.phone()}}",
+    "duties": "{{chance.sentence()}}"
   },
   "payment_method": {
-    "type": "cc_type",
-    "card": "cc",
-    "expiration": "exp"
+    "type": "{{chance.cc_type()}}",
+    "card": "{{chance.cc()}}",
+    "expiration": "{{chance.exp()}}"
   }
 }

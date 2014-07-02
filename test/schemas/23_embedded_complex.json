@@ -1,21 +1,21 @@
 {
-  "user_email": "email",
+  "user_email": "{{chance.email()}}",
   "job": {
-    "company": "word",
-    "phone": "phone",
-    "duties": "sentence"
+    "company": "{{chance.word()}}",
+    "phone": "{{chance.phone()}}",
+    "duties": "{{chance.sentence()}}"
   },
   "personalities": {
     "favorites": {
-      "number": "d10",
-      "city": "city",
-      "radio": "radio"
+      "number": "{{chance.d10()}}",
+      "city": "{{chance.city()}}",
+      "radio": "{{chance.radio()}}"
     },
-    "rating": "d6"
+    "rating": "{{chance.d6()}}"
   },
   "payment_method": {
-    "type": "cc_type",
-    "card": "cc",
-    "expiration": "exp"
+    "type": "{{chance.cc_type()}}",
+    "card": "{{chance.cc()}}",
+    "expiration": "{{chance.exp()}}"
   }
 }

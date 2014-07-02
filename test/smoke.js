@@ -66,8 +66,8 @@ describe('basic schema', function() {
     var opts = {
       size: 5,
       schema: {
-        username: 'name',
-        email: 'email'
+        username: '{{chance.name()}}',
+        email: '{{chance.email()}}'
       }
     };
     helper.getResults(opts, function (err, items) {
