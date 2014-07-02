@@ -1,12 +1,6 @@
 /* schema.js */
 var Chance = require('chance');
 var debug = require('debug')('dataset:schema');
-var _ = require('underscore');
-var chance;
-_.templateSettings = {
-  variable: 'data',
-  interpolate: /\{\{(.+?)\}\}/g
-};
 
 /**
  * A representation of schema specified by user that records the name and
@@ -36,6 +30,7 @@ function Schema (s) {
 /**
  * A utility method to build the mixin needed for the input schema
  */
+var chance;
 function buildMixin (schema) {
   debug('Start building schema -> %j', schema);
   chance = new Chance();

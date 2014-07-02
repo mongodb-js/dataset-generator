@@ -1,4 +1,3 @@
-var Chance = require('chance');
 var debug = require('debug')('dataset:schema');
 var _ = require('underscore');
 
@@ -6,11 +5,16 @@ _.templateSettings = {
   interpolate: /\{\{(.+?)\}\}/g
 };
 
+// random data
+var Chance = require('chance');
+var faker = require('faker');
+
 function Schema (sc) {
   if (!(this instanceof Schema)) return new Schema(sc);
   this._schema = new Document(sc, this);
   this._context = {
-    chance: new Chance()
+    chance: new Chance(),
+    faker: faker
   };
 }
 
