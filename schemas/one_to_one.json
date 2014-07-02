@@ -1,0 +1,9 @@
+{
+  "name": "name",
+  "address": {
+    "street": "address",
+    "city": "city",
+    "state": "state",
+    "zip": "zip"
+  }
+}
