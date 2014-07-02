@@ -14,7 +14,10 @@ function Schema (sc) {
   this._schema = new Document(sc, this);
   this._context = {
     chance: new Chance(),
-    faker: faker
+    faker: faker,
+    util: {
+      sample: _.sample
+    }
   };
 }
 

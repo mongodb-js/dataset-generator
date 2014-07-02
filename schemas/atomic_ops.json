@@ -2,8 +2,8 @@
   "title": "MongoDB: {{faker.Company.bs()}}",
   "author": [ "{{chance.name()}}" ],
   "published_date": "{{chance.date()}}",
-  "pages": "{{chance.integer({min: 0})}}",
-  "language": "{{util.pick(['English', 'Chinese'])}}",
+  "pages": "{{chance.natural({max: 500})}}",
+  "language": "{{util.sample(['English', 'Chinese'])}}",
   "publisher_id": "{{faker.Company.companyName()}}",
   "available": "{{chance.d10()}}",
   "checkout": [ {

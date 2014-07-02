@@ -1,0 +1,6 @@
+{ "title" : "{{faker.Company.catchPhrase()}}" ,
+  "author" : "{{chance.name()}}" ,
+  "published" : "{{chance.natural({min: 1800, max: 2014})}}" ,
+  "ISBN" : "{{chance.string({length: 10, pool: '1234567890'})}}" ,
+  "topics" : [ "{{chance.word()}}" ]
+}
