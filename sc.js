@@ -1,14 +1,17 @@
 var Chance = require('chance');
 var debug = require('debug')('dataset:schema');
 var _ = require('underscore');
-var chance;
+
 _.templateSettings = {
   interpolate: /\{\{(.+?)\}\}/g
 };
 
 function Schema (sc) {
   if (!(this instanceof Schema)) return new Schema(sc);
-  this._schema = new Document(sc);
+  this._schema = new Document(sc, this);
+  this._context = {
+    chance: new Chance()
+  };
 }
 
 Schema.prototype.emit = function () {
@@ -16,9 +19,10 @@ Schema.prototype.emit = function () {
 };
 
 // doc must be an object or an array of object
-function Document (document) {
-  if (!(this instanceof Document)) return new Document(document);
+function Document (document, schema) {
+  if (!(this instanceof Document)) return new Document(document, schema);
 
+  this._schema = schema;
   this._array = document instanceof Array;
   this._document = {};
   var doc = this._array ? document[0] : document;
@@ -26,9 +30,9 @@ function Document (document) {
     var data = doc[name];
     if (typeof data === 'string' ||
        (data instanceof Array && typeof data[0] === 'string')) {
-      this._document[name] = new Field(data);
+      this._document[name] = new Field(data, schema);
     } else {
-      this._document[name] = new Document(data);
+      this._document[name] = new Document(data, schema);
     }
   }
 }
@@ -54,9 +58,10 @@ Document.prototype.emit = function () {
 };
 
 // f must be string or an array of string
-function Field (f) {
-  if (!(this instanceof Field)) return new Field(f);
+function Field (f, schema) {
+  if (!(this instanceof Field)) return new Field(f, schema);
 
+  this._schema = schema;
   this._array = false;
   this._field = f;
   if (f instanceof Array) {
@@ -67,7 +72,7 @@ function Field (f) {
 }
 
 Field.prototype._produce = function () {
-  return this._compiled({});
+  return this._compiled(this._schema._context);
 };
 
 Field.prototype.emit = function () {
@@ -81,7 +86,5 @@ Field.prototype.emit = function () {
     return this._produce();
   }
 };
-
-var raw = { field: 'string', obj: { field: 'string' }, ar: ['string'], arobj: [{ field: 'string' }]}
 
 module.exports = Schema;
