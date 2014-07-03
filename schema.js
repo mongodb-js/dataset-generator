@@ -6,36 +6,13 @@ _.templateSettings = {
 };
 
 // random data
-var Chance = require('chance');
+var chance = require('chance').Chance();
 var faker = require('faker');
 
 function Schema (sc) {
   if (!(this instanceof Schema)) return new Schema(sc);
   this._schema = new Document(sc, this);
-  this._context = {
-    chance: new Chance(),
-    faker: faker,
-    Date: function (date) {
-      this._temp._objectMode = true;
-      this._temp._objectCnst = Date;
-      this._temp._objectArg = date;
-    },
-    counter: function (id, start, step) {
-      id = id || 0; // though id=0 is false, does not matter
-      if (typeof this._state.counter[id] === 'undefined') {
-        return (this._state.counter[id] = start || 0);
-      }
-      return (this._state.counter[id] += (step || 1));
-    },
-    util: {
-      sample: _.sample
-    },
-    _state: {
-      clock: 0,
-      counter: []
-    },
-    _temp: {}
-  };
+  this._context = new Context(this);
 }
 
 Schema.prototype.emit = function () {
@@ -116,6 +93,38 @@ Field.prototype.emit = function () {
   } else {
     return this._produce();
   }
+};
+
+// object that will pass into _.template
+function Context (host) {
+  if (!(this instanceof Context)) return new Context(host);
+
+  this._host = host;
+  this._temp = {};
+  this._state = {
+    counter: []
+  };
+
+  // need to add security feature
+  this.chance = chance;
+  this.faker = faker;
+  this.util = {
+    sample: _.sample
+  };
+}
+
+Context.prototype.Date = function (date) {
+  this._temp._objectMode = true;
+  this._temp._objectCnst = Date;
+  this._temp._objectArg = date;
+};
+
+Context.prototype.counter = function (id, start, step) {
+  id = id || 0; // though id=0 is false, does not matter
+  if (typeof this._state.counter[id] === 'undefined') {
+    return (this._state.counter[id] = start || 0);
+  }
+  return (this._state.counter[id] += (step || 1));
 };
 
 module.exports = Schema;
