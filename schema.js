@@ -11,7 +11,7 @@ var faker = require('faker');
 
 function Schema (sc) {
   if (!(this instanceof Schema)) return new Schema(sc);
-  this._schema = new Document(sc, this);
+  this._document = new Document(sc, this);
   this._context = new Context(this);
 }
 
@@ -20,7 +20,7 @@ Schema.prototype.getSchema = function () {
 }
 
 Schema.prototype.emit = function () {
-  return this._schema.emit();
+  return this._document.emit();
 };
 
 // doc must be an object or an array of object
@@ -28,15 +28,15 @@ function Document (document, parent) {
   if (!(this instanceof Document)) return new Document(document, parent);
   this._parent = parent;
   this._array = document instanceof Array;
-  this._document = {};
+  this._children = {};
   var doc = this._array ? document[0] : document;
   for (var name in doc) {
     var data = doc[name];
     if (typeof data === 'string' ||
        (data instanceof Array && typeof data[0] === 'string')) {
-      this._document[name] = new Field(data, this);
+      this._children[name] = new Field(data, this);
     } else {
-      this._document[name] = new Document(data, this);
+      this._children[name] = new Document(data, this);
     }
   }
 }
@@ -47,8 +47,8 @@ Document.prototype.getSchema = function () {
 
 Document.prototype._produce = function () {
   var data = {};
-  for (var name in this._document) {
-    data[name] = this._document[name].emit();
+  for (var name in this._children) {
+    data[name] = this._children[name].emit();
   }
   return data;
 };
