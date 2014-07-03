@@ -1,0 +1,50 @@
+{
+  "name": "mongodb-datasets",
+  "intro": "Welcome! I'm the tool you will use to get data into your db!",
+  "repo": "https://github.com/imlucas/mongodb-datasets",
+  "usage": "coming soon",
+  "features": {
+    "structural": {
+      "flat": "just an ordinary field",
+      "doc": {
+        "intro": "hey my parent is a document!"
+      },
+      "flat_array": [ "a lonely element in array, but just for now" ],
+      "doc_array": [{
+        "intro": "not any way better, a lonely doc"
+      }],
+      "embedded": {
+        "doc": {
+          "whoops": "I'm already 4-level embedded, no need to show again"
+        },
+        "array": [
+          [ "I have no idea why my master made an array of arrays" ]
+        ]
+      }
+    },
+    "data_generator": {
+      "string": "I'm not a string",
+      "random_string": {
+        "chancejs": {
+          "doc": "http://chancejs.com/",
+          "eg": "{{chance.name({male: true})}}"
+        },
+        "faker": {
+          "repo": "https://github.com/FotoVerite/Faker.js",
+          "eg": "{{faker.Company.catchPhrase()}}"
+        }
+      },
+      "object": {
+        "ISODate": "{{Date(chance.date())}}"
+      },
+      "useful_gadgets": {
+        "sample": "{{util.sample(['1', '2', '3'])}}",
+        "counter": "{{counter(0, 0, 1)}}"
+      },
+      "combination": "I'm {{counter(1, 10, 1)}}-year-old! I grow fast!",
+      "more": "still adding more functions!"
+    },
+    "data_importer": "coming soon"
+  },
+  "version": "v0.0.0"
+}

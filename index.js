@@ -2,7 +2,6 @@ var debug = require('debug')('dataset:index');
 var Inserter = require('./inserter');
 var helper = require('./helper');
 var Generator = require('./generator');
-// var Schema = require('./schema');
 var Schema = require('./schema');
 
 // assume these are the user input
