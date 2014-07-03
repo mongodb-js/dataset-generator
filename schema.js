@@ -15,15 +15,18 @@ function Schema (sc) {
   this._context = new Context(this);
 }
 
+Schema.prototype.getSchema = function () {
+  return this;
+}
+
 Schema.prototype.emit = function () {
   return this._schema.emit();
 };
 
 // doc must be an object or an array of object
-function Document (document, schema) {
-  if (!(this instanceof Document)) return new Document(document, schema);
-
-  this._schema = schema;
+function Document (document, parent) {
+  if (!(this instanceof Document)) return new Document(document, parent);
+  this._parent = parent;
   this._array = document instanceof Array;
   this._document = {};
   var doc = this._array ? document[0] : document;
@@ -31,11 +34,15 @@ function Document (document, schema) {
     var data = doc[name];
     if (typeof data === 'string' ||
        (data instanceof Array && typeof data[0] === 'string')) {
-      this._document[name] = new Field(data, schema);
+      this._document[name] = new Field(data, this);
     } else {
-      this._document[name] = new Document(data, schema);
+      this._document[name] = new Document(data, this);
     }
   }
+}
+
+Document.prototype.getSchema = function () {
+  return this._parent.getSchema();
 }
 
 Document.prototype._produce = function () {
@@ -59,10 +66,9 @@ Document.prototype.emit = function () {
 };
 
 // field must be string or an array of string
-function Field (field, schema) {
-  if (!(this instanceof Field)) return new Field(field, schema);
-
-  this._schema = schema;
+function Field (field, parent) {
+  if (!(this instanceof Field)) return new Field(field, parent);
+  this._parent = parent;
   this._array = false;
   this._field = field;
   if (field instanceof Array) {
@@ -72,11 +78,15 @@ function Field (field, schema) {
   this._compiled = _.template(this._field);
 }
 
+Field.prototype.getSchema = function () {
+  return this._parent.getSchema();
+}
+
 Field.prototype._produce = function () {
-  this._schema._context._temp = {};
-  var res = this._compiled(this._schema._context);
-  if (this._schema._context._temp._objectMode) {
-    var temp = this._schema._context._temp;
+  this.getSchema()._context._temp = {};
+  var res = this._compiled(this.getSchema()._context);
+  if (this.getSchema()._context._temp._objectMode) {
+    var temp = this.getSchema()._context._temp;
     return new temp._objectCnst(temp._objectArg);
   } else {
     return res;
@@ -98,19 +108,18 @@ Field.prototype.emit = function () {
 // object that will pass into _.template
 function Context (host) {
   if (!(this instanceof Context)) return new Context(host);
-
   this._host = host;
   this._temp = {};
   this._state = {
     counter: []
   };
+  this.util = {
+    sample: _.sample
+  };
 
   // need to add security feature
   this.chance = chance;
   this.faker = faker;
-  this.util = {
-    sample: _.sample
-  };
 }
 
 Context.prototype.Date = function (date) {
