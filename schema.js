@@ -1,4 +1,5 @@
 var debug = require('debug')('dataset:schema');
+var mongo = require('mongodb');
 var _ = require('underscore');
 
 _.templateSettings = {
@@ -85,12 +86,8 @@ Field.prototype.getSchema = function () {
 Field.prototype._produce = function () {
   this.getSchema()._context._temp = {};
   var res = this._compiled(this.getSchema()._context);
-  if (this.getSchema()._context._temp._objectMode) {
-    var temp = this.getSchema()._context._temp;
-    return new temp._objectCnst(temp._objectArg);
-  } else {
-    return res;
-  }
+  var alt = this.getSchema()._context._temp.override;
+  return (typeof alt === 'undefined') ? res : alt;
 };
 
 Field.prototype.emit = function () {
@@ -100,16 +97,18 @@ Field.prototype.emit = function () {
       data.push(this._produce());
     }
     return data;
-  } else {
-    return this._produce();
   }
+  return this._produce();
 };
 
 // object that will pass into _.template
 function Context (host) {
   if (!(this instanceof Context)) return new Context(host);
+  // security issues, what if users call _host?
   this._host = host;
-  this._temp = {};
+  this._temp = {
+    override: undefined // if present, used to override the template output
+  };
   this._state = {
     counter: []
   };
@@ -122,12 +121,6 @@ function Context (host) {
   this.faker = faker;
 }
 
-Context.prototype.Date = function (date) {
-  this._temp._objectMode = true;
-  this._temp._objectCnst = Date;
-  this._temp._objectArg = date;
-};
-
 Context.prototype.counter = function (id, start, step) {
   id = id || 0; // though id=0 is false, does not matter
   if (typeof this._state.counter[id] === 'undefined') {
@@ -135,5 +128,34 @@ Context.prototype.counter = function (id, start, step) {
   }
   return (this._state.counter[id] += (step || 1));
 };
+
+// all supported data types
+Context.prototype.Double = function (i) {
+  this._temp.override = Number(i);
+}
+Context.prototype.Boolean = function (b) {
+  this._temp.override = Boolean(b);
+}
+Context.prototype.String = function (s) {
+  this._temp.override = String(s);
+}
+Context.prototype.Date = function (d) {
+  this._temp.override = new Date(d);
+};
+Context.prototype.NumberLong = function (i) {
+  this._temp.override = new mongo.Long(i);
+}
+Context.prototype.MinKey = function () {
+  this._temp.override = new mongo.MinKey();
+}
+Context.prototype.MaxKey = function () {
+  this._temp.override = new mongo.MaxKey();
+}
+Context.prototype.Timestamp = function () {
+  this._temp.override = new mongo.Timestamp();
+}
+Context.prototype.ObjectID = function (i) {
+  this._temp.override = new mongo.ObjectID(i);
+}
 
 module.exports = Schema;
