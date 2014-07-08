@@ -17,9 +17,9 @@
         "doc": {
           "whoops": "I'm already 4-level embedded, no need to show again"
         },
-        "array": [
-          [ "I have no idea why my master made an array of arrays" ]
-        ]
+        "array": [{
+          "son": [ "I have no idea why my master made an array of arrays" ]
+        }]
       }
     },
     "data_generator": {
