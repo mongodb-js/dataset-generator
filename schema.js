@@ -18,7 +18,7 @@ function Schema (sc) {
 
 Schema.prototype.getSchema = function () {
   return this;
-}
+};
 
 Schema.prototype.emit = function () {
   return this._document.emit();
@@ -44,7 +44,7 @@ function Document (document, parent) {
 
 Document.prototype.getSchema = function () {
   return this._parent.getSchema();
-}
+};
 
 Document.prototype._produce = function () {
   var data = {};
@@ -69,7 +69,7 @@ Document.prototype.emit = function () {
 // field must be string or an array of string
 function Field (field, parent) {
   if (!(this instanceof Field)) return new Field(field, parent);
-  debug("building field", field);
+  debug('building field', field);
   this._parent = parent;
   this._array = false;
   this._field = field;
@@ -82,7 +82,7 @@ function Field (field, parent) {
 
 Field.prototype.getSchema = function () {
   return this._parent.getSchema();
-}
+};
 
 Field.prototype._produce = function () {
   this.getSchema()._context._temp = {};
@@ -133,30 +133,30 @@ Context.prototype.counter = function (id, start, step) {
 // all supported data types
 Context.prototype.Double = function (i) {
   this._temp.override = Number(i);
-}
+};
 Context.prototype.Boolean = function (b) {
   this._temp.override = Boolean(b);
-}
+};
 Context.prototype.String = function (s) {
   this._temp.override = String(s);
-}
+};
 Context.prototype.Date = function (d) {
   this._temp.override = new Date(d);
 };
 Context.prototype.NumberLong = function (i) {
   this._temp.override = new bson.Long(i);
-}
+};
 Context.prototype.MinKey = function () {
   this._temp.override = new bson.MinKey();
-}
+};
 Context.prototype.MaxKey = function () {
   this._temp.override = new bson.MaxKey();
-}
+};
 Context.prototype.Timestamp = function () {
   this._temp.override = new bson.Timestamp();
-}
+};
 Context.prototype.ObjectID = function (i) {
   this._temp.override = new bson.ObjectId(i);
-}
+};
 
 module.exports = Schema;
