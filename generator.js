@@ -23,7 +23,6 @@ function DataStream (schema, dataLength) {
   this.dataLength = dataLength;
   this.restLength = dataLength;
   this.schema = schema;
-  // this.chance = schema.chance;
 
   // log
   debug('OP: DataStream successfully built');
@@ -58,7 +57,6 @@ DataStream.prototype.next = function (step) {
   step = Math.min(step, this.restLength);
   this.restLength -= step;
   for (i = 0; i < step; i++) {
-    // data.push(this.chance._0());
     data.push(this.schema.emit());
   }
 
@@ -74,10 +72,5 @@ DataStream.prototype.hasNext = function () {
 DataStream.prototype.hasEnough = function (n) {
   return n <= this.restLength;
 };
-
-// DataStream.prototype.toString = function () {
-//   return format('<DataStream:%d/%d,%j>',
-//     this.restLength, this.dataLength, this.schema.emit());
-// };
 
 module.exports = DataStream;

@@ -1,6 +1,8 @@
 var debug = require('debug')('dataset:schema');
 var _ = require('underscore');
 var bson = require('bson');
+var util = require('util');
+var stream = require('stream');
 
 _.templateSettings = {
   interpolate: /\{\{(.+?)\}\}/g
@@ -12,9 +14,11 @@ var faker = require('faker');
 
 function Schema (sc) {
   if (!(this instanceof Schema)) return new Schema(sc);
+  stream.Readable.call(this, {objectMode: true});
   this._document = new Document(sc, this);
   this._context = new Context(this);
 }
+util.inherits(Schema, stream.Readable);
 
 Schema.prototype.getSchema = function () {
   return this;
@@ -24,9 +28,14 @@ Schema.prototype.emit = function () {
   return this._document.emit();
 };
 
+Schema.prototype._read = function (n) {
+  this.push(this._document.read(n));
+};
+
 // doc must be an object or an array of object
 function Document (document, parent) {
   if (!(this instanceof Document)) return new Document(document, parent);
+  stream.Readable.call(this, {objectMode: true});
   this._parent = parent;
   this._array = Array.isArray(document);
   this._children = {};
@@ -41,6 +50,7 @@ function Document (document, parent) {
     }
   }
 }
+util.inherits(Document, stream.Readable);
 
 Document.prototype.getSchema = function () {
   return this._parent.getSchema();
@@ -66,10 +76,15 @@ Document.prototype.emit = function () {
   }
 };
 
+Document.prototype._read = function (n) {
+  this.push(this.emit());
+};
+
 // field must be string or an array of string
 function Field (field, parent) {
   if (!(this instanceof Field)) return new Field(field, parent);
   debug('building field', field);
+  stream.Readable.call(this, {objectMode: true});
   this._parent = parent;
   this._array = false;
   this._field = field;
@@ -79,6 +94,7 @@ function Field (field, parent) {
   }
   this._compiled = _.template(this._field);
 }
+util.inherits(Field, stream.Readable);
 
 Field.prototype.getSchema = function () {
   return this._parent.getSchema();
@@ -100,6 +116,10 @@ Field.prototype.emit = function () {
     return data;
   }
   return this._produce();
+};
+
+Document.prototype._read = function (n) {
+  this.push(this.emit());
 };
 
 // object that will pass into _.template

@@ -6,6 +6,8 @@
  */
 
 var async = require('async');
+var stream = require('stream');
+var util = require('util');
 var debug = require('debug')('dataset:inserter');
 var debugDb = require('debug')('dataset:inserter:db');
 var debugQ = require('debug')('dataset:inserter:queue');
@@ -21,6 +23,7 @@ function Inserter (collection, dataStream, callback) {
   if (!(this instanceof Inserter)) {
     return new Inserter(collection, dataStream, callback);
   }
+  stream.Writable.call(this, {objectMode: true});
 
   // main component
   this._callback = callback;
@@ -67,6 +70,7 @@ function Inserter (collection, dataStream, callback) {
 
   debug('INFO: Successfully built the inserter');
 }
+util.inherits(Inserter, stream.Writable);
 
 Inserter.prototype.start = function () {
   debug('INFO: Inserter starts working');
@@ -112,7 +116,7 @@ Inserter.prototype._refill = function () {
     function (callback) { // task function
       var task = {
         id: ++that._taskCounter,
-        data: that._dataStream.next(that._bulkSize)
+        data: that._dataStream.read(that._bulkSize)
       };
       debugQ('OP: pushing task %d into queue', task.id);
       that._queue.push(task, function (err) {
