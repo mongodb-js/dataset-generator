@@ -1,6 +1,6 @@
 var debug = require('debug')('dataset:schema');
-var mongo = require('mongodb');
 var _ = require('underscore');
+var bson = require('bson');
 
 _.templateSettings = {
   interpolate: /\{\{(.+?)\}\}/g
@@ -28,13 +28,13 @@ Schema.prototype.emit = function () {
 function Document (document, parent) {
   if (!(this instanceof Document)) return new Document(document, parent);
   this._parent = parent;
-  this._array = document instanceof Array;
+  this._array = Array.isArray(document);
   this._children = {};
   var doc = this._array ? document[0] : document;
   for (var name in doc) {
     var data = doc[name];
     if (typeof data === 'string' ||
-       (data instanceof Array && typeof data[0] === 'string')) {
+       (Array.isArray(data) && typeof data[0] === 'string')) {
       this._children[name] = new Field(data, this);
     } else {
       this._children[name] = new Document(data, this);
@@ -69,10 +69,11 @@ Document.prototype.emit = function () {
 // field must be string or an array of string
 function Field (field, parent) {
   if (!(this instanceof Field)) return new Field(field, parent);
+  debug("building field", field);
   this._parent = parent;
   this._array = false;
   this._field = field;
-  if (field instanceof Array) {
+  if (Array.isArray(field)) {
     this._array = true;
     this._field = field[0];
   }
@@ -143,19 +144,19 @@ Context.prototype.Date = function (d) {
   this._temp.override = new Date(d);
 };
 Context.prototype.NumberLong = function (i) {
-  this._temp.override = new mongo.Long(i);
+  this._temp.override = new bson.Long(i);
 }
 Context.prototype.MinKey = function () {
-  this._temp.override = new mongo.MinKey();
+  this._temp.override = new bson.MinKey();
 }
 Context.prototype.MaxKey = function () {
-  this._temp.override = new mongo.MaxKey();
+  this._temp.override = new bson.MaxKey();
 }
 Context.prototype.Timestamp = function () {
-  this._temp.override = new mongo.Timestamp();
+  this._temp.override = new bson.Timestamp();
 }
 Context.prototype.ObjectID = function (i) {
-  this._temp.override = new mongo.ObjectID(i);
+  this._temp.override = new bson.ObjectId(i);
 }
 
 module.exports = Schema;
