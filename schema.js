@@ -16,7 +16,10 @@ function Schema (sc) {
   if (!(this instanceof Schema)) return new Schema(sc);
   stream.Readable.call(this, {objectMode: true});
   this._document = new Document(sc, this);
-  this._context = new Context(this);
+  // this._context = new Context(this);
+  this._state = { // serve as global state
+    counter: []
+  };
 }
 util.inherits(Schema, stream.Readable);
 
@@ -37,6 +40,7 @@ function Document (document, parent) {
   if (!(this instanceof Document)) return new Document(document, parent);
   stream.Readable.call(this, {objectMode: true});
   this._parent = parent;
+  this._context = new Context(this);
   this._array = Array.isArray(document);
   this._children = {};
   var doc = this._array ? document[0] : document;
@@ -101,21 +105,27 @@ Field.prototype.getSchema = function () {
 };
 
 Field.prototype._produce = function () {
-  this.getSchema()._context._temp = {};
-  var res = this._compiled(this.getSchema()._context);
-  var alt = this.getSchema()._context._temp.override;
+  // this.getSchema()._context._temp = {};
+  // var res = this._compiled(this.getSchema()._context);
+  // var alt = this.getSchema()._context._temp.override;
+  this._parent._context._temp = {};
+  var res = this._compiled(this._parent._context);
+  var alt = this._parent._context._temp.override;
   return (typeof alt === 'undefined') ? res : alt;
 };
 
 Field.prototype.emit = function () {
+  var data;
   if (this._array) {
-    var data = [];
+    data = [];
     for (var i = _.random(1, 3); i > 0; i--) {
       data.push(this._produce());
     }
     return data;
+  } else {
+    data = this._produce();
   }
-  return this._produce();
+  return data;
 };
 
 Document.prototype._read = function (n) {
@@ -131,7 +141,7 @@ function Context (host) {
     override: undefined // if present, used to override the template output
   };
   this._state = {
-    counter: []
+    // counter: []
   };
   this.util = {
     sample: _.sample
@@ -144,10 +154,15 @@ function Context (host) {
 
 Context.prototype.counter = function (id, start, step) {
   id = id || 0; // though id=0 is false, does not matter
-  if (typeof this._state.counter[id] === 'undefined') {
-    return (this._state.counter[id] = start || 0);
+  // if (typeof this._state.counter[id] === 'undefined') {
+  //   return (this._state.counter[id] = start || 0);
+  // }
+  // return (this._state.counter[id] += (step || 1));
+  var counter = this._host.getSchema()._state.counter; //pointer
+  if (typeof counter[id] === 'undefined') {
+    return (counter[id] = start || 0);
   }
-  return (this._state.counter[id] += (step || 1));
+  return (counter[id] += (step || 1));
 };
 
 // all supported data types
