@@ -112,7 +112,7 @@ function Field (field, parent) {
     this._array = true;
     this._field = field[0];
   }
-  this._compiled = _.template(this._field);
+  this._compiled = _.bind(_.template(this._field), this._parent._scope);
 }
 util.inherits(Field, stream.Readable);
 
@@ -125,7 +125,8 @@ Field.prototype._produce = function () {
   // var res = this._compiled(this.getRoot()._context);
   // var alt = this.getRoot()._context._temp.override;
   this._parent._context._temp = {};
-  var res = this._compiled.call(this._parent._scope, this._parent._context);
+  // var res = this._compiled.call(this._parent._scope, this._parent._context);
+  var res = this._compiled(this._parent._context);
   var alt = this._parent._context._temp.override;
   return (typeof alt === 'undefined') ? res : alt;
 };
