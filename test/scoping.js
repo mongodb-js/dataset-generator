@@ -7,7 +7,7 @@ describe('scoping', function() {
     var opts = {
       size: 1,
       schema: {
-        'greetings': '{{"This is " + this.name}}',
+        'greetings': 'This is {{this.name}}',
         'name': '{{chance.name()}}',
         'zip': '00000',
         'full_zip': '{{this.zip+"-0000"}}',
