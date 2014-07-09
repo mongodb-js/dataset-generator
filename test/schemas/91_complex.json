@@ -1,23 +1,23 @@
 {
-  "user_email": "email",
+  "user_email": "{{chance.email()}}",
   "job": {
-    "company": "word",
+    "company": "{{chance.word()}}",
     "phones": {
-      "mobile": "phone",
-      "work": "phone"
+      "mobile": "{{chance.phone()}}",
+      "work": "{{chance.phone()}}"
     },
-    "duties": "sentence"
+    "duties": "{{chance.sentence()}}"
   },
   "personalities": {
     "favorites": {
-      "number": "d10",
-      "city": "city",
-      "radio": "radio"
+      "number": "{{chance.d10()}}",
+      "city": "{{chance.city()}}",
+      "radio": "{{chance.radio()}}"
     },
-    "violence-rating": "d6"
+    "violence-rating": "{{chance.d6()}}"
   },
   "friends" : [{
-    "name": "name",
-    "phones": ["phone"]
+    "name": "{{chance.name()}}",
+    "phones": ["{{chance.phone()}}"]
   }]
 }

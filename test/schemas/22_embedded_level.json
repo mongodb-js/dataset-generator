@@ -1,11 +1,11 @@
 {
-  "user_email": "email",
+  "user_email": "{{chance.email()}}",
   "personalities": {
     "favorites": {
-      "number": "d10",
-      "city": "city",
-      "radio": "radio"
+      "number": "{{chance.d10()}}",
+      "city": "{{chance.city()}}",
+      "radio": "{{chance.radio()}}"
     },
-    "rating": "d6"
+    "rating": "{{chance.d6()}}"
   }
 }

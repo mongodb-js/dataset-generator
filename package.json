@@ -13,8 +13,10 @@
     "mongodb": "^1.4.0",
     "minimist": "^0.1.0",
     "async": "^0.8.0",
-    "algorithms": "^0.4.0",
-    "mongodb-uri": "^0.9.7"
+    "mongodb-uri": "^0.9.7",
+    "underscore": "^1.6.0",
+    "faker": "^1.0.0",
+    "bson": "^0.2.9"
   },
   "devDependencies": {
     "mocha": "^1.17.1",

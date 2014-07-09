@@ -1,11 +1,11 @@
 {
-  "name": "name",
+  "name": "{{chance.name()}}",
   "friends": [{
-    "name": "name",
+    "name": "{{chance.name()}}",
     "payment_method": {
-      "type": "cc_type",
-      "card": "cc",
-      "expiration": "exp"
+      "type": "{{chance.cc_type()}}",
+      "card": "{{chance.cc()}}",
+      "expiration": "{{chance.exp()}}"
     }
   }]
 }

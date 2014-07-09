@@ -1,4 +1,4 @@
 {
-  "name": "name",
-  "friends": [ "name" ]
+  "name": "{{chance.name()}}",
+  "friends": [ "{{chance.name()}}" ]
 }

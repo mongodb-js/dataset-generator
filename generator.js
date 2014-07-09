@@ -7,8 +7,6 @@
 
 var util = require('util');
 var stream = require('stream');
-var chanceBuilder = require('./chanceBuilder');
-var format = require('util').format;
 var debug = require('debug')('dataset:generator');
 
 /**
@@ -24,7 +22,7 @@ function DataStream (schema, dataLength) {
   stream.Readable.call(this, {objectMode: true});
   this.dataLength = dataLength;
   this.restLength = dataLength;
-  this.chance = chanceBuilder(schema);
+  this.schema = schema;
 
   // log
   debug('OP: DataStream successfully built');
@@ -59,7 +57,7 @@ DataStream.prototype.next = function (step) {
   step = Math.min(step, this.restLength);
   this.restLength -= step;
   for (i = 0; i < step; i++) {
-    data.push(this.chance._0());
+    data.push(this.schema.emit());
   }
 
   debug('OP: DataStream emitted %d docs, %d left', step, this.restLength);
@@ -73,11 +71,6 @@ DataStream.prototype.hasNext = function () {
 
 DataStream.prototype.hasEnough = function (n) {
   return n <= this.restLength;
-};
-
-DataStream.prototype.toString = function () {
-  return format('<DataStream:%d/%d,%j>',
-    this.restLength, this.dataLength, this.chance._0());
 };
 
 module.exports = DataStream;

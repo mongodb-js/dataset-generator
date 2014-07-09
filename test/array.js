@@ -33,7 +33,7 @@ describe('array of primitive types', function() {
   it('should produce correct schema structure', function () {
     res.items.forEach(function (item) {
       Joi.validate(item, expected.schema, function(err, val) {
-        assert.equal(null, err);
+        assert.ifError(err);
       });
     });
   });
@@ -91,7 +91,7 @@ describe('array of documents', function() {
   it('should produce correct schema structure', function () {
     res.items.forEach(function (item) {
       Joi.validate(item, expected.schema, function(err, val) {
-        assert.equal(null, err);
+        assert.ifError(err);
       });
     });
   });
@@ -153,7 +153,7 @@ describe('array of embedded docs', function() {
   it('should produce correct schema structure', function () {
     res.items.forEach(function (item) {
       Joi.validate(item, expected.schema, function(err, val) {
-        assert.equal(null, err);
+        assert.ifError(err);
       });
     });
   });
@@ -215,7 +215,7 @@ describe('embedded arrays', function() {
   it('should produce correct schema structure', function () {
     res.items.forEach(function (item) {
       Joi.validate(item, expected.schema, function(err, val) {
-        assert.equal(null, err);
+        assert.ifError(err);
       });
     });
   });
