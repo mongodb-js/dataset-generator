@@ -6,9 +6,105 @@ What's a database without any data?
 
 ## Example
 
-```javascript
-// @todo
+Example _schema.json_:
+```json
+{
+  "user_email": "{{chance.email()}}",
+  "job": {
+    "company": "{{chance.word()}}",
+    "phones": {
+      "mobile": "{{chance.phone()}}",
+      "work": "{{chance.phone()}}"
+    },
+    "duties": "{{chance.sentence()}}"
+  },
+  "personalities": {
+    "favorites": {
+      "number": "{{chance.d10()}}",
+      "city": "{{chance.city()}}",
+      "radio": "{{chance.radio()}}"
+    },
+    "violence-rating": "{{chance.d6()}}"
+  },
+  "friends" : [{
+    "name": "{{chance.name()}}",
+    "phones": ["{{chance.phone()}}"]
+  }]
+}
 ```
+
+Example _app.js_:
+```javascript
+var datasets = require('mongodb-datasets');
+var opts = {
+  host: 'localhost',
+  port: '27017',
+  db: 'test',
+  collection: 'dataset',
+  schema: './schema.json',
+  size: 5
+};
+
+datasets(opts, function () {
+  console.log('Done! Check out the collection you specified!');
+});
+```
+
+Sample entry in the collection:
+```javascript
+{
+  "_id" : ObjectId("53a89211734538741c4bde5e"),
+  "user_email" : "jofowpat@asose.edu",
+  "job" : {
+    "company" : "wapez",
+    "phones" : {
+      "mobile" : "(311) 692-8852",
+      "work" : "(417) 927-3203"
+    },
+    "duties" : "Hu zaib diftu jujepme joulemo gib jip oboto."
+  },
+  "personalities" : {
+    "favorites" : {
+      "number" : 5,
+      "city" : "Hapkugbub",
+      "radio" : "KCWL"
+    },
+    "violence-rating" : 3
+  },
+  "friends" : [
+    {
+      "name" : "Edna Perez",
+      "phones" : [
+        "(313) 206-6936",
+        "(924) 655-6886"
+      ]
+    },
+    {
+      "name" : "Etta Parsons",
+      "phones" : [
+        "(719) 313-2275",
+        "(545) 706-7688"
+      ]
+    },
+    {
+      "name" : "Thomas Cummings",
+      "phones" : [
+        "(343) 550-2924",
+        "(205) 513-1057",
+        "(388) 242-1740"
+      ]
+    },
+    {
+      "name" : "Maria Hunter",
+      "phones" : [
+        "(501) 629-3251"
+      ]
+    }
+  ]
+}
+```
+
+## Usage
 
 ## Overview
 
@@ -27,11 +123,11 @@ establish MongoDB as a leader in this emerging market.
 
 ## Milestones
 
+- [x] Set up generalizable skeleton code that abstracts each module
+- [x] Support user defined schemas with arbitrary structure
 - [ ] Collect example schemas from documentation
-- [ ] Generate random data to populate the example schemas
+- [ ] Extend the current code base to support replicating common datasets
 - [ ] Select datasets to add support for prototyping
-- [ ] Design efficient schemas for the selected datasets
-- [ ] Scripts to import from data sources to specified user database
 
 ## Implementation Plan
 
@@ -53,21 +149,24 @@ establish MongoDB as a leader in this emerging market.
 + Add peripheral support for individual schemas, based on the skeleton
   1. identify types and/or reasonable range for data in each field
   2. write up configuration files for each schema
++ Enhance user experience
+  1. generate user defined (as opposed to random) data, such as
+     constant strings, enums, and incrementor
+  2. allow user pass in config arguments to underlying Chance.js methods
 + @todo: plans for replicating datasets
 
 ## Resources
 
-+ Random data generator
-  * MongoDB official doc: [Generate Test Data](http://docs.mongodb.org/manual/tutorial/generate-test-data)
-  * community question [random k-v pair](https://groups.google.com/forum/#!topic/mongodb-user/o0AmMt9i3Zc)
-  * API: [chance.js](http://chancejs.com/)
++ Some handy references
+  * [Chance.js](http://chancejs.com/)
+  * [Joi](https://github.com/spumko/joi)
+  * [Node.js Stream](http://nodejs.org/api/stream.html)
+  * [Async](https://github.com/caolan/async)
+  * [Stream Handbook](https://github.com/substack/stream-handbook)
 
-+ Schema Design
++ Other potential userful docs
+  * MongoDB official doc: [Generate Test Data](http://docs.mongodb.org/manual/tutorial/generate-test-data)
   * [Time Series](http://blog.mongodb.org/post/65517193370/schema-design-for-time-series-data-in-mongodb)[same topic ppt](http://www.mongodb.com/presentations/webinar-time-series-data-mongodb)
-    1. granularity: a doc per hour or min or event, level of embedded
-    2. sparse data?
-    3. capped collection?
-    - notes: [Cassandra](http://stackoverflow.com/questions/11166441/nosql-for-time-series-logged-instrument-reading-data-that-is-also-versioned)
   * [User Management](http://www.slideshare.net/mongodb/webinar-user-data-management-with-mongodb)
 
 ## License
