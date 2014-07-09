@@ -23,12 +23,12 @@ function Schema (sc) {
 }
 util.inherits(Schema, stream.Readable);
 
-Schema.prototype.getSchema = function () {
+Schema.prototype.getRoot = function () {
   return this;
 };
 
-Schema.prototype.emit = function () {
-  return this._document.emit();
+Schema.prototype.next = function () {
+  return this._document.next();
 };
 
 Schema.prototype._read = function (n) {
@@ -56,19 +56,19 @@ function Document (document, parent) {
 }
 util.inherits(Document, stream.Readable);
 
-Document.prototype.getSchema = function () {
-  return this._parent.getSchema();
+Document.prototype.getRoot = function () {
+  return this._parent.getRoot();
 };
 
 Document.prototype._produce = function () {
   var data = {};
   for (var name in this._children) {
-    data[name] = this._children[name].emit();
+    data[name] = this._children[name].next();
   }
   return data;
 };
 
-Document.prototype.emit = function () {
+Document.prototype.next = function () {
   if (this._array) {
     var data = [];
     for (var i = _.random(1, 3); i > 0; i--) {
@@ -81,7 +81,7 @@ Document.prototype.emit = function () {
 };
 
 Document.prototype._read = function (n) {
-  this.push(this.emit());
+  this.push(this.next());
 };
 
 // field must be string or an array of string
@@ -100,28 +100,27 @@ function Field (field, parent) {
 }
 util.inherits(Field, stream.Readable);
 
-Field.prototype.getSchema = function () {
-  return this._parent.getSchema();
+Field.prototype.getRoot = function () {
+  return this._parent.getRoot();
 };
 
 Field.prototype._produce = function () {
-  // this.getSchema()._context._temp = {};
-  // var res = this._compiled(this.getSchema()._context);
-  // var alt = this.getSchema()._context._temp.override;
+  // this.getRoot()._context._temp = {};
+  // var res = this._compiled(this.getRoot()._context);
+  // var alt = this.getRoot()._context._temp.override;
   this._parent._context._temp = {};
   var res = this._compiled(this._parent._context);
   var alt = this._parent._context._temp.override;
   return (typeof alt === 'undefined') ? res : alt;
 };
 
-Field.prototype.emit = function () {
+Field.prototype.next = function () {
   var data;
   if (this._array) {
     data = [];
     for (var i = _.random(1, 3); i > 0; i--) {
       data.push(this._produce());
     }
-    return data;
   } else {
     data = this._produce();
   }
@@ -129,7 +128,7 @@ Field.prototype.emit = function () {
 };
 
 Document.prototype._read = function (n) {
-  this.push(this.emit());
+  this.push(this.next());
 };
 
 // object that will pass into _.template
@@ -158,7 +157,7 @@ Context.prototype.counter = function (id, start, step) {
   //   return (this._state.counter[id] = start || 0);
   // }
   // return (this._state.counter[id] += (step || 1));
-  var counter = this._host.getSchema()._state.counter; //pointer
+  var counter = this._host.getRoot()._state.counter; //pointer
   if (typeof counter[id] === 'undefined') {
     return (counter[id] = start || 0);
   }

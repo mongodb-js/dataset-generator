@@ -57,7 +57,7 @@ DataStream.prototype.next = function (step) {
   step = Math.min(step, this.restLength);
   this.restLength -= step;
   for (i = 0; i < step; i++) {
-    data.push(this.schema.emit());
+    data.push(this.schema.next());
   }
 
   debug('OP: DataStream emitted %d docs, %d left', step, this.restLength);
