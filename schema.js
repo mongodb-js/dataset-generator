@@ -16,7 +16,7 @@ function Schema (sc) {
   if (!(this instanceof Schema)) return new Schema(sc);
   stream.Readable.call(this, {objectMode: true});
   this._document = new Document(sc, this);
-  // this._context = new Context(this);
+  // this._context = new Context(this); // should not call Schema's context
   this._state = { // serve as global state
     counter: []
   };
@@ -131,9 +131,6 @@ Field.prototype._clean = function () {
   this._currVal = undefined;
 };
 Field.prototype._produce = function () {
-  // this.getRoot()._context._temp = {};
-  // var res = this._compiled(this.getRoot()._context);
-  // var alt = this.getRoot()._context._temp.override;
   this._parent._context._temp = {};
   var res = this._compiled.call(this._parent._currVal, this._parent._context);
   var alt = this._parent._context._temp.override;
@@ -182,10 +179,6 @@ function Context (host) {
 
 Context.prototype.counter = function (id, start, step) {
   id = id || 0; // though id=0 is false, does not matter
-  // if (typeof this._state.counter[id] === 'undefined') {
-  //   return (this._state.counter[id] = start || 0);
-  // }
-  // return (this._state.counter[id] += (step || 1));
   var counter = this._host.getRoot()._state.counter; //pointer
   if (typeof counter[id] === 'undefined') {
     return (counter[id] = start || 0);
