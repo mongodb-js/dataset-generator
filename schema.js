@@ -111,15 +111,23 @@ function Field (field, parent) {
   debug('building field', field);
   stream.Readable.call(this, {objectMode: true});
   this._parent = parent;
-  this._array = false;
-  this._field = field;
-  this._passVal = undefined;
+  this._prevVal = undefined;
   this._currVal = undefined;
+
   if (Array.isArray(field)) {
     this._array = true;
     this._field = field[0];
+  } else {
+    this._array = false;
+    this._field = field;
   }
-  this._compiled = _.template(this._field);
+
+  if (typeof this._field !== 'string') {
+    var self = this;
+    this._compiled = function () { return self._field; };
+  } else {
+    this._compiled = _.template(this._field);
+  }
 }
 util.inherits(Field, stream.Readable);
 
@@ -150,7 +158,9 @@ Field.prototype.next = function () {
   } else {
     data = this._produce();
   }
-  return (this._currVal = data);
+  this._prevVal = this._currVal;
+  this._currVal = data;
+  return data;
 };
 
 Document.prototype._read = function (n) {
