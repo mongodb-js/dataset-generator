@@ -75,6 +75,7 @@ Document.prototype.getRoot = function () {
 };
 
 Document.prototype._produce = function () {
+  this._clean();
   var data = {};
   for (var name in this._children) {
     data[name] = this._children[name].next();
@@ -91,6 +92,12 @@ Document.prototype.next = function () {
     return data;
   } else {
     return this._produce();
+  }
+};
+
+Document.prototype._clean = function () {
+  for (var child in this._children) {
+    this._children[child]._clean();
   }
 };
 
@@ -112,7 +119,7 @@ function Field (field, parent) {
     this._array = true;
     this._field = field[0];
   }
-  this._compiled = _.bind(_.template(this._field), this._parent._scope);
+  this._compiled = _.template(this._field);
 }
 util.inherits(Field, stream.Readable);
 
@@ -120,19 +127,21 @@ Field.prototype.getRoot = function () {
   return this._parent.getRoot();
 };
 
+Field.prototype._clean = function () {
+  this._currVal = undefined;
+};
 Field.prototype._produce = function () {
   // this.getRoot()._context._temp = {};
   // var res = this._compiled(this.getRoot()._context);
   // var alt = this.getRoot()._context._temp.override;
   this._parent._context._temp = {};
-  // var res = this._compiled.call(this._parent._scope, this._parent._context);
-  var res = this._compiled(this._parent._context);
+  var res = this._compiled.call(this._parent._scope, this._parent._context);
   var alt = this._parent._context._temp.override;
   return (typeof alt === 'undefined') ? res : alt;
 };
 
 Field.prototype.next = function () {
-  // if (typeof this._currVal !== 'undefined') return this._currVal;
+  if (typeof this._currVal !== 'undefined') return this._currVal;
   var data;
   if (this._array) {
     data = [];
@@ -144,8 +153,7 @@ Field.prototype.next = function () {
   } else {
     data = this._produce();
   }
-  this._currVal = data;
-  return data;
+  return (this._currVal = data);
 };
 
 Document.prototype._read = function (n) {
