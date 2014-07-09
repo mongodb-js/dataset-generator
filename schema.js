@@ -42,16 +42,27 @@ function Document (document, parent) {
   this._parent = parent;
   this._context = new Context(this);
   this._array = Array.isArray(document);
+  this._scope = {};
   this._children = {};
   var doc = this._array ? document[0] : document;
   for (var name in doc) {
-    var data = doc[name];
+    var child, data = doc[name];
     if ((Array.isArray(data) && typeof data[0] === 'object') ||
         (typeof data === 'object' && !Array.isArray(data))) {
-      this._children[name] = new Document(data, this);
+      child = new Document(data, this);
     } else {
-      this._children[name] = new Field(data, this);
+      child = new Field(data, this);
     }
+    this._children[name] = child;
+    Object.defineProperty(this._scope, name, {
+      enumerable: true,
+      get: function() {
+        if (typeof child._currVal === 'undefined') {
+          child.next();
+        }
+        return child._currVal;
+      }
+    });
   }
 }
 util.inherits(Document, stream.Readable);
@@ -92,6 +103,7 @@ function Field (field, parent) {
   this._parent = parent;
   this._array = false;
   this._field = field;
+  this._currVal = undefined;
   if (Array.isArray(field)) {
     this._array = true;
     this._field = field[0];
@@ -124,6 +136,7 @@ Field.prototype.next = function () {
   } else {
     data = this._produce();
   }
+  this._currVal = data;
   return data;
 };
 
