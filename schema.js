@@ -45,6 +45,7 @@ function Document (document, parent) {
   this._scope = {};
   this._children = {};
   var doc = this._array ? document[0] : document;
+
   for (var name in doc) {
     var data = doc[name];
     if ((Array.isArray(data) && typeof data[0] === 'object') ||
@@ -53,6 +54,18 @@ function Document (document, parent) {
     } else {
        this._children[name] = new Field(data, this);
     }
+    (function (method) {
+      var child = this._children[method];
+      Object.defineProperty(this._scope, method, {
+        enumerable: true,
+        get: function () {
+          if (typeof child._currVal === 'undefined') {
+            child.next();
+          }
+          return child._currVal;
+        }
+      });
+    }).call(this, name);
   }
 }
 util.inherits(Document, stream.Readable);
@@ -63,38 +76,11 @@ Document.prototype.getRoot = function () {
 
 Document.prototype._produce = function () {
   var data = {};
-  var scope = {};
   for (var name in this._children) {
-    set(name, scope, this);
-    // Object.defineProperty(scope, name2, {
-    //   enumerable: true,
-    //   get: function() {
-    //     if (typeof self._children[name2]._currVal === 'undefined') {
-    //       self._children[name2].next();
-    //     }
-    //     console.log(self._children[name2]._currVal);
-    //     return self._children[name2]._currVal;
-    //   }
-    // });
-  }
-  for (var name in this._children) {
-    data[name] = this._children[name].next(scope);
+    data[name] = this._children[name].next();
   }
   return data;
 };
-
-function set(method, obj, self) {
-  Object.defineProperty(obj, method, {
-      enumerable: true,
-      get: function() {
-        if (typeof self._children[method]._currVal === 'undefined') {
-          self._children[method].next();
-        }
-        console.log(self._children[method]._currVal);
-        return self._children[method]._currVal;
-      }
-    });
-}
 
 Document.prototype.next = function () {
   if (this._array) {
@@ -134,28 +120,28 @@ Field.prototype.getRoot = function () {
   return this._parent.getRoot();
 };
 
-Field.prototype._produce = function (scope) {
+Field.prototype._produce = function () {
   // this.getRoot()._context._temp = {};
   // var res = this._compiled(this.getRoot()._context);
   // var alt = this.getRoot()._context._temp.override;
   this._parent._context._temp = {};
-  var res = this._compiled.call(scope, this._parent._context);
+  var res = this._compiled.call(this._parent._scope, this._parent._context);
   var alt = this._parent._context._temp.override;
   return (typeof alt === 'undefined') ? res : alt;
 };
 
-Field.prototype.next = function (scope) {
+Field.prototype.next = function () {
   // if (typeof this._currVal !== 'undefined') return this._currVal;
   var data;
   if (this._array) {
     data = [];
     for (var i = _.random(1, 3); i > 0; i--) {
-      data.push(this._produce(scope));
+      data.push(this._produce());
     }
   } else if (typeof this._field !== 'string') {
     data = this._field;
   } else {
-    data = this._produce(scope);
+    data = this._produce();
   }
   this._currVal = data;
   return data;
