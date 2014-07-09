@@ -133,6 +133,8 @@ Field.prototype.next = function () {
     for (var i = _.random(1, 3); i > 0; i--) {
       data.push(this._produce());
     }
+  } else if (typeof this._field !== 'string') {
+    data = this._field;
   } else {
     data = this._produce();
   }
