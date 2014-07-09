@@ -46,11 +46,11 @@ function Document (document, parent) {
   var doc = this._array ? document[0] : document;
   for (var name in doc) {
     var data = doc[name];
-    if (typeof data === 'string' ||
-       (Array.isArray(data) && typeof data[0] === 'string')) {
-      this._children[name] = new Field(data, this);
-    } else {
+    if ((Array.isArray(data) && typeof data[0] === 'object') ||
+        (typeof data === 'object' && !Array.isArray(data))) {
       this._children[name] = new Document(data, this);
+    } else {
+      this._children[name] = new Field(data, this);
     }
   }
 }
