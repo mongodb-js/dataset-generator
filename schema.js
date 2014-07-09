@@ -96,7 +96,7 @@ function Field (field, parent) {
     this._array = true;
     this._field = field[0];
   }
-  this._compiled = _.template(this._field);
+  this._compiled = _.bind(_.template(this._field), {});
 }
 util.inherits(Field, stream.Readable);
 
