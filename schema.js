@@ -42,7 +42,7 @@ function Document (document, parent) {
   this._parent = parent;
   this._context = new Context(this);
   this._array = Array.isArray(document);
-  this._scope = {};
+  this._currVal = {};
   this._children = {};
   var doc = this._array ? document[0] : document;
 
@@ -56,11 +56,11 @@ function Document (document, parent) {
     }
     (function (method) {
       var child = this._children[method];
-      Object.defineProperty(this._scope, method, {
+      Object.defineProperty(this._currVal, method, {
         enumerable: true,
         get: function () {
           if (typeof child._currVal === 'undefined') {
-            child.next();
+            return child.next();
           }
           return child._currVal;
         }
@@ -135,7 +135,7 @@ Field.prototype._produce = function () {
   // var res = this._compiled(this.getRoot()._context);
   // var alt = this.getRoot()._context._temp.override;
   this._parent._context._temp = {};
-  var res = this._compiled.call(this._parent._scope, this._parent._context);
+  var res = this._compiled.call(this._parent._currVal, this._parent._context);
   var alt = this._parent._context._temp.override;
   return (typeof alt === 'undefined') ? res : alt;
 };
