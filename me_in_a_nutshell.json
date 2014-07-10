@@ -45,6 +45,13 @@
         "sample": "{{util.sample(['1', '2', '3'])}}",
         "counter": "{{counter(0, 0, 1)}}"
       },
+      "scoping": {
+        "name": "{{chance.name()}}",
+        "greetings": "This is {{this.name}}. I got ${{this.bank.balance}}.",
+        "bank": {
+          "balance": 100
+        }
+      },
       "combination": "I'm {{counter(1, 10, 1)}}-year-old! I grow fast!",
       "more": "still adding more functions!"
     },

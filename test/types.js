@@ -11,7 +11,8 @@ describe('generate different types of data', function() {
           zero: '{{Double(0)}}',
           one: '{{Double(1)}}',
           decimal: '{{Double(0.1)}}',
-          neg: '{{Double(-0.1)}}'
+          neg: '{{Double(-0.1)}}',
+          array: ['{{Double(0)}}']
         },
         boolean: {
           basic: '{{Boolean(true)}}',
@@ -22,7 +23,7 @@ describe('generate different types of data', function() {
           basic: '{{Date(0)}}',
           string: '{{Date("01/01/2000")}}',
           type: '{{Date(chance.date())}}'
-        }
+        },
       }
     };
     helper.getResults(opts, function (err, items) {
@@ -48,6 +49,13 @@ describe('generate different types of data', function() {
     it('should support negatives', function () {
       assert.ok(typeof res.item.double.neg === 'number');
       assert.strictEqual(-0.1, res.item.double.neg);
+    });
+
+    it('should work in array', function () {
+      res.item.double.array.forEach(function (i) {
+        assert.ok(typeof i === 'number');
+        assert.strictEqual(0, i);
+      });
     });
   });
 
@@ -81,4 +89,5 @@ describe('generate different types of data', function() {
       assert.ok(res.item.date.type instanceof Date);
     });
   });
+
 });
