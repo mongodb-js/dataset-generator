@@ -3,14 +3,15 @@
   "version": "0.0.0",
   "description": "What's a database without any data?",
   "scripts": {
-    "test": "mocha",
-    "check": "jshint *.js && istanbul cover _mocha"
+    "test": "mocha"
+  },
+  "bin": {
+    "mongodb-datasets": "bin/mongodb-datasets.js"
   },
   "dependencies": {
     "debug": "^1.0.2",
     "regret": "^0.1.1",
     "chance": "^0.5.6",
-    "mongodb": "^1.4.0",
     "minimist": "^0.1.0",
     "async": "^0.8.0",
     "mongodb-uri": "^0.9.7",
@@ -19,10 +20,9 @@
     "bson": "^0.2.9"
   },
   "devDependencies": {
-    "mocha": "^1.17.1",
-    "jshint": "^2.5.1",
-    "istanbul": "^0.2.10",
-    "joi": "^4.6.1"
+    "mocha": "^1.20.1",
+    "joi": "^4.6.1",
+    "mongodb": "^1.4.0"
   },
   "keywords": [
     "mongodb",
