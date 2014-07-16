@@ -136,6 +136,7 @@ Field.prototype.getRoot = function () {
 };
 
 Field.prototype._clean = function () {
+  this._prevVal = this._currVal;
   this._currVal = undefined;
 };
 Field.prototype._produce = function () {
@@ -158,9 +159,7 @@ Field.prototype.next = function () {
   } else {
     data = this._produce();
   }
-  this._prevVal = this._currVal;
-  this._currVal = data;
-  return data;
+  return (this._currVal = data);
 };
 
 Document.prototype._read = function (n) {
