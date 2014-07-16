@@ -170,12 +170,10 @@ Document.prototype._read = function (n) {
 function Context (host) {
   if (!(this instanceof Context)) return new Context(host);
   // security issues, what if users call _host?
-  this._host = host;
   this._temp = {
     override: undefined // if present, used to override the template output
   };
   this._state = {
-    // counter: []
   };
   this.util = {
     sample: _.sample
@@ -184,16 +182,19 @@ function Context (host) {
   // need to add security feature
   this.chance = chance;
   this.faker = faker;
-}
 
-Context.prototype.counter = function (id, start, step) {
-  id = id || 0; // though id=0 is false, does not matter
-  var counter = this._host.getRoot()._state.counter; //pointer
-  if (typeof counter[id] === 'undefined') {
-    return (counter[id] = start || 0);
-  }
-  return (counter[id] += (step || 1));
-};
+  // utility
+  // this._host = host;
+  this.counter = function (id, start, step) {
+    id = id || 0; // though id=0 is false, does not matter
+    var counter = host.getRoot()._state.counter; //pointer
+    if (typeof counter[id] === 'undefined') {
+      return (counter[id] = start || 0);
+    }
+    return (counter[id] += (step || 1));
+  };
+
+}
 
 // all supported data types
 Context.prototype.Double = function (i) {
