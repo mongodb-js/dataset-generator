@@ -140,9 +140,9 @@ Field.prototype._clean = function () {
   this._currVal = undefined;
 };
 Field.prototype._produce = function () {
-  this._parent._context._temp = {};
+  this._parent._context._state = {};
   var res = this._compiled.call(this._parent._currVal, this._parent._context);
-  var alt = this._parent._context._temp.override;
+  var alt = this._parent._context._state.override;
   return (typeof alt === 'undefined') ? res : alt;
 };
 
@@ -169,11 +169,9 @@ Document.prototype._read = function (n) {
 // object that will pass into _.template
 function Context (host) {
   if (!(this instanceof Context)) return new Context(host);
-  // security issues, what if users call _host?
-  this._temp = {
-    override: undefined // if present, used to override the template output
-  };
+
   this._state = {
+    override: undefined // if present, used to override the template output
   };
   this.util = {
     sample: _.sample
@@ -183,7 +181,7 @@ function Context (host) {
   this.chance = chance;
   this.faker = faker;
 
-  // utility
+  // utility methods
   // this._host = host;
   this.counter = function (id, start, step) {
     id = id || 0; // though id=0 is false, does not matter
@@ -198,31 +196,31 @@ function Context (host) {
 
 // all supported data types
 Context.prototype.Double = function (i) {
-  this._temp.override = Number(i);
+  this._state.override = Number(i);
 };
 Context.prototype.Boolean = function (b) {
-  this._temp.override = Boolean(b);
+  this._state.override = Boolean(b);
 };
 Context.prototype.String = function (s) {
-  this._temp.override = String(s);
+  this._state.override = String(s);
 };
 Context.prototype.Date = function (d) {
-  this._temp.override = new Date(d);
+  this._state.override = new Date(d);
 };
 Context.prototype.NumberLong = function (i) {
-  this._temp.override = new bson.Long(i);
+  this._state.override = new bson.Long(i);
 };
 Context.prototype.MinKey = function () {
-  this._temp.override = new bson.MinKey();
+  this._state.override = new bson.MinKey();
 };
 Context.prototype.MaxKey = function () {
-  this._temp.override = new bson.MaxKey();
+  this._state.override = new bson.MaxKey();
 };
 Context.prototype.Timestamp = function () {
-  this._temp.override = new bson.Timestamp();
+  this._state.override = new bson.Timestamp();
 };
 Context.prototype.ObjectID = function (i) {
-  this._temp.override = new bson.ObjectId(i);
+  this._state.override = new bson.ObjectId(i);
 };
 
 module.exports = Schema;
