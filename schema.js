@@ -12,6 +12,28 @@ _.templateSettings = {
 var chance = require('chance').Chance();
 var faker = require('faker');
 
+// parse the user array
+function demuxArray (array) {
+  if (!Array.isArray(array) || array.length === 0) {
+    return {
+      isArray: false
+    };
+  }
+  var num = function () { return _.random(1, 3); };
+  if (array.length > 1) {
+    var userNum = _.first(array);
+    if (typeof userNum === 'number') {
+      num = function () { return userNum; };
+    } else {
+      num = function () { return Number(_.template(userNum)()); };
+    }
+  }
+  return {
+    isArray: true,
+    num: num
+  };
+}
+
 function Schema (sc) {
   if (!(this instanceof Schema)) return new Schema(sc);
   stream.Readable.call(this, {objectMode: true});
@@ -41,11 +63,11 @@ function Document (document, parent) {
   stream.Readable.call(this, {objectMode: true});
   this._parent = parent;
   this._context = new Context(this);
-  this._array = Array.isArray(document);
   this._currVal = {};
   this._children = {};
-  var doc = this._array ? document[0] : document;
 
+  this._arrayConfig = demuxArray(document);
+  var doc = this._arrayConfig.isArray ? _.last(document) : document;
   for (var name in doc) {
     var data = doc[name];
     if ((Array.isArray(data) && typeof data[0] === 'object') ||
@@ -84,9 +106,9 @@ Document.prototype._produce = function () {
 };
 
 Document.prototype.next = function () {
-  if (this._array) {
+  if (this._arrayConfig.isArray) {
     var data = [];
-    for (var i = _.random(1, 3); i > 0; i--) {
+    for (var i = this._arrayConfig.num(); i > 0; i--) {
       data.push(this._produce());
     }
     return data;
@@ -113,14 +135,8 @@ function Field (field, parent) {
   this._parent = parent;
   this._prevVal = undefined;
   this._currVal = undefined;
-
-  if (Array.isArray(field)) {
-    this._array = true;
-    this._field = field[0];
-  } else {
-    this._array = false;
-    this._field = field;
-  }
+  this._arrayConfig = demuxArray(field);
+  this._field = this._arrayConfig.isArray ? _.last(field) : field;
 
   if (typeof this._field !== 'string') {
     var self = this;
@@ -149,9 +165,9 @@ Field.prototype._produce = function () {
 Field.prototype.next = function () {
   if (typeof this._currVal !== 'undefined') return this._currVal;
   var data;
-  if (this._array) {
+  if (this._arrayConfig.isArray) {
     data = [];
-    for (var i = _.random(1, 3); i > 0; i--) {
+    for (var i = this._arrayConfig.num(); i > 0; i--) {
       data.push(this._produce());
     }
   } else if (typeof this._field !== 'string') {
