@@ -106,11 +106,25 @@ invoked values will not be generated more than once per inserted document.
 
 #### Utility methods
 
+We are happy to add more methods in a prompt manner should you find any could be
+potentially helpful. Currently we have:
+* `counter([id], [start], [step])` - the underlying counts are accessble
+  anywhere in the outmost document so that you can use the same counter
+  consistently regardless of its position
+  + `id` - the index of the counter to use, default is 0
+  + `start` - the first count, default is 0
+  + `step` - increment of each count, default is 1
+* `util.sample(list, [n])` - identical to [underscore.js](http://underscorejs.org/#sample)
+* `util.random(min, max)` - identical to [underscore.js](http://underscorejs.org/#random)
+
 #### Imperfections
 
-1. underscore
-2. _state
-3. no legality check
+* Due to the use of underscore.js, `_` is accessible from within the template
+  schema. Its many powerful methods may cause unwanted effects if used unchecked.
+* A lot of efforts were made to avoid exposing internal variables, but
+* Expressions provided by users are directly evaluated without any error
+  checking, which may cause the program to crash without supplying much helpful
+  information to users
 
 ## Purpose of this project
 
