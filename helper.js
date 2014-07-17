@@ -22,7 +22,7 @@ module.exports.parseUserOpts = function (opts, callback) {
     size: typeof opts.size === 'number' ? opts.size : 100,
     collection: opts.collection || 'dataset',
     schema: opts.schema,
-    schemaPath: opts.schemaPath || 'me_in_a_nutshell.json'
+    schemaPath: opts.schemaPath || __dirname + '/examples/me_in_a_nutshell.json'
   };
   // parse uri
   if (typeof rtn.uri === 'undefined') {
