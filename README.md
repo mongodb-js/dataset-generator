@@ -90,13 +90,27 @@ types as in [bson](https://github.com/mongodb/js-bson) module, such as Double,
 Timestamp, Date, and ObjectID. Note that once conversion is triggered, the
 target object will be the only produced content. Some examples:
 * `{ "date": "{{ Date(chance.date()) }}" }` becomes `ISODate(...)` in MongoDB
-* `{ "two": "{{ Double(1) + Double(1) }}" }` produces `{ "two": 1}`
+* `{ "two": "{{ Double(1) + Double(1) }}" }` produces `{ "two": 1 }`
 
-#### Scope
+#### Document-level scope
+
+You can make use of `this` keyword in expressions to get access to values of
+other name/value pairs. But its behavior is different from the default `this`
+in a Javascript object in the sense that all properties must correspond to
+a name/value pair. Using values not yet generated is also supported, and the
+invoked values will not be generated more than once per inserted document.
+* `{ "one": 1, "two: "{{ Double(this.one + 1) }}" }`
+* `{ "first_name": "{{ this.name.first }}",
+     "name": { "first": "{{ chance.first() }}" } }` produces consistent result.
+* `{ "echo": {{ Object.keys(this) }} }` returns `{ "echo": [ "echo" ] }`
 
 #### Utility methods
 
 #### Imperfections
+
+1. underscore
+2. _state
+3. no legality check
 
 ## Purpose of this project
 
@@ -112,54 +126,6 @@ believe supplying users with example schemas for common use cases,
 such as user activity streams, time series data, and entity management,
 and more importantly, corresponding datasets for prototyping will
 establish MongoDB as a leader in this emerging market.
-
-## Milestones
-
-- [x] Set up generalizable skeleton code that abstracts each module
-- [x] Support user defined schemas with arbitrary structure
-- [ ] Collect example schemas from documentation
-- [ ] Extend the current code base to support replicating common datasets
-- [ ] Select datasets to add support for prototyping
-
-## Implementation Plan
-
-+ Collect example schemas
-  * Simple educational schemas that cover
-    1. basic model relationships, e.g. one-to-one, one-to-many with
-       embedded document, one-to-many with document reference
-  * Ready-to-use template schemas such as
-    1. user activity stream
-    2. time series data
-    3. user management
-    4. other [use cases](http://docs.mongodb.org/ecosystem/use-cases)
-+ Set up skeleton code that encapsulates the feature to populate random
-  data, which has support of
-  1. reading and configuring for the selected schemas with limited user
-     customization
-  2. generating data of types that are used in the schemas
-  3. feeding the generated data to MongoDB database
-+ Add peripheral support for individual schemas, based on the skeleton
-  1. identify types and/or reasonable range for data in each field
-  2. write up configuration files for each schema
-+ Enhance user experience
-  1. generate user defined (as opposed to random) data, such as
-     constant strings, enums, and incrementor
-  2. allow user pass in config arguments to underlying Chance.js methods
-+ @todo: plans for replicating datasets
-
-## Resources
-
-+ Some handy references
-  * [Chance.js](http://chancejs.com/)
-  * [Joi](https://github.com/spumko/joi)
-  * [Node.js Stream](http://nodejs.org/api/stream.html)
-  * [Async](https://github.com/caolan/async)
-  * [Stream Handbook](https://github.com/substack/stream-handbook)
-
-+ Other potential userful docs
-  * MongoDB official doc: [Generate Test Data](http://docs.mongodb.org/manual/tutorial/generate-test-data)
-  * [Time Series](http://blog.mongodb.org/post/65517193370/schema-design-for-time-series-data-in-mongodb)[same topic ppt](http://www.mongodb.com/presentations/webinar-time-series-data-mongodb)
-  * [User Management](http://www.slideshare.net/mongodb/webinar-user-data-management-with-mongodb)
 
 ## License
 
