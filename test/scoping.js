@@ -14,7 +14,10 @@ describe('scoping', function() {
         'num': {
           'one': 1
         },
-        'two': '{{Double(this.num.one+1)}}'
+        'two': '{{Double(this.num.one+1)}}',
+        'dependent': '{{this.s1}}-{{this.s2}}',
+        's1': 'Constant',
+        's2': '{{chance.name()}}'
       }
     };
     helper.getResults(opts, function (err, items) {
@@ -39,6 +42,14 @@ describe('scoping', function() {
     assert.deepEqual(1, res.item.num.one);
     assert.ok(typeof res.item.two === 'number');
     assert.deepEqual(2, res.item.two);
+  });
+
+  it('should support using not-yet-generated variables', function () {
+    var d = res.item.dependent;
+    assert.ok(typeof d === 'string');
+    var comps = d.split('-');
+    assert.equal('Constant', comps[0]);
+    assert.equal(res.item.s2, comps[1]);
   });
 
 });

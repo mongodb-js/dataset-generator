@@ -55,8 +55,9 @@ You can also invoke mongodb-datasets in cli
 
     $ mongodb-datasets --schemaPath=./schema.json --size=100 --collection=temp --uri=mongodb://localhost:27017/test
 
-### Schema customization
+### Building your schema
 
+####
 
 ## Purpose of this project
 
