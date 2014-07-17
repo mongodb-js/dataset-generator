@@ -2,111 +2,63 @@
 
 [![build status](https://secure.travis-ci.org/imlucas/mongodb-datasets.png)](http://travis-ci.org/imlucas/mongodb-datasets)
 
-What's a database without any data?
+What's a database without any data? With mongodb-datasets you never worry about
+how to populate your MongoDB database with the data as you wish. Unlike a simple
+populator, mongodb-datasets is designed to offer you the maximum control of the
+data to be in your database.
 
-## Example
+## A Simple Example
 
-Example _schema.json_:
-```json
-{
-  "user_email": "{{chance.email()}}",
-  "job": {
-    "company": "{{chance.word()}}",
-    "phones": {
-      "mobile": "{{chance.phone()}}",
-      "work": "{{chance.phone()}}"
-    },
-    "duties": "{{chance.sentence()}}"
-  },
-  "personalities": {
-    "favorites": {
-      "number": "{{chance.d10()}}",
-      "city": "{{chance.city()}}",
-      "radio": "{{chance.radio()}}"
-    },
-    "violence-rating": "{{chance.d6()}}"
-  },
-  "friends" : [{
-    "name": "{{chance.name()}}",
-    "phones": ["{{chance.phone()}}"]
-  }]
-}
-```
-
-Example _app.js_:
 ```javascript
 var datasets = require('mongodb-datasets');
 var opts = {
   host: 'localhost',
   port: '27017',
-  db: 'test',
-  collection: 'dataset',
-  schema: './schema.json',
-  size: 5
+  db: 'company',
+  collection: 'employee',
+  size: 50,
+  schema: {
+    _id: '{{counter()}}',
+    name: '{{chance.name()}}',
+    phones: [ 3, '{{chance.phone()}}' ],
+    title: 'Software {{util.sample(["Engineer", "Programmer"])}}'
+  }
 };
 
-datasets(opts, function () {
-  console.log('Done! Check out the collection you specified!');
+datasets.populate(opts, function () {
+  console.log('This will be called when populating is complete.');
 });
-```
-
-Sample entry in the collection:
-```javascript
-{
-  "_id" : ObjectId("53a89211734538741c4bde5e"),
-  "user_email" : "jofowpat@asose.edu",
-  "job" : {
-    "company" : "wapez",
-    "phones" : {
-      "mobile" : "(311) 692-8852",
-      "work" : "(417) 927-3203"
-    },
-    "duties" : "Hu zaib diftu jujepme joulemo gib jip oboto."
-  },
-  "personalities" : {
-    "favorites" : {
-      "number" : 5,
-      "city" : "Hapkugbub",
-      "radio" : "KCWL"
-    },
-    "violence-rating" : 3
-  },
-  "friends" : [
-    {
-      "name" : "Edna Perez",
-      "phones" : [
-        "(313) 206-6936",
-        "(924) 655-6886"
-      ]
-    },
-    {
-      "name" : "Etta Parsons",
-      "phones" : [
-        "(719) 313-2275",
-        "(545) 706-7688"
-      ]
-    },
-    {
-      "name" : "Thomas Cummings",
-      "phones" : [
-        "(343) 550-2924",
-        "(205) 513-1057",
-        "(388) 242-1740"
-      ]
-    },
-    {
-      "name" : "Maria Hunter",
-      "phones" : [
-        "(501) 629-3251"
-      ]
-    }
-  ]
-}
 ```
 
 ## Usage
 
-## Overview
+### Options
+
+* `uri` - the URI of the target MongoDB database. Alternatively, you can
+  specify each components respectively: `host`, `port`, `db`
+* `collection` - the collection to store the sample data
+* `size` - the number of documents to be populated
+* `schema` - a Javascript object representing the template schema of your data.
+* Or `schemaPath` - if you want to define your schema in a `.json` file
+
+If any required option is missing, the default will be used.
+```js
+uri: 'mongodb://localhost:27017/test/',
+collection: 'dataset',
+size: 100,
+schemaPath: './me_in_a_nutshell.json'
+```
+
+### Command line
+
+You can also invoke mongodb-datasets in cli
+
+    $ mongodb-datasets --schemaPath=./schema.json --size=100 --collection=temp --uri=mongodb://localhost:27017/test
+
+### Schema customization
+
+
+## Purpose of this project
 
 With the explosion of data volume and availability, users are
 transitioning their focus to analysis and data-mining on these vast
