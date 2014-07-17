@@ -12,6 +12,28 @@ _.templateSettings = {
 var chance = require('chance').Chance();
 var faker = require('faker');
 
+// parse the user array
+function demuxArray (array) {
+  if (!Array.isArray(array) || array.length === 0) {
+    return {
+      isArray: false
+    };
+  }
+  var num = function () { return _.random(1, 3); };
+  if (array.length > 1) {
+    var userNum = _.first(array);
+    if (typeof userNum === 'number') {
+      num = function () { return userNum; };
+    } else {
+      num = function () { return Number(_.template(userNum)()); };
+    }
+  }
+  return {
+    isArray: true,
+    num: num
+  };
+}
+
 function Schema (sc) {
   if (!(this instanceof Schema)) return new Schema(sc);
   stream.Readable.call(this, {objectMode: true});
@@ -41,11 +63,11 @@ function Document (document, parent) {
   stream.Readable.call(this, {objectMode: true});
   this._parent = parent;
   this._context = new Context(this);
-  this._array = Array.isArray(document);
   this._currVal = {};
   this._children = {};
-  var doc = this._array ? document[0] : document;
 
+  this._arrayConfig = demuxArray(document);
+  var doc = this._arrayConfig.isArray ? _.last(document) : document;
   for (var name in doc) {
     var data = doc[name];
     if ((Array.isArray(data) && typeof data[0] === 'object') ||
@@ -84,9 +106,9 @@ Document.prototype._produce = function () {
 };
 
 Document.prototype.next = function () {
-  if (this._array) {
+  if (this._arrayConfig.isArray) {
     var data = [];
-    for (var i = _.random(1, 3); i > 0; i--) {
+    for (var i = this._arrayConfig.num(); i > 0; i--) {
       data.push(this._produce());
     }
     return data;
@@ -113,14 +135,8 @@ function Field (field, parent) {
   this._parent = parent;
   this._prevVal = undefined;
   this._currVal = undefined;
-
-  if (Array.isArray(field)) {
-    this._array = true;
-    this._field = field[0];
-  } else {
-    this._array = false;
-    this._field = field;
-  }
+  this._arrayConfig = demuxArray(field);
+  this._field = this._arrayConfig.isArray ? _.last(field) : field;
 
   if (typeof this._field !== 'string') {
     var self = this;
@@ -136,21 +152,22 @@ Field.prototype.getRoot = function () {
 };
 
 Field.prototype._clean = function () {
+  this._prevVal = this._currVal;
   this._currVal = undefined;
 };
 Field.prototype._produce = function () {
-  this._parent._context._temp = {};
+  this._parent._context._state = {};
   var res = this._compiled.call(this._parent._currVal, this._parent._context);
-  var alt = this._parent._context._temp.override;
+  var alt = this._parent._context._state.override;
   return (typeof alt === 'undefined') ? res : alt;
 };
 
 Field.prototype.next = function () {
   if (typeof this._currVal !== 'undefined') return this._currVal;
   var data;
-  if (this._array) {
+  if (this._arrayConfig.isArray) {
     data = [];
-    for (var i = _.random(1, 3); i > 0; i--) {
+    for (var i = this._arrayConfig.num(); i > 0; i--) {
       data.push(this._produce());
     }
   } else if (typeof this._field !== 'string') {
@@ -158,9 +175,7 @@ Field.prototype.next = function () {
   } else {
     data = this._produce();
   }
-  this._prevVal = this._currVal;
-  this._currVal = data;
-  return data;
+  return (this._currVal = data);
 };
 
 Document.prototype._read = function (n) {
@@ -170,13 +185,9 @@ Document.prototype._read = function (n) {
 // object that will pass into _.template
 function Context (host) {
   if (!(this instanceof Context)) return new Context(host);
-  // security issues, what if users call _host?
-  this._host = host;
-  this._temp = {
-    override: undefined // if present, used to override the template output
-  };
+
   this._state = {
-    // counter: []
+    override: undefined // if present, used to override the template output
   };
   this.util = {
     sample: _.sample
@@ -185,44 +196,47 @@ function Context (host) {
   // need to add security feature
   this.chance = chance;
   this.faker = faker;
-}
 
-Context.prototype.counter = function (id, start, step) {
-  id = id || 0; // though id=0 is false, does not matter
-  var counter = this._host.getRoot()._state.counter; //pointer
-  if (typeof counter[id] === 'undefined') {
-    return (counter[id] = start || 0);
-  }
-  return (counter[id] += (step || 1));
-};
+  // utility methods
+  // this._host = host;
+  this.counter = function (id, start, step) {
+    id = id || 0; // though id=0 is false, does not matter
+    var counter = host.getRoot()._state.counter; //pointer
+    if (typeof counter[id] === 'undefined') {
+      return (counter[id] = start || 0);
+    }
+    return (counter[id] += (step || 1));
+  };
+
+}
 
 // all supported data types
 Context.prototype.Double = function (i) {
-  this._temp.override = Number(i);
+  this._state.override = Number(i);
 };
 Context.prototype.Boolean = function (b) {
-  this._temp.override = Boolean(b);
+  this._state.override = Boolean(b);
 };
 Context.prototype.String = function (s) {
-  this._temp.override = String(s);
+  this._state.override = String(s);
 };
 Context.prototype.Date = function (d) {
-  this._temp.override = new Date(d);
+  this._state.override = new Date(d);
 };
 Context.prototype.NumberLong = function (i) {
-  this._temp.override = new bson.Long(i);
+  this._state.override = new bson.Long(i);
 };
 Context.prototype.MinKey = function () {
-  this._temp.override = new bson.MinKey();
+  this._state.override = new bson.MinKey();
 };
 Context.prototype.MaxKey = function () {
-  this._temp.override = new bson.MaxKey();
+  this._state.override = new bson.MaxKey();
 };
 Context.prototype.Timestamp = function () {
-  this._temp.override = new bson.Timestamp();
+  this._state.override = new bson.Timestamp();
 };
 Context.prototype.ObjectID = function (i) {
-  this._temp.override = new bson.ObjectId(i);
+  this._state.override = new bson.ObjectId(i);
 };
 
 module.exports = Schema;
