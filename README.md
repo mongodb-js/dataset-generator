@@ -57,7 +57,46 @@ You can also invoke mongodb-datasets in cli
 
 ### Building your schema
 
-####
+The schema is a JSON or Javascript object which is used as the template of every
+single document to be inserted into MongoDB database. The following content in
+this section discusses how to specify the value of each name/value pair of the
+object.
+
+#### Basics
+
+The value can be any primitive data types, such as boolean, number, array, and
+object. When the value is a string, it can be used to evaluate Javascript
+expressions. All string segments intended to be treated as expressions must be
+surrounded by `{{ <expr> }}`. A mix of regular string and expressions are
+allowed, whereas a mix of different types is not. Some examples:
+* `{ "boolean": true }`
+* `{ "brackets_parade": [ { 1: { 2: [ { 3: 3 } ] } } ] }`
+* `{ "mix": "1 + 1 = {{ 1+1 }}" }`
+
+#### Random data
+
+This project uses [chance.js](http://chancejs.com/) and
+[faker.js](https://github.com/FotoVerite/Faker.js) as the internal random data
+generator. To invoke them, simply do, for instance:
+* `{ "use_chance": "{{ chance.name({ gender: 'female' }) }}" }`
+* `{ "use_faker": "{{ faker.Company.catchPhrase() }}" }`
+
+#### Type conversion
+
+Maybe you've already noticed. It's not very useful to generate a string from
+`"{{chance.year()}}"` which is expected to apply commands such as `$gte`.
+Since its MongoDB-specific nature, the package currently supports common bson
+types as in [bson](https://github.com/mongodb/js-bson) module, such as Double,
+Timestamp, Date, and ObjectID. Note that once conversion is triggered, the
+target object will be the only produced content. Some examples:
+* `{ "date": "{{ Date(chance.date()) }}" }` becomes `ISODate(...)` in MongoDB
+* `{ "two": "{{ Double(1) + Double(1) }}" }` produces `{ "two": 1}`
+
+#### Scope
+
+#### Utility methods
+
+#### Imperfections
 
 ## Purpose of this project
 
