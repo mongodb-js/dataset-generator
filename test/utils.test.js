@@ -1,4 +1,4 @@
-var helper = require('./helper');
+var helpers = require('./helpers');
 var assert = require('assert');
 
 describe('util methods for schema config file', function() {
@@ -14,7 +14,7 @@ describe('util methods for schema config file', function() {
         }
       }
     };
-    helper.getResults(opts, function (err, items) {
+    helpers.getResults(opts, function (err, items) {
       if (err) return done(err);
       res.items = items;
       done();

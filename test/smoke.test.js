@@ -1,4 +1,4 @@
-var helper = require('./helper');
+var helpers = require('./helpers');
 var Joi = require('joi');
 var assert = require('assert');
 
@@ -21,7 +21,7 @@ describe('generate other datatypes', function() {
         email: '{{chance.email()}}'
       }
     };
-    helper.getResults(opts, function (err, items) {
+    helpers.getResults(opts, function (err, items) {
       if (err) return done(err);
       res.items = items;
       done();
@@ -41,7 +41,7 @@ describe('generate other datatypes', function() {
   });
 
   it('should produce entries with random content', function (done) {
-    helper.sampleAndStrip(res.items, 2, function (sample) {
+    helpers.sampleAndStrip(res.items, 2, function (sample) {
       assert.notDeepEqual(sample[0], sample[1]);
       done();
     });

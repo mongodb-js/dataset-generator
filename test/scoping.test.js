@@ -1,4 +1,4 @@
-var helper = require('./helper');
+var helpers = require('./helpers');
 var assert = require('assert');
 
 describe('scoping', function() {
@@ -20,7 +20,7 @@ describe('scoping', function() {
         's2': '{{chance.name()}}'
       }
     };
-    helper.getResults(opts, function (err, items) {
+    helpers.getResults(opts, function (err, items) {
       if (err) return done(err);
       res.item = items[0];
       done();

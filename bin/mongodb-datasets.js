@@ -5,6 +5,6 @@ var argv = require('minimist')(process.argv.slice(2));
 
 console.log(argv);
 
-main(argv, function () {
+main.populate(argv, function () {
   console.log('done');
 });
