@@ -3,7 +3,7 @@
  */
 
 var chance = require('chance').Chance();
-var populator = require('../index.js');
+var main = require('../index.js');
 var dbUtil = require('../helper');
 var async = require('async');
 var MongoClient = require('mongodb').MongoClient;
@@ -39,7 +39,7 @@ function setUp (testOpts, callback) {
       var collection = db.collection(opts.collection);
       collection.remove({}, function(err, res) {
         if(err) return callback(err);
-        populator(opts, function () {
+        main.populate(opts, function () {
           var connection = {
             db: db,
             collection: collection

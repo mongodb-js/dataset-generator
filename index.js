@@ -5,7 +5,7 @@ var Generator = require('./generator');
 var Schema = require('./schema');
 
 // assume these are the user input
-module.exports = function (opts, fn) {
+module.exports.populate = function (opts, fn) {
   helper.parseUserOpts(opts, function (opts) {
     debug('processed user opts', opts);
     var schema = new Schema(opts.schema);

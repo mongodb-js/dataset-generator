@@ -15,6 +15,7 @@ module.exports.connect = function (user, fn) {
   });
 };
 
+// parse user options
 module.exports.parseUserOpts = function (opts, callback) {
   var rtn = {
     uri: opts.uri,
@@ -50,4 +51,39 @@ module.exports.parseUserOpts = function (opts, callback) {
     rtn.schema = JSON.parse(data);
     callback(rtn);
   });
+};
+
+module.exports.parseOpts = function (opts) {
+  var rtn = {
+    uri: opts.uri,
+    clientOptions: opts.clientOptions || {},
+    size: typeof opts.size === 'number' ? opts.size : 100,
+    collection: opts.collection || 'dataset'
+  };
+  // parse uri
+  if (typeof rtn.uri === 'undefined') {
+    rtn.uri = mongodbUri.format({
+      username: opts.username ? opts.username : '',
+      password: opts.password ? opts.password : '',
+      hosts: [
+        {
+          host: opts.host || 'localhost',
+          port: opts.port || 27017
+        }
+      ],
+      database: opts.db || 'test',
+      options: opts.serverOptions
+    });
+  }
+  return rtn;
+};
+
+// return parsed json object used as schema
+module.exports.parseSchema = function (input) {
+  if (typeof input === 'object') return input;
+  // must be file path
+  var filePath = path.resolve(input);
+  var raw = fs.readFileSync(filePath);
+  var data = JSON.parse(raw);
+  return data;
 };
