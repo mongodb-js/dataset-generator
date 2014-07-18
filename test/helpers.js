@@ -3,8 +3,8 @@
  */
 
 var chance = require('chance').Chance();
-var main = require('../index.js');
-var dbUtil = require('../helper');
+var main = require('../');
+var dbUtil = require('../lib/helpers');
 var async = require('async');
 var MongoClient = require('mongodb').MongoClient;
 var debug = require('debug')('dataset:testUtil');
@@ -75,6 +75,10 @@ function sampleAndStrip(array, count, fn) {
   });
 }
 
+function resolveSchemaPath(name) {
+  return './examples/' + name;
+}
+
 // test utility functions
 module.exports.setUp = setUp;
 module.exports.tearDown = tearDown;
@@ -82,3 +86,4 @@ module.exports.tearDown = tearDown;
 module.exports.sampleAndStrip = sampleAndStrip;
 module.exports.regex = regex;
 module.exports.getResults = getResults;
+module.exports.resolveSchemaPath = resolveSchemaPath;

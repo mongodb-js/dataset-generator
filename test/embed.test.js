@@ -1,4 +1,4 @@
-var helper = require('./helper');
+var helpers = require('./helpers');
 var Joi = require('joi');
 var assert = require('assert');
 
@@ -11,7 +11,7 @@ describe('basic embedded schema', function() {
       user_email: Joi.string().email().required(),
       job: Joi.object().keys({
         company: Joi.string().required(),
-        phone: Joi.string().regex(helper.regex.phone).required(),
+        phone: Joi.string().regex(helpers.regex.phone).required(),
         duties: Joi.string().required(),
       }).length(3).required()
     }).length(3)
@@ -20,9 +20,9 @@ describe('basic embedded schema', function() {
   before(function(done) {
     var opts = {
       size: 50,
-      schemaPath: 'test/schemas/20_embedded_basic.json'
+      schemaPath: helpers.resolveSchemaPath('/20_embedded_basic.json')
     };
-    helper.getResults(opts, function (err, items) {
+    helpers.getResults(opts, function (err, items) {
       if (err) return done(err);
       res.items = items;
       done();
@@ -42,7 +42,7 @@ describe('basic embedded schema', function() {
   });
 
   it('should produce entries with random content', function (done) {
-    helper.sampleAndStrip(res.items, 2, function (sample) {
+    helpers.sampleAndStrip(res.items, 2, function (sample) {
       assert.notDeepEqual(sample[0], sample[1]);
       done();
     });
@@ -59,13 +59,13 @@ describe('schema with parallel embedded fields', function() {
       user_email: Joi.string().email().required(),
       job: Joi.object().keys({
         company: Joi.string().required(),
-        phone: Joi.string().regex(helper.regex.phone).required(),
+        phone: Joi.string().regex(helpers.regex.phone).required(),
         duties: Joi.string().required(),
       }).length(3).required(),
       payment_method: Joi.object().keys({
         type: Joi.string().required(),
         card: Joi.number().integer().required(),
-        expiration: Joi.string().regex(helper.regex.exp).required()
+        expiration: Joi.string().regex(helpers.regex.exp).required()
       }).length(3).required()
     }).length(4)
   };
@@ -73,9 +73,9 @@ describe('schema with parallel embedded fields', function() {
   before(function(done) {
     var opts = {
       size: 33,
-      schemaPath: 'test/schemas/21_embedded_multi.json'
+      schemaPath: helpers.resolveSchemaPath('/21_embedded_multi.json')
     };
-    helper.getResults(opts, function (err, items) {
+    helpers.getResults(opts, function (err, items) {
       if (err) return done(err);
       res.items = items;
       done();
@@ -95,7 +95,7 @@ describe('schema with parallel embedded fields', function() {
   });
 
   it('should produce entries with random content', function (done) {
-    helper.sampleAndStrip(res.items, 2, function (sample) {
+    helpers.sampleAndStrip(res.items, 2, function (sample) {
       assert.notDeepEqual(sample[0], sample[1]);
       done();
     });
@@ -124,9 +124,9 @@ describe('schema with high level of embedding', function() {
   before(function(done) {
     var opts = {
       size: 23,
-      schemaPath: 'test/schemas/22_embedded_level.json'
+      schemaPath: helpers.resolveSchemaPath('/22_embedded_level.json')
     };
-    helper.getResults(opts, function (err, items) {
+    helpers.getResults(opts, function (err, items) {
       if (err) return done(err);
       res.items = items;
       done();
@@ -146,7 +146,7 @@ describe('schema with high level of embedding', function() {
   });
 
   it('should produce entries with random content', function (done) {
-    helper.sampleAndStrip(res.items, 2, function (sample) {
+    helpers.sampleAndStrip(res.items, 2, function (sample) {
       assert.notDeepEqual(sample[0], sample[1]);
       done();
     });
@@ -163,7 +163,7 @@ describe('complex embedded schema', function() {
       user_email: Joi.string().email().required(),
       job: Joi.object().keys({
         company: Joi.string().required(),
-        phone: Joi.string().regex(helper.regex.phone).required(),
+        phone: Joi.string().regex(helpers.regex.phone).required(),
         duties: Joi.string().required(),
       }).length(3).required(),
       personalities: Joi.object().keys({
@@ -177,7 +177,7 @@ describe('complex embedded schema', function() {
       payment_method: Joi.object().keys({
         type: Joi.string().required(),
         card: Joi.number().integer().required(),
-        expiration: Joi.string().regex(helper.regex.exp).required()
+        expiration: Joi.string().regex(helpers.regex.exp).required()
       }).length(3).required()
     }).length(5)
   };
@@ -185,9 +185,9 @@ describe('complex embedded schema', function() {
   before(function(done) {
     var opts = {
       size: 19,
-      schemaPath: 'test/schemas/23_embedded_complex.json'
+      schemaPath: helpers.resolveSchemaPath('/23_embedded_complex.json')
     };
-    helper.getResults(opts, function (err, items) {
+    helpers.getResults(opts, function (err, items) {
       if (err) return done(err);
       res.items = items;
       done();
@@ -207,7 +207,7 @@ describe('complex embedded schema', function() {
   });
 
   it('should produce entries with random content', function (done) {
-    helper.sampleAndStrip(res.items, 2, function (sample) {
+    helpers.sampleAndStrip(res.items, 2, function (sample) {
       assert.notDeepEqual(sample[0], sample[1]);
       done();
     });
