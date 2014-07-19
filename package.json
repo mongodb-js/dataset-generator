@@ -17,7 +17,8 @@
     "mongodb-uri": "^0.9.7",
     "underscore": "^1.6.0",
     "faker": "^1.0.0",
-    "bson": "^0.2.9"
+    "bson": "^0.2.9",
+    "event-stream": "^3.1.5"
   },
   "devDependencies": {
     "mocha": "^1.20.1",
