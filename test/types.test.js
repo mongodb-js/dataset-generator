@@ -24,6 +24,12 @@ describe('generate different types of data', function() {
           string: '{{Date("01/01/2000")}}',
           type: '{{Date(chance.date())}}'
         },
+        primitive: {
+          number: 1,
+          bool1: true,
+          bool0: false,
+          null: null
+        }
       }
     };
     helpers.getResults(opts, function (err, items) {
@@ -88,6 +94,24 @@ describe('generate different types of data', function() {
     it('should work with chance', function () {
       assert.ok(res.item.date.type instanceof Date);
     });
+  });
+
+  describe('#primitive', function() {
+    it('should accept number', function () {
+      assert.ok(typeof res.item.primitive.number === 'number');
+      assert.strictEqual(1, res.item.primitive.number);
+    });
+
+    it('should accept boolean', function () {
+      assert.ok(typeof res.item.primitive.bool0 === 'boolean');
+      assert.ok(typeof res.item.primitive.bool1 === 'boolean');
+      assert.strictEqual(false, res.item.primitive.bool0);
+      assert.strictEqual(true, res.item.primitive.bool1);
+    });
+
+    // it('should accept null', function () {
+    //   assert.strictEqual(null, res.item.primitive.null);
+    // });
   });
 
 });

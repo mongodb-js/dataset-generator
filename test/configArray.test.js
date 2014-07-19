@@ -17,7 +17,9 @@ describe('configurable arrays', function() {
           'doc': [ '{{_.random(1, 3)}}', {
             'some_field': '{{chance.name()}}'
           } ]
-        }
+        },
+        'embedded': [ 1, [ '{{Double(chance.latitude())}}',
+                           '{{Double(chance.longitude())}}' ] ]
       }
     };
     helpers.getResults(opts, function (err, items) {
@@ -53,5 +55,17 @@ describe('configurable arrays', function() {
       assert.ok(l > 0 && l < 4);
     });
   });
+
+  // it('should support array of any length as content', function () {
+  //   console.log(res.items[0].embedded);
+  //   res.items.forEach(function (item) {
+  //     assert.ok(Array.isArray(item.embedded));
+  //     assert.equal(1, item.embedded.length);
+  //     assert.ok(Array.isArray(item.embedded[0]));
+  //     assert.equal(2, item.embedded[0].length);
+  //     assert.ok(typeof item.embedded[0][0] === 'number');
+  //     assert.ok(typeof item.embedded[0][1] === 'number');
+  //   });
+  // });
 
 });
