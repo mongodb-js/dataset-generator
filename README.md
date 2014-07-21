@@ -1,4 +1,4 @@
-# mongodb-datasets
+# MongoDB-Datasets
 
 [![build status](https://secure.travis-ci.org/imlucas/mongodb-datasets.png)](http://travis-ci.org/imlucas/mongodb-datasets)
 
