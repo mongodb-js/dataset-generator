@@ -11,10 +11,10 @@ var myOpts = helpers.filterOptions(argv, md.DEFAULT_OPTIONS.cli);
 var genOpts = helpers.filterOptions(argv, md.DEFAULT_OPTIONS.generator);
 var popOpts = helpers.filterOptions(argv, md.DEFAULT_OPTIONS.populator);
 
-console.log('All commands: ', argv);
-console.log('For this script: ', myOpts);
-console.log('For Generator: ', genOpts);
-console.log('For Populator: ', popOpts);
+// console.log('All commands: ', argv);
+// console.log('For this script: ', myOpts);
+// console.log('For Generator: ', genOpts);
+// console.log('For Populator: ', popOpts);
 
 (myOpts.path ? fs.createReadStream(myOpts.path) : process.stdin)
   .pipe(md.createGeneratorStream(genOpts))
@@ -27,5 +27,6 @@ console.log('For Populator: ', popOpts);
       callback(null, JSON.stringify(data, null, 2));
     }
   }))
-  .pipe(myOpts.display ? process.stdout
-                       : new stream.PassThrough({objectMode: true}));
+  .pipe(process.stdout);
+  // .pipe(myOpts.display ? process.stdout
+                       // : new stream.PassThrough({objectMode: true}));
