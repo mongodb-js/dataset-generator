@@ -7,7 +7,6 @@ describe('complex schema', function() {
   var expected = {
     count: 31,
     schema: Joi.object().keys({
-      _id: Joi.any().required(),
       user_email: Joi.string().email().required(),
       job: Joi.object().keys({
         company: Joi.string().required(),
@@ -31,15 +30,15 @@ describe('complex schema', function() {
           .includes(Joi.string().regex(helpers.regex.phone))
           .excludes(Joi.object()).required()
       }).length(2)).required()
-    }).length(5)
+    }).length(4)
   };
 
   before(function(done) {
+  var schemaPath = helpers.resolveSchemaPath('91_complex.json');
     var opts = {
       size: 31,
-      schemaPath: helpers.resolveSchemaPath('/91_complex.json')
     };
-    helpers.getResults(opts, function (err, items) {
+    helpers.generate(schemaPath, opts, function (err, items) {
       if (err) return done(err);
       res.items = items;
       done();

@@ -7,21 +7,20 @@ describe('generate other datatypes', function() {
   var expected = {
     count: 5,
     schema: Joi.object().keys({
-      _id: Joi.any().required(),
       username: Joi.string().required(),
       email: Joi.string().email().required(),
-    }).length(3)
+    }).length(2)
   };
 
   before(function(done) {
+    var schema = {
+      username: '{{chance.name()}}',
+      email: '{{chance.email()}}'
+    };
     var opts = {
       size: 5,
-      schema: {
-        username: '{{chance.name()}}',
-        email: '{{chance.email()}}'
-      }
     };
-    helpers.getResults(opts, function (err, items) {
+    helpers.generate(schema, opts, function (err, items) {
       if (err) return done(err);
       res.items = items;
       done();

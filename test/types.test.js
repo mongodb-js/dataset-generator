@@ -4,35 +4,35 @@ var assert = require('assert');
 describe('generate different types of data', function() {
   var res = { item: null };
   before(function(done) {
-    var opts = {
-      size: 1,
-      schema: {
-        double: {
-          zero: '{{Double(0)}}',
-          one: '{{Double(1)}}',
-          decimal: '{{Double(0.1)}}',
-          neg: '{{Double(-0.1)}}',
-          array: ['{{Double(0)}}']
-        },
-        boolean: {
-          basic: '{{Boolean(true)}}',
-          interp: '{{Boolean(0)}}',
-          string: '{{Boolean("false")}}'
-        },
-        date: {
-          basic: '{{Date(0)}}',
-          string: '{{Date("01/01/2000")}}',
-          type: '{{Date(chance.date())}}'
-        },
-        primitive: {
-          number: 1,
-          bool1: true,
-          bool0: false,
-          null: null
-        }
+    var schema = {
+      double: {
+        zero: '{{Double(0)}}',
+        one: '{{Double(1)}}',
+        decimal: '{{Double(0.1)}}',
+        neg: '{{Double(-0.1)}}',
+        array: ['{{Double(0)}}']
+      },
+      boolean: {
+        basic: '{{Boolean(true)}}',
+        interp: '{{Boolean(0)}}',
+        string: '{{Boolean("false")}}'
+      },
+      date: {
+        basic: '{{Date(0)}}',
+        string: '{{Date("01/01/2000")}}',
+        type: '{{Date(chance.date())}}'
+      },
+      primitive: {
+        number: 1,
+        bool1: true,
+        bool0: false,
+        null: null
       }
     };
-    helpers.getResults(opts, function (err, items) {
+    var opts = {
+      size: 1,
+    };
+    helpers.generate(schema, opts, function (err, items) {
       if (err) return done(err);
       res.item = items[0];
       done();

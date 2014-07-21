@@ -7,22 +7,21 @@ describe('basic embedded schema', function() {
   var expected = {
     count: 50,
     schema: Joi.object().keys({
-      _id: Joi.any().required(),
       user_email: Joi.string().email().required(),
       job: Joi.object().keys({
         company: Joi.string().required(),
         phone: Joi.string().regex(helpers.regex.phone).required(),
         duties: Joi.string().required(),
       }).length(3).required()
-    }).length(3)
+    }).length(2)
   };
 
   before(function(done) {
+    var schemaPath = helpers.resolveSchemaPath('20_embedded_basic.json');
     var opts = {
       size: 50,
-      schemaPath: helpers.resolveSchemaPath('/20_embedded_basic.json')
     };
-    helpers.getResults(opts, function (err, items) {
+    helpers.generate(schemaPath, opts, function (err, items) {
       if (err) return done(err);
       res.items = items;
       done();
@@ -55,7 +54,6 @@ describe('schema with parallel embedded fields', function() {
   var expected = {
     count: 33,
     schema: Joi.object().keys({
-      _id: Joi.any().required(),
       user_email: Joi.string().email().required(),
       job: Joi.object().keys({
         company: Joi.string().required(),
@@ -67,15 +65,15 @@ describe('schema with parallel embedded fields', function() {
         card: Joi.number().integer().required(),
         expiration: Joi.string().regex(helpers.regex.exp).required()
       }).length(3).required()
-    }).length(4)
+    }).length(3)
   };
 
   before(function(done) {
+    var schemaPath = helpers.resolveSchemaPath('21_embedded_multi.json');
     var opts = {
       size: 33,
-      schemaPath: helpers.resolveSchemaPath('/21_embedded_multi.json')
     };
-    helpers.getResults(opts, function (err, items) {
+    helpers.generate(schemaPath, opts, function (err, items) {
       if (err) return done(err);
       res.items = items;
       done();
@@ -108,7 +106,6 @@ describe('schema with high level of embedding', function() {
   var expected = {
     count: 23,
     schema: Joi.object().keys({
-      _id: Joi.any().required(),
       user_email: Joi.string().email().required(),
       personalities: Joi.object().keys({
         favorites: Joi.object().keys({
@@ -118,15 +115,15 @@ describe('schema with high level of embedding', function() {
         }).length(3).required(),
         rating: Joi.number().integer().max(6).required(),
       }).length(2).required()
-    }).length(3)
+    }).length(2)
   };
 
   before(function(done) {
+    var schemaPath = helpers.resolveSchemaPath('22_embedded_level.json');
     var opts = {
       size: 23,
-      schemaPath: helpers.resolveSchemaPath('/22_embedded_level.json')
     };
-    helpers.getResults(opts, function (err, items) {
+    helpers.generate(schemaPath, opts, function (err, items) {
       if (err) return done(err);
       res.items = items;
       done();
@@ -159,7 +156,6 @@ describe('complex embedded schema', function() {
   var expected = {
     count: 19,
     schema: Joi.object().keys({
-      _id: Joi.any().required(),
       user_email: Joi.string().email().required(),
       job: Joi.object().keys({
         company: Joi.string().required(),
@@ -179,15 +175,15 @@ describe('complex embedded schema', function() {
         card: Joi.number().integer().required(),
         expiration: Joi.string().regex(helpers.regex.exp).required()
       }).length(3).required()
-    }).length(5)
+    }).length(4)
   };
 
   before(function(done) {
+    var schemaPath = helpers.resolveSchemaPath('23_embedded_complex.json');
     var opts = {
       size: 19,
-      schemaPath: helpers.resolveSchemaPath('/23_embedded_complex.json')
     };
-    helpers.getResults(opts, function (err, items) {
+    helpers.generate(schemaPath, opts, function (err, items) {
       if (err) return done(err);
       res.items = items;
       done();
