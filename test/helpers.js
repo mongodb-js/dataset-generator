@@ -3,12 +3,16 @@
  */
 
 var chance = require('chance').Chance();
-var main = require('../');
+var md = require('../');
 var dbUtil = require('../lib/helpers');
 var async = require('async');
 var MongoClient = require('mongodb').MongoClient;
 var debug = require('debug')('dataset:testUtil');
 var _ = require('underscore');
+var es = require('event-stream');
+var fs = require('fs');
+var path = require('path');
+var stream = require('stream');
 
 var defaults = {
   host: 'localhost',
@@ -39,7 +43,7 @@ function setUp (testOpts, callback) {
       var collection = db.collection(opts.collection);
       collection.remove({}, function(err, res) {
         if(err) return callback(err);
-        main.populate(opts, function () {
+        md.populate(opts, function () {
           var connection = {
             db: db,
             collection: collection
@@ -75,15 +79,28 @@ function sampleAndStrip(array, count, fn) {
   });
 }
 
-function resolveSchemaPath(name) {
-  return './examples/' + name;
-}
+module.exports.resolveSchemaPath = function (name) {
+  return path.resolve('.', 'examples', name);
+};
+
+module.exports.generate = function (schema, options, callback) {
+  var rs;
+  if (typeof schema === 'object') {
+    rs = new stream.Readable({objectMode: true});
+    rs.push(schema);
+    rs.push(null);
+  } else {
+    rs = fs.createReadStream(schema);
+  }
+  rs.pipe(md.createGeneratorStream(options))
+    .pipe(es.writeArray(function (err, array) {
+      callback(err, array);
+    }));
+};
 
 // test utility functions
-module.exports.setUp = setUp;
-module.exports.tearDown = tearDown;
+// module.exports.setUp = setUp;
+// module.exports.tearDown = tearDown;
 // general utilities
 module.exports.sampleAndStrip = sampleAndStrip;
 module.exports.regex = regex;
-module.exports.getResults = getResults;
-module.exports.resolveSchemaPath = resolveSchemaPath;
