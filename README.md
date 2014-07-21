@@ -12,9 +12,7 @@ data to be in your database.
 ```javascript
 var datasets = require('mongodb-datasets');
 var opts = {
-  host: 'localhost',
-  port: '27017',
-  db: 'company',
+  uri: 'mongodb://localhost:27017/company',
   collection: 'employee',
   size: 50,
   schema: {
@@ -121,7 +119,7 @@ potentially helpful. Currently we have:
 
 * Due to the use of underscore.js, `_` is accessible from within the template
   schema. Its many powerful methods may cause unwanted effects if used unchecked.
-* A lot of efforts were made to avoid exposing internal variables, but there is 
+* A lot of efforts were made to avoid exposing internal variables, but there is
   still one not properly handled, such as `_state`. Please do not mess with it.
 * Expressions provided by users are directly evaluated without any error
   checking, which may cause the program to crash without supplying much helpful

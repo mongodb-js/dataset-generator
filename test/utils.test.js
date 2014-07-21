@@ -4,17 +4,17 @@ var assert = require('assert');
 describe('util methods for schema config file', function() {
   var res = { items: null };
   before(function(done) {
-    var opts = {
-      size: 10,
-      schema: {
-        counter: {
-          normal: '{{Number(counter())}}',
-          start: '{{Number(counter(2, 100))}}',
-          step: '{{Number(counter(3, 0, 10))}}'
-        }
+    var schema = {
+      counter: {
+        normal: '{{Number(counter())}}',
+        start: '{{Number(counter(2, 100))}}',
+        step: '{{Number(counter(3, 0, 10))}}'
       }
     };
-    helpers.getResults(opts, function (err, items) {
+    var opts = {
+      size: 10,
+    };
+    helpers.generate(schema, opts, function (err, items) {
       if (err) return done(err);
       res.items = items;
       done();

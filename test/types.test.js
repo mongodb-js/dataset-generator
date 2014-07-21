@@ -4,29 +4,35 @@ var assert = require('assert');
 describe('generate different types of data', function() {
   var res = { item: null };
   before(function(done) {
-    var opts = {
-      size: 1,
-      schema: {
-        double: {
-          zero: '{{Double(0)}}',
-          one: '{{Double(1)}}',
-          decimal: '{{Double(0.1)}}',
-          neg: '{{Double(-0.1)}}',
-          array: ['{{Double(0)}}']
-        },
-        boolean: {
-          basic: '{{Boolean(true)}}',
-          interp: '{{Boolean(0)}}',
-          string: '{{Boolean("false")}}'
-        },
-        date: {
-          basic: '{{Date(0)}}',
-          string: '{{Date("01/01/2000")}}',
-          type: '{{Date(chance.date())}}'
-        },
+    var schema = {
+      double: {
+        zero: '{{Double(0)}}',
+        one: '{{Double(1)}}',
+        decimal: '{{Double(0.1)}}',
+        neg: '{{Double(-0.1)}}',
+        array: ['{{Double(0)}}']
+      },
+      boolean: {
+        basic: '{{Boolean(true)}}',
+        interp: '{{Boolean(0)}}',
+        string: '{{Boolean("false")}}'
+      },
+      date: {
+        basic: '{{Date(0)}}',
+        string: '{{Date("01/01/2000")}}',
+        type: '{{Date(chance.date())}}'
+      },
+      primitive: {
+        number: 1,
+        bool1: true,
+        bool0: false,
+        null: null
       }
     };
-    helpers.getResults(opts, function (err, items) {
+    var opts = {
+      size: 1,
+    };
+    helpers.generate(schema, opts, function (err, items) {
       if (err) return done(err);
       res.item = items[0];
       done();
@@ -88,6 +94,24 @@ describe('generate different types of data', function() {
     it('should work with chance', function () {
       assert.ok(res.item.date.type instanceof Date);
     });
+  });
+
+  describe('#primitive', function() {
+    it('should accept number', function () {
+      assert.ok(typeof res.item.primitive.number === 'number');
+      assert.strictEqual(1, res.item.primitive.number);
+    });
+
+    it('should accept boolean', function () {
+      assert.ok(typeof res.item.primitive.bool0 === 'boolean');
+      assert.ok(typeof res.item.primitive.bool1 === 'boolean');
+      assert.strictEqual(false, res.item.primitive.bool0);
+      assert.strictEqual(true, res.item.primitive.bool1);
+    });
+
+    // it('should accept null', function () {
+    //   assert.strictEqual(null, res.item.primitive.null);
+    // });
   });
 
 });

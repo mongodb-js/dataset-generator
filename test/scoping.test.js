@@ -4,23 +4,26 @@ var assert = require('assert');
 describe('scoping', function() {
   var res = { item: null };
   before(function(done) {
-    var opts = {
-      size: 1,
-      schema: {
-        'greetings': 'This is {{this.name}}',
-        'name': '{{chance.name()}}',
-        'zip': '00000',
-        'full_zip': '{{this.zip+"-0000"}}',
-        'num': {
-          'one': 1
-        },
-        'two': '{{Double(this.num.one+1)}}',
-        'dependent': '{{this.s1}}-{{this.s2}}',
-        's1': 'Constant',
-        's2': '{{chance.name()}}'
-      }
+    var schema = {
+      'greetings': 'This is {{this.name}}',
+      'name': '{{chance.name()}}',
+      'zip': '00000',
+      'full_zip': '{{this.zip+"-0000"}}',
+      'num': {
+        'one': 1,
+        'zip': '{{this._$parent.zip}}',
+        'name': '{{this._$parent.name}}',
+        's2': '{{this._$parent.s2}}'
+      },
+      'two': '{{Double(this.num.one+1)}}',
+      'dependent': '{{this.s1}}-{{this.s2}}',
+      's1': 'Constant',
+      's2': '{{chance.name()}}'
     };
-    helpers.getResults(opts, function (err, items) {
+    var options = {
+      size: 1,
+    };
+    helpers.generate(schema, options, function (err, items) {
       if (err) return done(err);
       res.item = items[0];
       done();
@@ -50,6 +53,12 @@ describe('scoping', function() {
     var comps = d.split('-');
     assert.equal('Constant', comps[0]);
     assert.equal(res.item.s2, comps[1]);
+  });
+
+  it('should have access to parent variables', function () {
+    assert.equal(res.item.num.zip, res.item.zip);
+    assert.equal(res.item.num.name, res.item.name);
+    assert.equal(res.item.num.s2, res.item.s2);
   });
 
 });
