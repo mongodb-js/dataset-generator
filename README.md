@@ -1,4 +1,4 @@
-# mongodb-datasets
+# MongoDB-Datasets
 
 [![build status](https://secure.travis-ci.org/imlucas/mongodb-datasets.png)](http://travis-ci.org/imlucas/mongodb-datasets)
 
@@ -10,57 +10,58 @@ data to be in your database.
 ## A Simple Example
 
 ```javascript
-var datasets = require('mongodb-datasets');
-var opts = {
-  uri: 'mongodb://localhost:27017/company',
-  collection: 'employee',
-  size: 50,
-  schema: {
-    _id: '{{counter()}}',
-    name: '{{chance.name()}}',
-    phones: [ 3, '{{chance.phone()}}' ],
-    title: 'Software {{util.sample(["Engineer", "Programmer"])}}'
-  }
-};
+var fs = require('fs'),
+  es = require('event-stream'),
+  assert = require('assert'),
+  datasets = require('mongodb-datasets');
 
-datasets.populate(opts, function () {
-  console.log('This will be called when populating is complete.');
-});
+fs.createReadStream('./test_schema.json')
+  .pipe(datasets.createGeneratorStream({size: 10})
+  .pipe(es.writeArray(function (err, array) {
+    assert.equal(10, array.length);
+  });
+```
+
+test_schema.json
+```json
+{
+  "_id": "{{counter()}}",
+  "name": "{{chance.name()}}",
+  "phones": [ 3, "{{chance.phone()}}" ],
+  "title": "Software {{util.sample(['Engineer', 'Programmer'])}}"
+}
 ```
 
 ## Usage
 
+`createGeneratorStream(options)` creates a [Transform]
+(http://nodejs.org/api/stream.html#stream_class_stream_transform) stream, which
+consumes a Readable stream containing a template schema and produces a stream
+of generated documents in the form of Javascript objects.
+
 ### Options
 
-* `uri` - the URI of the target MongoDB database. Alternatively, you can
-  specify each components respectively: `host`, `port`, `db`
-* `collection` - the collection to store the sample data
 * `size` - the number of documents to be populated
-* `schema` - a Javascript object representing the template schema of your data.
-* Or `schemaPath` - if you want to define your schema in a `.json` file
 
-If any required option is missing, the default will be used.
-```js
-uri: 'mongodb://localhost:27017/test/',
-collection: 'dataset',
-size: 100,
-schemaPath: './me_in_a_nutshell.json'
-```
+[Planned to add support for:]
+* `schema` - a Javascript object representing the template schema of your data.
+If present, the returned stream effectively behaves as a Writable stream.
 
 ### Command line
 
-You can also invoke mongodb-datasets in cli
+You can also use mongodb-datasets in cli. For complete list of available
+commands, use:
 
-    $ mongodb-datasets --schemaPath=./schema.json --size=100 --collection=temp --uri=mongodb://localhost:27017/test
+    $ mongodb-datasets --help
 
-### Building your schema
+## Building your schema
 
 The schema is a JSON or Javascript object which is used as the template of every
 single document to be inserted into MongoDB database. The following content in
 this section discusses how to specify the value of each name/value pair of the
 object.
 
-#### Basics
+### Basics
 
 The value can be any primitive data types, such as boolean, number, array, and
 object. When the value is a string, it can be used to evaluate Javascript
@@ -71,7 +72,7 @@ allowed, whereas a mix of different types is not. Some examples:
 * `{ "brackets_parade": [ { 1: { 2: [ { 3: 3 } ] } } ] }`
 * `{ "mix": "1 + 1 = {{ 1+1 }}" }`
 
-#### Random data
+### Random data
 
 This project uses [chance.js](http://chancejs.com/) and
 [faker.js](https://github.com/FotoVerite/Faker.js) as the internal random data
@@ -79,7 +80,7 @@ generator. To invoke them, simply do, for instance:
 * `{ "use_chance": "{{ chance.name({ gender: 'female' }) }}" }`
 * `{ "use_faker": "{{ faker.Company.catchPhrase() }}" }`
 
-#### Type conversion
+### Type conversion
 
 Maybe you've already noticed. It's not very useful to generate a string from
 `"{{chance.year()}}"` which is expected to apply commands such as `$gte`.
@@ -90,7 +91,7 @@ target object will be the only produced content. Some examples:
 * `{ "date": "{{ Date(chance.date()) }}" }` becomes `ISODate(...)` in MongoDB
 * `{ "two": "{{ Double(1) + Double(1) }}" }` produces `{ "two": 1 }`
 
-#### Document-level scope
+### Document-level scope
 
 You can make use of `this` keyword in expressions to get access to values of
 other name/value pairs. But its behavior is different from the default `this`
@@ -102,7 +103,7 @@ invoked values will not be generated more than once per inserted document.
      "name": { "first": "{{ chance.first() }}" } }` produces consistent result.
 * `{ "echo": {{ Object.keys(this) }} }` returns `{ "echo": [ "echo" ] }`
 
-#### Utility methods
+### Utility methods
 
 We are happy to add more methods in a prompt manner should you find any could be
 potentially helpful. Currently we have:
@@ -115,7 +116,7 @@ potentially helpful. Currently we have:
 * `util.sample(list, [n])` - identical to [underscore.js](http://underscorejs.org/#sample)
 * `util.random(min, max)` - identical to [underscore.js](http://underscorejs.org/#random)
 
-#### Imperfections
+### Imperfections
 
 * Due to the use of underscore.js, `_` is accessible from within the template
   schema. Its many powerful methods may cause unwanted effects if used unchecked.

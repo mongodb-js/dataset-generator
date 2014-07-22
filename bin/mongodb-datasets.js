@@ -1,32 +1,51 @@
 #!/usr/bin/env node
 
-var md = require('../');
-var helpers = require('../lib/helpers');
-var argv = require('minimist')(process.argv.slice(2));
+var datasets = require('../');
 var es = require('event-stream');
 var fs = require('fs');
-var stream = require('stream');
+var yargs = require('yargs')
+      .usage('MongoDB-Datasets version 0.0.0')
+      .example('$0 schema.json -n 10 -o dump.out', '')
+      .example('cat schema.json | $0 -n 10 -o -', '')
+      .describe(0, 'Path to a template schema file')
+      .options('n', {
+        demand: true,
+        alias: 'size',
+        describe: 'Number of documents to generate'
+      })
+      .options('o', {
+        demand: true,
+        alias: 'out',
+        string: true,
+        describe: 'Path to output file. Use "-" for stdout'
+      })
+      .options('pretty', {
+        boolean: true,
+        describe: 'Whether to format results'
+      })
+      .options('h', {
+        alias: 'help',
+        boolean: true,
+        describe: 'Show help message'
+      })
+      .check(function (argv) {
+        if (argv._.length > 1)
+          throw 'Too many arguments!';
+        var _0 = argv._[0];
+        if (_0 && _0 !== 'help' && !fs.existsSync(_0))
+          throw 'Schema file does not exist!';
+      });
+var argv = yargs.argv;
 
-var myOpts = helpers.filterOptions(argv, md.DEFAULT_OPTIONS.cli);
-var genOpts = helpers.filterOptions(argv, md.DEFAULT_OPTIONS.generator);
-var popOpts = helpers.filterOptions(argv, md.DEFAULT_OPTIONS.populator);
+if (argv.h || argv._[0] === 'help') return yargs.showHelp();
 
-// console.log('All commands: ', argv);
-// console.log('For this script: ', myOpts);
-// console.log('For Generator: ', genOpts);
-// console.log('For Populator: ', popOpts);
-
-(myOpts.path ? fs.createReadStream(myOpts.path) : process.stdin)
-  .pipe(md.createGeneratorStream(genOpts))
-  .pipe(myOpts.populate ? md.createPopulatorStream(popOpts)
-                        : new stream.PassThrough({objectMode: true}))
+(argv._[0] ? fs.createReadStream(argv._[0]) : process.stdin)
+  .pipe(datasets.createGeneratorStream({size: argv.size}))
   .pipe(es.map(function (data, callback) {
-    if (myOpts.raw) {
-      callback(null, JSON.stringify(data));
+    if (argv.pretty) {
+      callback(null, JSON.stringify(data, null, 2) + '\n');
     } else {
-      callback(null, JSON.stringify(data, null, 2));
+      callback(null, JSON.stringify(data));
     }
   }))
-  .pipe(process.stdout);
-  // .pipe(myOpts.display ? process.stdout
-                       // : new stream.PassThrough({objectMode: true}));
+  .pipe((argv.out === '-') ? process.stdout : fs.createWriteStream(argv.out));
