@@ -97,11 +97,24 @@ You can make use of `this` keyword in expressions to get access to values of
 other name/value pairs. But its behavior is different from the default `this`
 in a Javascript object in the sense that all properties must correspond to
 a name/value pair. Using values not yet generated is also supported, and the
-invoked values will not be generated more than once per inserted document.
+invoked values will not be generated more than once per inserted document. You
+can also access a field's parent using `this._$parent`.
 * `{ "one": 1, "two: "{{ Double(this.one + 1) }}" }`
 * `{ "first_name": "{{ this.name.first }}",
      "name": { "first": "{{ chance.first() }}" } }` produces consistent result.
 * `{ "echo": {{ Object.keys(this) }} }` returns `{ "echo": [ "echo" ] }`
+* `{ "1": { "2": "{{ this._$parent.3 }}" }, "3": "{{ chance.d6() }}" }`
+
+### Field visibility
+
+You also have control on the visibility of each field. By default, fields with
+name starting with `_$` are hidden. To toggle the visibility, simply call
+`show(boolean)` or `hide(boolean)` anywhere in the target field's expression.
+Note that while hidden one can still access its newly generated value.
+* `{ "_$digit": 3, "lat": "{{ chance.latitude({fixed: this._$digit}) }}",
+                   "lng": "{{ chance.longitude({fixed: this._$digit}) }}"}`
+* `{ "temperature": "{{ util.random(40, 130) }}",
+     "warning": "Too hot! {{ hide(this.temperature < 100) }}" }`
 
 ### Utility methods
 
