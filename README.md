@@ -42,9 +42,7 @@ of generated documents in the form of Javascript objects.
 ### Options
 
 * `size` - the number of documents to be populated
-
-[Planned to add support for:]
-* `schema` - a Javascript object representing the template schema of your data.
+* `schema` - an object representing the template schema of your data.
 If present, the returned stream effectively behaves as a Writable stream.
 
 ### Command line
