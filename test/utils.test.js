@@ -6,11 +6,15 @@ describe('util methods for schema config file', function() {
   before(function(done) {
     var schema = {
       counter: {
-        normal: '{{Number(counter())}}',
-        start: '{{Number(counter(2, 100))}}',
-        step: '{{Number(counter(3, 0, 10))}}'
+        normal: '{{Double(counter())}}',
+        start: '{{Double(counter(2, 100))}}',
+        step: '{{Double(counter(3, 0, 10))}}'
       },
-      size: '{{Double(_$size())}}'
+      index: '{{Double(counter(1))}}',
+      size: '{{Double(_$size())}}',
+      v: {
+        half: '{{hide(this._$parent.index < 5)}}mark'
+      }
     };
     var opts = {
       size: 10,
@@ -48,6 +52,17 @@ describe('util methods for schema config file', function() {
   describe('#_$size()', function () {
     it('should return the correct size', function () {
       assert.equal(10, res.items[0].size);
+    });
+  });
+
+  describe('#hide(cond)', function () {
+    it('should hide a field', function () {
+      res.items.forEach(function (item) {
+        if (item.index < 5)
+          assert.ok(item.v.half === undefined);
+        else
+          assert.equal('mark', item.v.half);
+      });
     });
   });
 
