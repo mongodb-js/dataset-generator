@@ -9,14 +9,15 @@
     "mongodb-datasets": "bin/mongodb-datasets.js"
   },
   "dependencies": {
-    "regret": "^0.1.1",
-    "chance": "^0.5.6",
-    "yargs": "^1.2.6",
-    "mongodb-uri": "^0.9.7",
-    "underscore": "^1.6.0",
-    "faker": "^1.0.0",
     "bson": "^0.2.9",
-    "event-stream": "^3.1.5"
+    "chance": "^0.5.6",
+    "event-stream": "^3.1.5",
+    "faker": "^1.0.0",
+    "mongodb-extended-json": "0.0.4",
+    "mongodb-uri": "^0.9.7",
+    "regret": "^0.1.1",
+    "underscore": "^1.6.0",
+    "yargs": "^1.2.6"
   },
   "devDependencies": {
     "debug": "^1.0.2",
