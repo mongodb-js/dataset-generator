@@ -13,7 +13,10 @@ describe('util methods for schema config file', function() {
       index: '{{Double(counter(1))}}',
       size: '{{Double(_$size())}}',
       v: {
-        half: '{{hide(this._$parent.index < 5)}}mark'
+        half: '{{hide(this._$parent.index < 5)}}mark',
+        data: '{{this.half}}',
+        '_$hide': 'wont be showed anyway',
+        echo: '{{this._$hide}}'
       }
     };
     var opts = {
@@ -62,6 +65,26 @@ describe('util methods for schema config file', function() {
           assert.ok(item.v.half === undefined);
         else
           assert.equal('mark', item.v.half);
+      });
+    });
+
+    it('should make the hidden field accessible', function () {
+      res.items.forEach(function (item) {
+        assert.equal('mark', item.v.data);
+      });
+    });
+  });
+
+  describe('#_$fields', function () {
+    it('should be hidden by default', function () {
+      res.items.forEach(function (item) {
+        assert.ok(item.v._$hide === undefined);
+      });
+    });
+
+    it('should make the auto hidden field accessible', function () {
+      res.items.forEach(function (item) {
+        assert.equal('wont be showed anyway', item.v.echo);
       });
     });
   });
