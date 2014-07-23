@@ -2,7 +2,7 @@
  * Common tools for test
  */
 var chance = require('chance').Chance();
-var md = require('../');
+var datasets = require('../');
 var async = require('async');
 var es = require('event-stream');
 var fs = require('fs');
@@ -14,12 +14,12 @@ module.exports.regex = {
 };
 
 module.exports.generate = function (schema, opts, fn) {
-  if(typeof schema === 'object'){
-    return md.createGeneratorStream(opts).pipe(es.writeArray(fn));
+  if(Object.prototype.toString.call(schema) === '[object Object]'){
+    return datasets(opts.size, schema).pipe(es.writeArray(fn));
   }
 
   fs.createReadStream(schema)
-    .pipe(md.createGeneratorStream(opts))
+    .pipe(datasets(opts.size))
     .pipe(es.writeArray(fn));
 };
 
