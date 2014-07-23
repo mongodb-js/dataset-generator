@@ -11,7 +11,6 @@
     "after",
     "afterEach"
   ],
-  "indent": "2",
   "unused": true,
   "trailing": true,
   "loopfunc": true,

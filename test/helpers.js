@@ -2,8 +2,6 @@ var chance = require('chance').Chance(),
   async = require('async'),
   es = require('event-stream'),
   fs = require('fs'),
-  path = require('path'),
-  assert = require('assert'),
   datasets = require('../');
 
 module.exports.regex = {
@@ -12,18 +10,17 @@ module.exports.regex = {
 };
 
 module.exports.generate = function (schema, opts, fn) {
-  assert(opts.size, 'Missing size');
   if(Object.prototype.toString.call(schema) === '[object Object]'){
     return datasets(opts.size, schema).pipe(es.writeArray(fn));
   }
 
   fs.createReadStream(schema)
-    .pipe(datasets(opts.size))
+    .pipe(datasets.createGeneratorStream({size: opts.size}))
     .pipe(es.writeArray(fn));
 };
 
 module.exports.resolveSchemaPath = function (name) {
-  return path.resolve('.', 'examples', name);
+  return './examples/' + name;
 };
 
 module.exports.sampleAndStrip = function (array, count, fn) {
@@ -31,9 +28,8 @@ module.exports.sampleAndStrip = function (array, count, fn) {
   async.each(sample, function (item, callback) {
     item._id = undefined;
     callback();
-  }, function (err) {
-    if (err)
-      throw err;
+  }, function (err){
+    if (err) throw err;
     fn(sample);
   });
 };
