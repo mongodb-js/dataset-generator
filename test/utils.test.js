@@ -9,7 +9,8 @@ describe('util methods for schema config file', function() {
         normal: '{{Number(counter())}}',
         start: '{{Number(counter(2, 100))}}',
         step: '{{Number(counter(3, 0, 10))}}'
-      }
+      },
+      size: '{{Double(_$size())}}'
     };
     var opts = {
       size: 10,
@@ -41,6 +42,12 @@ describe('util methods for schema config file', function() {
       res.items.forEach(function (item) {
         assert.deepEqual((clock += 10), item.counter.step);
       });
+    });
+  });
+
+  describe('#_$size()', function () {
+    it('should return the correct size', function () {
+      assert.equal(10, res.items[0].size);
     });
   });
 
