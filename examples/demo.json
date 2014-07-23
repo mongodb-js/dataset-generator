@@ -1,0 +1,12 @@
+{
+"_id": "{{ObjectID(chance.hash({length: 12}))}}",
+"name": "{{chance.name({gender: 'male'})}}",
+"twitter": "{{chance.twitter()}}",
+"card": "{{chance.cc({type: 'Visa'})}}",
+"date": "{{Date(chance.date())}}",
+"bool": "{{Boolean(true)}}",
+"info": {
+  "first":"{{this._$parent.name.split(' ')[0]}}",
+  "last": "{{this._$parent.name.split(' ')[1]}}"
+}
+}
