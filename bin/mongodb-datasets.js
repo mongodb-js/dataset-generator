@@ -31,7 +31,8 @@ var datasets = require('../'),
 
 if (argv.h || argv._[0] === 'help') return yargs.showHelp();
 
-if(!argv._[0] && !fs.existsSync(argv._[0])){
+// the schema file can also be piped in through stdin
+if(argv._[0] && !fs.existsSync(argv._[0])){
   console.error('File `'+argv._[0]+'` does not exist!');
   return yargs.showHelp();
 }
