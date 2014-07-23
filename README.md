@@ -47,10 +47,19 @@ If present, the returned stream effectively behaves as a Writable stream.
 
 ### Command line
 
-You can also use mongodb-datasets in cli. For complete list of available
-commands, use:
+You can also use mongodb-datasets in cli. Examples:
 
-    $ mongodb-datasets --help
+    $ mongodb-datasets schema.json -n 10 -o dump.out
+    $ cat schema.json | mongodb-datasets -n 10 -o -
+
+```
+Options:
+  stdin       Path to a template schema file           [string]
+  -n, --size  Number of documents to generate          [required]
+  -o, --out   Path to output file. Use "-" for stdout  [required]
+  --pretty    Whether to format results
+  -h, --help  Show help message
+```
 
 ## Building your schema
 
