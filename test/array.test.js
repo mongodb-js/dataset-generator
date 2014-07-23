@@ -57,7 +57,7 @@ describe('array of primitive types', function() {
 
 });
 
-describe('array of documents', function() {
+describe.skip('array of documents', function() {
   var res = { items: null };
   var expected = {
     count: 99,
@@ -114,7 +114,7 @@ describe('array of documents', function() {
 
 });
 
-describe('array of embedded docs', function() {
+describe.skip('array of embedded docs', function() {
   var res = { items: null };
   var expected = {
     count: 19,
@@ -175,7 +175,7 @@ describe('array of embedded docs', function() {
 
 });
 
-describe('embedded arrays', function() {
+describe.skip('embedded arrays', function() {
   var res = { items: null };
   var expected = {
     count: 11,
