@@ -105,13 +105,13 @@ shortcuts `f.<method>` and `c.<method>`.
 ### Type conversion
 
 Maybe you've already noticed. It's not very useful to generate a string from
-`"{{chance.year()}}"` which is expected to apply commands such as `$gte`.
+`"{{c.year()}}"` which is expected to apply commands such as `$gte`.
 Since its MongoDB-specific nature, the package currently supports common bson
 types as in [bson](https://github.com/mongodb/js-bson) module, such as Number,
 Timestamp, Date, and ObjectID. Note that once conversion is triggered, the
 target object will be the only produced content. Shortcuts are available: D for
 Date, N for Number, O for ObjectID, B for Boolean. Some examples:
-* `{ "date": "{{ D(chance.date()) }}" }` becomes `ISODate(...)` in MongoDB
+* `{ "date": "{{ D(c.date()) }}" }` becomes `ISODate(...)` in MongoDB
 * `{ "two": "{{ N(1) + N(1) }}" }` produces `{ "two": 1 }`
 
 ### Document-level scope
@@ -124,9 +124,9 @@ invoked values will not be generated more than once per inserted document. You
 can also access a field's parent using `this._$parent`.
 * `{ "one": 1, "two: "{{ Number(this.one + 1) }}" }`
 * `{ "first_name": "{{ this.name.first }}",
-     "name": { "first": "{{ chance.first() }}" } }` produces consistent result.
+     "name": { "first": "{{ c.first() }}" } }` produces consistent result.
 * `{ "echo": {{ Object.keys(this) }} }` returns `{ "echo": [ "echo" ] }`
-* `{ "1": { "2": "{{ this._$parent.3 }}" }, "3": "{{ chance.d6() }}" }`
+* `{ "1": { "2": "{{ this._$parent.3 }}" }, "3": "{{ c.d6() }}" }`
 
 ### Field visibility
 
@@ -134,8 +134,8 @@ You also have control on the visibility of each field. By default, fields with
 name starting with `_$` are hidden. To toggle the visibility, simply call
 `show(boolean)` or `hide(boolean)` anywhere in the target field's expression.
 Note that while hidden one can still access its newly generated value.
-* `{ "_$digit": 3, "lat": "{{ chance.latitude({fixed: this._$digit}) }}",
-                   "lng": "{{ chance.longitude({fixed: this._$digit}) }}"}`
+* `{ "_$digit": 3, "lat": "{{ c.latitude({fixed: this._$digit}) }}",
+                   "lng": "{{ c.longitude({fixed: this._$digit}) }}"}`
 * `{ "temperature": "{{ util.random(40, 130) }}",
      "warning": "Too hot! {{ hide(this.temperature < 100) }}" }`
 
@@ -194,7 +194,10 @@ First release!
 
 ### 0.1.3 - Jul. 24, 2014
 * Changed `Double` to `Number` to hide Javascript's `Number` constructor
-* Added shortcuts `N, D, O, B` for `Number, Date, ObjectID, Boolean``
+* Added shortcuts `N, D, O, B` for `Number, Date, ObjectID, Boolean`
+* Added shortcuts `f` for `faker` and `c` for `chance`
+* Added `_$index`
+* Made the former `_$size()` a property `_$size`
 
 ## License
 
