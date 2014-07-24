@@ -97,8 +97,9 @@ allowed, whereas a mix of different types is not. Some examples:
 
 This project uses [chance.js](http://chancejs.com/) and
 [faker.js](https://github.com/FotoVerite/Faker.js) as the internal random data
-generator. To invoke them, simply do, for instance:
-* `{ "use_chance": "{{ chance.name({ gender: 'female' }) }}" }`
+generator. To invoke them, use `faker.<method>` and `chance.<method>`, or
+shortcuts `f.<method>` and `c.<method>`.
+* `{ "use_chance": "{{ c.name({ gender: 'female' }) }}" }`
 * `{ "use_faker": "{{ faker.Company.catchPhrase() }}" }`
 
 ### Type conversion
@@ -142,7 +143,8 @@ Note that while hidden one can still access its newly generated value.
 
 We are happy to add more methods in a prompt manner should you find any could be
 potentially helpful. Currently we have:
-* `_$size` - returns the total number of generated docs in the current run
+* `_$size` - the total number of generated docs in the current run
+* `_$index` - the index of the current document, starting from 0
 * `counter([id], [start], [step])` - the underlying counts are accessble
   anywhere in the outmost document so that you can use the same counter
   consistently regardless of its position
