@@ -6,12 +6,12 @@ describe('util methods for schema config file', function() {
   before(function(done) {
     var schema = {
       counter: {
-        normal: '{{Double(counter())}}',
-        start: '{{Double(counter(2, 100))}}',
-        step: '{{Double(counter(3, 0, 10))}}'
+        normal: '{{N(counter())}}',
+        start: '{{N(counter(2, 100))}}',
+        step: '{{N(counter(3, 0, 10))}}'
       },
-      index: '{{Double(counter(1))}}',
-      size: '{{Double(_$size())}}',
+      index: '{{N(counter(1))}}',
+      size: '{{N(_$size())}}',
       v: {
         half: '{{hide(this._$parent.index < 5)}}mark',
         data: '{{this.half}}',

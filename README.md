@@ -105,11 +105,11 @@ generator. To invoke them, simply do, for instance:
 Maybe you've already noticed. It's not very useful to generate a string from
 `"{{chance.year()}}"` which is expected to apply commands such as `$gte`.
 Since its MongoDB-specific nature, the package currently supports common bson
-types as in [bson](https://github.com/mongodb/js-bson) module, such as Double,
+types as in [bson](https://github.com/mongodb/js-bson) module, such as Number,
 Timestamp, Date, and ObjectID. Note that once conversion is triggered, the
 target object will be the only produced content. Some examples:
 * `{ "date": "{{ Date(chance.date()) }}" }` becomes `ISODate(...)` in MongoDB
-* `{ "two": "{{ Double(1) + Double(1) }}" }` produces `{ "two": 1 }`
+* `{ "two": "{{ Number(1) + Number(1) }}" }` produces `{ "two": 1 }`
 
 ### Document-level scope
 
@@ -119,7 +119,7 @@ in a Javascript object in the sense that all properties must correspond to
 a name/value pair. Using values not yet generated is also supported, and the
 invoked values will not be generated more than once per inserted document. You
 can also access a field's parent using `this._$parent`.
-* `{ "one": 1, "two: "{{ Double(this.one + 1) }}" }`
+* `{ "one": 1, "two: "{{ Number(this.one + 1) }}" }`
 * `{ "first_name": "{{ this.name.first }}",
      "name": { "first": "{{ chance.first() }}" } }` produces consistent result.
 * `{ "echo": {{ Object.keys(this) }} }` returns `{ "echo": [ "echo" ] }`
