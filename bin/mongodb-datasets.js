@@ -3,7 +3,7 @@
 var datasets = require('../'),
   fs = require('fs'),
   yargs = require('yargs')
-    .usage('MongoDB-Datasets version 0.0.0')
+    .usage('MongoDB-Datasets version ' + datasets.version)
     .example('$0 schema.json -n 10 -o dump.out', '')
     .example('cat schema.json | $0 -n 10 -o -', '')
     .describe(0, 'Path to a template schema file')
@@ -31,7 +31,8 @@ var datasets = require('../'),
 
 if (argv.h || argv._[0] === 'help') return yargs.showHelp();
 
-if(!argv._[0] && !fs.existsSync(argv._[0])){
+// the schema file can also be piped in through stdin
+if(argv._[0] && !fs.existsSync(argv._[0])){
   console.error('File `'+argv._[0]+'` does not exist!');
   return yargs.showHelp();
 }

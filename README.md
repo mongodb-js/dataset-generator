@@ -7,8 +7,31 @@ how to populate your MongoDB database with the data as you wish. Unlike a simple
 populator, mongodb-datasets is designed to offer you the maximum control of the
 data to be in your database.
 
+## Installation
+
+To use the `mongodb-datasets` command, install mongodb-datasets globally:
+
+    $ npm install -g mongodb-datasets
+
+To use the Javascript API, simply add mongodb-datasets to the package.json.
+
 ## A Simple Example
 
+test_schema.json
+```json
+{
+  "_id": "{{counter()}}",
+  "name": "{{chance.name()}}",
+  "phones": [ 3, "{{chance.phone()}}" ],
+  "title": "Software {{util.sample(['Engineer', 'Programmer'])}}"
+}
+```
+
+Using the command:
+
+    $ mongodb-datasets test_schema.json -n 10 -o datasets.json
+
+Or using the Javascript API:
 ```javascript
 var fs = require('fs'),
   es = require('event-stream'),
@@ -20,16 +43,6 @@ fs.createReadStream('./test_schema.json')
   .pipe(es.writeArray(function (err, array) {
     assert.equal(10, array.length);
   });
-```
-
-test_schema.json
-```json
-{
-  "_id": "{{counter()}}",
-  "name": "{{chance.name()}}",
-  "phones": [ 3, "{{chance.phone()}}" ],
-  "title": "Software {{util.sample(['Engineer', 'Programmer'])}}"
-}
 ```
 
 ## Usage
@@ -47,10 +60,19 @@ If present, the returned stream effectively behaves as a Writable stream.
 
 ### Command line
 
-You can also use mongodb-datasets in cli. For complete list of available
-commands, use:
+You can also use mongodb-datasets in cli. Examples:
 
-    $ mongodb-datasets --help
+    $ mongodb-datasets schema.json -n 10 -o dump.out
+    $ cat schema.json | mongodb-datasets -n 10 -o -
+
+```
+Options:
+  -0          Path to a template schema file           [string]
+  -n, --size  Number of documents to generate          [required]
+  -o, --out   Path to output file. Use "-" for stdout  [required]
+  --pretty    Whether to format results
+  -h, --help  Show help message
+```
 
 ## Building your schema
 
@@ -118,14 +140,17 @@ Note that while hidden one can still access its newly generated value.
 
 We are happy to add more methods in a prompt manner should you find any could be
 potentially helpful. Currently we have:
+* `_$size()` - returns the total number of generated docs in the current run
 * `counter([id], [start], [step])` - the underlying counts are accessble
   anywhere in the outmost document so that you can use the same counter
   consistently regardless of its position
   + `id` - the index of the counter to use, default is 0
   + `start` - the first count, default is 0
   + `step` - increment of each count, default is 1
+* `coordinates(options)` - generate a coordinate pairs of the
+  form [\<lat\>, \<lng\>]. Options:
+  + `fixed` - number of decimal digits for lat/lng
 * `util.sample(list, [n])` - identical to [underscore.js](http://underscorejs.org/#sample)
-* `util.random(min, max)` - identical to [underscore.js](http://underscorejs.org/#random)
 
 ### Imperfections
 

@@ -6,9 +6,17 @@ describe('util methods for schema config file', function() {
   before(function(done) {
     var schema = {
       counter: {
-        normal: '{{Number(counter())}}',
-        start: '{{Number(counter(2, 100))}}',
-        step: '{{Number(counter(3, 0, 10))}}'
+        normal: '{{Double(counter())}}',
+        start: '{{Double(counter(2, 100))}}',
+        step: '{{Double(counter(3, 0, 10))}}'
+      },
+      index: '{{Double(counter(1))}}',
+      size: '{{Double(_$size())}}',
+      v: {
+        half: '{{hide(this._$parent.index < 5)}}mark',
+        data: '{{this.half}}',
+        '_$hide': 'wont be showed anyway',
+        echo: '{{this._$hide}}'
       }
     };
     var opts = {
@@ -40,6 +48,43 @@ describe('util methods for schema config file', function() {
       var clock = -10;
       res.items.forEach(function (item) {
         assert.deepEqual((clock += 10), item.counter.step);
+      });
+    });
+  });
+
+  describe('#_$size()', function () {
+    it('should return the correct size', function () {
+      assert.equal(10, res.items[0].size);
+    });
+  });
+
+  describe('#hide(cond)', function () {
+    it('should hide a field', function () {
+      res.items.forEach(function (item) {
+        if (item.index < 5)
+          assert.ok(item.v.half === undefined);
+        else
+          assert.equal('mark', item.v.half);
+      });
+    });
+
+    it('should make the hidden field accessible', function () {
+      res.items.forEach(function (item) {
+        assert.equal('mark', item.v.data);
+      });
+    });
+  });
+
+  describe('#_$fields', function () {
+    it('should be hidden by default', function () {
+      res.items.forEach(function (item) {
+        assert.ok(item.v._$hide === undefined);
+      });
+    });
+
+    it('should make the auto hidden field accessible', function () {
+      res.items.forEach(function (item) {
+        assert.equal('wont be showed anyway', item.v.echo);
       });
     });
   });
