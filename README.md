@@ -142,7 +142,7 @@ Note that while hidden one can still access its newly generated value.
 
 We are happy to add more methods in a prompt manner should you find any could be
 potentially helpful. Currently we have:
-* `_$size()` - returns the total number of generated docs in the current run
+* `_$size` - returns the total number of generated docs in the current run
 * `counter([id], [start], [step])` - the underlying counts are accessble
   anywhere in the outmost document so that you can use the same counter
   consistently regardless of its position

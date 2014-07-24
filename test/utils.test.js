@@ -10,8 +10,8 @@ describe('util methods for schema config file', function() {
         start: '{{N(counter(2, 100))}}',
         step: '{{N(counter(3, 0, 10))}}'
       },
-      index: '{{N(counter(1))}}',
-      size: '{{N(_$size())}}',
+      index: '{{N(_$index)}}',
+      size: '{{N(_$size)}}',
       v: {
         half: '{{hide(this._$parent.index < 5)}}mark',
         data: '{{this.half}}',
@@ -52,7 +52,7 @@ describe('util methods for schema config file', function() {
     });
   });
 
-  describe('#_$size()', function () {
+  describe('#_$size', function () {
     it('should return the correct size', function () {
       assert.equal(10, res.items[0].size);
     });
@@ -71,6 +71,14 @@ describe('util methods for schema config file', function() {
     it('should make the hidden field accessible', function () {
       res.items.forEach(function (item) {
         assert.equal('mark', item.v.data);
+      });
+    });
+  });
+
+  describe('#_$index', function () {
+    it('should return the index of the current doc', function () {
+      res.items.forEach(function (item, index) {
+        assert.equal(index, item.index);
       });
     });
   });

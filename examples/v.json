@@ -1,5 +1,5 @@
 {
-  "_$max_version": "{{N(_$size())}}",
+  "_$max_version": "{{N(_$size)}}",
   "_$attr2_released": "{{N(this._$max_version / 2)}}",
   "docId": "{{N(chance.natural({max: 1000}))}}",
   "v": "{{N(counter(0, 1, 1))}}",
