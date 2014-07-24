@@ -1,6 +1,7 @@
 # MongoDB-Datasets
 
-[![build status](https://secure.travis-ci.org/imlucas/mongodb-datasets.png)](http://travis-ci.org/imlucas/mongodb-datasets)
+[![build status](https://secure.travis-ci.org/imlucas/mongodb-datasets.png)]
+(http://travis-ci.org/imlucas/mongodb-datasets)
 
 What's a database without any data? With mongodb-datasets you never worry about
 how to populate your MongoDB database with the data as you wish. Unlike a simple
@@ -107,9 +108,10 @@ Maybe you've already noticed. It's not very useful to generate a string from
 Since its MongoDB-specific nature, the package currently supports common bson
 types as in [bson](https://github.com/mongodb/js-bson) module, such as Number,
 Timestamp, Date, and ObjectID. Note that once conversion is triggered, the
-target object will be the only produced content. Some examples:
-* `{ "date": "{{ Date(chance.date()) }}" }` becomes `ISODate(...)` in MongoDB
-* `{ "two": "{{ Number(1) + Number(1) }}" }` produces `{ "two": 1 }`
+target object will be the only produced content. Shortcuts are available: D for
+Date, N for Number, O for ObjectID, B for Boolean. Some examples:
+* `{ "date": "{{ D(chance.date()) }}" }` becomes `ISODate(...)` in MongoDB
+* `{ "two": "{{ N(1) + N(1) }}" }` produces `{ "two": 1 }`
 
 ### Document-level scope
 
@@ -164,18 +166,33 @@ potentially helpful. Currently we have:
 
 ## Purpose of this project
 
-With the explosion of data volume and availability, users are
-transitioning their focus to analysis and data-mining on these vast
-datasets. We believe MongoDB is ideally positioned to provide the
-backbone to meet these market needs. While several users have already
-begun to exploit this, it requires substantial sunk costs including
-mapping the aggregation framework to their current mental model,
-designing efficient schemas, and acquiring datasets for prototyping.
-Work to humanize the aggregation framework is already underway. We
-believe supplying users with example schemas for common use cases,
-such as user activity streams, time series data, and entity management,
-and more importantly, corresponding datasets for prototyping will
-establish MongoDB as a leader in this emerging market.
+With the explosion of data volume and availability, users are transitioning
+their focus to analysis and data-mining on these vast datasets. We believe
+MongoDB is ideally positioned to provide the backbone to meet these market
+needs. While several users have already begun to exploit this, it requires
+substantial sunk costs including mapping the aggregation framework to their
+current mental model, designing efficient schemas, and acquiring datasets for
+prototyping. Work to humanize the aggregation framework is already underway. We
+believe supplying users with example schemas for common use cases, such as user
+activity streams, time series data, and entity management, and more importantly,
+corresponding datasets for prototyping will establish MongoDB as a leader in
+this emerging market.
+
+## Change log
+
+### 0.1.0 - Jul. 23, 2014
+First release!
+
+### 0.1.1 - Jul. 23, 2014
+* Fixed bug that causes `mongodb-datasets` command crash
+* Updated README to include all features
+
+### 0.1.2 - Jul. 24, 2014
+* Fixed bug that causes inconsistent content if `this.<embedded doc>` is used
+
+### 0.1.3 - Jul. 24, 2014
+* Changed `Double` to `Number` to hide Javascript's `Number` constructor
+* Added shortcuts `N, D, O, B` for `Number, Date, ObjectID, Boolean``
 
 ## License
 
