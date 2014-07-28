@@ -11,13 +11,13 @@ describe('configurable arrays', function() {
         'normal': [ 3, '{{N(counter())}}']
       },
       'random': {
-        'field': [ '{{_.random(1, 1)}}', '{{c.name()}}' ],
+        'field': [ '{{_.random(1, 1)}}', '{{chance.name()}}' ],
         'doc': [ '{{_.random(1, 3)}}', {
-          'some_field': '{{c.name()}}'
+          'some_field': '{{chance.name()}}'
         } ]
       },
-      'embedded': [ 1, [ '{{N(c.latitude())}}',
-                         '{{N(c.longitude())}}' ] ]
+      'embedded': [ 1, [ '{{N(chance.latitude())}}',
+                         '{{N(chance.longitude())}}' ] ]
     };
     var opts = {
       size: 50,

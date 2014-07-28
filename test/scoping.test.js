@@ -6,7 +6,7 @@ describe('scoping', function() {
   before(function(done) {
     var schema = {
       'greetings': 'This is {{this.name}}',
-      'name': '{{c.name()}}',
+      'name': '{{chance.name()}}',
       'zip': '00000',
       'full_zip': '{{this.zip+"-0000"}}',
       'num': {
@@ -19,7 +19,7 @@ describe('scoping', function() {
       'two': '{{N(this.num.one+1)}}',
       'dependent': '{{this.s1}}-{{this.s2}}',
       's1': 'Constant',
-      's2': '{{c.name()}}',
+      's2': '{{chance.name()}}',
       'index': '{{N(this.num.index)}}'
     };
     var options = {

@@ -20,7 +20,7 @@ describe('generate different types of data', function() {
       date: {
         basic: '{{D(0)}}',
         string: '{{Date("01/01/2000")}}',
-        type: '{{Date(c.date())}}'
+        type: '{{Date(chance.date())}}'
       },
       primitive: {
         number: 1,
