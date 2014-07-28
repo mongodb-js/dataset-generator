@@ -13,12 +13,14 @@ describe('scoping', function() {
         'one': 1,
         'zip': '{{this._$parent.zip}}',
         'name': '{{this._$parent.name}}',
-        's2': '{{this._$parent.s2}}'
+        's2': '{{this._$parent.s2}}',
+        'index': '{{Double(counter())}}'
       },
       'two': '{{Double(this.num.one+1)}}',
       'dependent': '{{this.s1}}-{{this.s2}}',
       's1': 'Constant',
-      's2': '{{chance.name()}}'
+      's2': '{{chance.name()}}',
+      'index': '{{Double(this.num.index)}}'
     };
     var options = {
       size: 1,
@@ -59,6 +61,11 @@ describe('scoping', function() {
     assert.equal(res.item.num.zip, res.item.zip);
     assert.equal(res.item.num.name, res.item.name);
     assert.equal(res.item.num.s2, res.item.s2);
+  });
+
+  it('should not cause redundant generating via getter of a doc', function () {
+    assert.equal(0, res.item.index);
+    assert.equal(0, res.item.num.index);
   });
 
 });
