@@ -1,5 +1,5 @@
 {
-"_id": "{{ObjectIDate(chance.hash({length: 12}))}}",
+"_id": "{{ObjectID(chance.hash({length: 12}))}}",
 "name": "{{chance.name({gender: 'male'})}}",
 "twitter": "{{chance.twitter()}}",
 "card": "{{chance.cc({type: 'Visa'})}}",
