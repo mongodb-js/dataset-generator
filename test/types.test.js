@@ -6,19 +6,19 @@ describe('generate different types of data', function() {
   before(function(done) {
     var schema = {
       double: {
-        zero: '{{N(0)}}',
+        zero: '{{Number(0)}}',
         one: '{{Number(1)}}',
         decimal: '{{Number(0.1)}}',
         neg: '{{Number(-0.1)}}',
         array: ['{{Number(0)}}']
       },
       boolean: {
-        basic: '{{B(true)}}',
+        basic: '{{Boolean(true)}}',
         interp: '{{Boolean(0)}}',
         string: '{{Boolean("false")}}'
       },
       date: {
-        basic: '{{D(0)}}',
+        basic: '{{Date(0)}}',
         string: '{{Date("01/01/2000")}}',
         type: '{{Date(chance.date())}}'
       },
