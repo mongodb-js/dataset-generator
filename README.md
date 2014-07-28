@@ -1,10 +1,9 @@
 # MongoDB-Datasets
 
-[![Build Status]((https://secure.travis-ci.org/imlucas/mongodb-datasets.png)](http://travis-ci.org/imlucas/mongodb-datasets)
-<!-- [![Coverage Status](https://coveralls.io/repos/imlucas/mongodb-datasets/badge.png)](https://coveralls.io/r/imlucas/mongodb-datasets) -->
+[![Build Status](https://secure.travis-ci.org/imlucas/mongodb-datasets.png)](http://travis-ci.org/imlucas/mongodb-datasets)
 [![Dependency Status](https://david-dm.org/imlucas/mongodb-datasets.svg?theme=shields.io)](https://david-dm.org/imlucas/mongodb-datasets)
 ![npm version](http://img.shields.io/npm/v/mongodb-datasets.svg)
-
+<!-- [![Coverage Status](https://coveralls.io/repos/imlucas/mongodb-datasets/badge.png)](https://coveralls.io/r/imlucas/mongodb-datasets) -->
 What's a database without any data? With mongodb-datasets you never worry about
 how to populate your MongoDB database with the data as you wish. Unlike a simple
 populator, mongodb-datasets is designed to offer you the maximum control of the
