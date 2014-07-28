@@ -192,10 +192,10 @@ First release!
 * Fixed bug that causes `mongodb-datasets` command crash
 * Updated README to include all features
 
-### 0.1.2 - Jul. 24, 2014
+### 0.1.3 - Jul. 24, 2014
 * Fixed bug that causes inconsistent content if `this.<embedded doc>` is used
 
-### 0.1.3 - Jul. 24, 2014
+### 0.1.4 - Jul. 24, 2014
 * Changed `Double` to `Number` to hide Javascript's `Number` constructor
 * Added shortcuts `N, D, O, B` for `Number, Date, ObjectID, Boolean`
 * Added shortcuts `f` for `faker` and `c` for `chance`
