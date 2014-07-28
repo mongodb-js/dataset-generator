@@ -14,13 +14,13 @@ describe('scoping', function() {
         'zip': '{{this._$parent.zip}}',
         'name': '{{this._$parent.name}}',
         's2': '{{this._$parent.s2}}',
-        'index': '{{Double(counter())}}'
+        'index': '{{Number(counter())}}'
       },
-      'two': '{{Double(this.num.one+1)}}',
+      'two': '{{Number(this.num.one+1)}}',
       'dependent': '{{this.s1}}-{{this.s2}}',
       's1': 'Constant',
       's2': '{{chance.name()}}',
-      'index': '{{Double(this.num.index)}}'
+      'index': '{{Number(this.num.index)}}'
     };
     var options = {
       size: 1,

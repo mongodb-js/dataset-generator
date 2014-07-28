@@ -6,11 +6,11 @@ describe('generate different types of data', function() {
   before(function(done) {
     var schema = {
       double: {
-        zero: '{{Double(0)}}',
-        one: '{{Double(1)}}',
-        decimal: '{{Double(0.1)}}',
-        neg: '{{Double(-0.1)}}',
-        array: ['{{Double(0)}}']
+        zero: '{{Number(0)}}',
+        one: '{{Number(1)}}',
+        decimal: '{{Number(0.1)}}',
+        neg: '{{Number(-0.1)}}',
+        array: ['{{Number(0)}}']
       },
       boolean: {
         basic: '{{Boolean(true)}}',
@@ -39,7 +39,7 @@ describe('generate different types of data', function() {
     });
   });
 
-  describe('#double', function() {
+  describe('#number', function() {
     it('should support integer', function () {
       assert.ok(typeof res.item.double.zero === 'number');
       assert.strictEqual(0, res.item.double.zero);

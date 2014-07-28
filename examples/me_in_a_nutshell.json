@@ -36,7 +36,7 @@
       },
       "object": {
         "ISODate": "{{Date(chance.date())}}",
-        "number": "{{Double(2)}}",
+        "number": "{{Number(2)}}",
         "boolean": "{{Boolean(true)}}",
         "long": "{{NumberLong(3)}}",
         "more": "Please refer to docs for the complete list"

@@ -27,7 +27,7 @@
   ],
   "vars": [ "{{_.random(2, 4)}}",
     {
-      "id": "{{Double(counter(0))}}",
+      "id": "{{Number(counter(0))}}",
       "img": [
         {
           "height": "{{10 * chance.natural({max: 128})}}",

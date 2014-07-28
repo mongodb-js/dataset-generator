@@ -8,7 +8,7 @@ describe('configurable arrays', function() {
       'defaults': [ 'default options apply' ],
       'hardcoded': {
         'zero': [ 0, 'should not appear' ],
-        'normal': [ 3, '{{Double(counter())}}']
+        'normal': [ 3, '{{Number(counter())}}']
       },
       'random': {
         'field': [ '{{_.random(1, 1)}}', '{{chance.name()}}' ],
@@ -16,8 +16,8 @@ describe('configurable arrays', function() {
           'some_field': '{{chance.name()}}'
         } ]
       },
-      'embedded': [ 1, [ '{{Double(chance.latitude())}}',
-                         '{{Double(chance.longitude())}}' ] ]
+      'embedded': [ 1, [ '{{Number(chance.latitude())}}',
+                         '{{Number(chance.longitude())}}' ] ]
     };
     var opts = {
       size: 50,
