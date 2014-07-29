@@ -1,4 +1,4 @@
 {
   "name": "{{chance.name()}}",
-  "friends": [ "{{chance.name()}}" ]
+  "friends": [ "{{_$config}}", null, "{{chance.name()}}" ]
 }
