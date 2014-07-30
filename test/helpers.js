@@ -23,7 +23,6 @@ module.exports.resolveSchemaPath = function (name) {
 };
 
 module.exports.sampleAndStrip = function (array, count, fn) {
-  // var sample = chance.pick(array, count);
   var sample = _.sample(array, count);
   sample.forEach(function (item) {
     item._id = undefined;

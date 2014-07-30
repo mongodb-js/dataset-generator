@@ -10,6 +10,7 @@ describe('scoping', function() {
       'zip': '00000',
       'full_zip': '{{this.zip+"-0000"}}',
       'num': {
+        'neg': '{{Number(this._$parent.array.data[0])}}',
         'one': 1,
         'zip': '{{this._$parent.zip}}',
         'name': '{{this._$parent.name}}',
@@ -20,7 +21,14 @@ describe('scoping', function() {
       'dependent': '{{this.s1}}-{{this.s2}}',
       's1': 'Constant',
       's2': '{{chance.name()}}',
-      'index': '{{Number(this.num.index)}}'
+      'index': '{{Number(this.num.index)}}',
+      'array': {
+        'data': [ -1 ],
+        'ref': [
+          '{{Number(this._$parent.num.one)}}',
+          '{{this._$parent.name}}'
+        ]
+      }
     };
     var options = {
       size: 1,
@@ -66,6 +74,20 @@ describe('scoping', function() {
   it('should not cause redundant generating via getter of a doc', function () {
     assert.equal(0, res.item.index);
     assert.equal(0, res.item.num.index);
+  });
+
+  it('should be able to refer elements in an array', function () {
+    assert.ok(Array.isArray(res.item.array.data));
+    assert.equal(1, res.item.array.data.length);
+    assert.equal(-1, res.item.array.data[0]);
+    assert.equal(-1, res.item.num.neg);
+  });
+
+  it('should support accessing data from inside an array', function () {
+    assert.ok(Array.isArray(res.item.array.ref));
+    assert.equal(2, res.item.array.ref.length);
+    assert.equal(1, res.item.array.ref[0]);
+    assert.equal(res.item.name, res.item.array.ref[1]);
   });
 
 });
