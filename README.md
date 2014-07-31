@@ -198,7 +198,8 @@ First release!
 * Added `_$index`
 * Made the former `_$size()` a property `_$size`
 
-### 0.2.0-alpha - Jul. 29, 2014
+### Changes not yet released
+#### branch:API - Jul. 29, 2014
 * Output nice formatted json array with flag `--pretty` enabled
 * Mapped chance and faker's random functions to higher level API of datasets.
   Please consult comments in `lib/schema/context.js' for detailed usage.

@@ -1,6 +1,6 @@
 {
   "name": "mongodb-datasets",
-  "version": "0.2.0-alpha",
+  "version": "0.1.4",
   "description": "What's a database without any data?",
   "scripts": {
     "test": "mocha"
