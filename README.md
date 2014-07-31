@@ -4,6 +4,7 @@
 [![Dependency Status](https://david-dm.org/imlucas/mongodb-datasets.svg?theme=shields.io)](https://david-dm.org/imlucas/mongodb-datasets)
 ![npm version](http://img.shields.io/npm/v/mongodb-datasets.svg)
 <!-- [![Coverage Status](https://coveralls.io/repos/imlucas/mongodb-datasets/badge.png)](https://coveralls.io/r/imlucas/mongodb-datasets) -->
+
 What's a database without any data? With mongodb-datasets you never worry about
 how to populate your MongoDB database with the data as you wish. Unlike a simple
 populator, mongodb-datasets is designed to offer you the maximum control of the
@@ -51,10 +52,10 @@ fs.createReadStream('./test_schema.json')
 
 ## Usage
 
-`createGeneratorStream(options)` creates a [Transform]
-(http://nodejs.org/api/stream.html#stream_class_stream_transform) stream, which
-consumes a Readable stream containing a template schema and produces a stream
-of generated documents in the form of Javascript objects.
+`createGeneratorStream(options)` creates a
+[Transform](http://nodejs.org/api/stream.html#stream_class_stream_transform)
+stream, which consumes a Readable stream containing a template schema and
+produces a stream of generated documents in the form of Javascript objects.
 
 ### Options
 
@@ -152,9 +153,6 @@ potentially helpful. Currently we have:
   + `id` - the index of the counter to use, default is 0
   + `start` - the first count, default is 0
   + `step` - increment of each count, default is 1
-* `coordinates(options)` - generate a coordinate pairs of the
-  form [\<lat\>, \<lng\>]. Options:
-  + `fixed` - number of decimal digits for lat/lng
 * `util.sample(list, [n])` - identical to [underscore.js](http://underscorejs.org/#sample)
 
 ### Imperfections
