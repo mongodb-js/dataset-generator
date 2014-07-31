@@ -198,6 +198,17 @@ First release!
 * Added `_$index`
 * Made the former `_$size()` a property `_$size`
 
+### Changed not yet published
+#### branch:arrayField - Jul. 31, 2014
+* New syntax for defining arrays in template schema
+* All configured arrays must conform to the format:
+  + `[ "{{_$config}}", {/*options*/}, <content>, /*optionally*/ <more content...> ]`
+* Arrays whose first element is not `{{_$config}}` are treated as ordinary arrays
+  + multiple elements are ok, `[ '{{chance.name()}}',  '{{chance.age()}}' ]`
+  + different types are ok `[ true, 3, { doc: 'doc' }, [ "array" ]]`
+* Supported options:
+  + `size` - can be a number or an array of two numbers ([min, max]). the number of times the contents will be repeated
+
 ## License
 
 MIT
