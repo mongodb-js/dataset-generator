@@ -20,7 +20,21 @@ describe('scoping', function() {
       'dependent': '{{this.s1}}-{{this.s2}}',
       's1': 'Constant',
       's2': '{{chance.name()}}',
-      'index': '{{Number(this.num.index)}}'
+      'index': '{{Number(this.num.index)}}',
+      '3': {
+        '2': {
+          '1': {
+            'self': {
+              '1': '{{this._$nthParent().val}}',
+              '2': '{{this._$nthParent(2).val}}',
+              '3': '{{this._$nthParent(3).val}}'
+            },
+            'val': '{{chance.name()}}'
+          },
+          'val': '{{chance.name()}}'
+        },
+        'val': '{{chance.name()}}'
+      }
     };
     var options = {
       size: 1,
@@ -66,6 +80,13 @@ describe('scoping', function() {
   it('should not cause redundant generating via getter of a doc', function () {
     assert.equal(0, res.item.index);
     assert.equal(0, res.item.num.index);
+  });
+
+  it('should support _$nthParent(n)', function () {
+    var self = res.item[3][2][1].self;
+    assert.equal(self[1], res.item[3][2][1].val);
+    assert.equal(self[2], res.item[3][2].val);
+    assert.equal(self[3], res.item[3].val);
   });
 
 });
