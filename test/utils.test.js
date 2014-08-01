@@ -16,7 +16,8 @@ describe('util methods for schema config file', function() {
         half: '{{hide(this._$parent.index < 5)}}mark',
         data: '{{this.half}}',
         '_$hide': 'wont be showed anyway',
-        echo: '{{this._$hide}}'
+        echo: '{{this._$hide}}',
+        index: '{{Number(_$root.index)}}'
       }
     };
     var opts = {
@@ -55,6 +56,14 @@ describe('util methods for schema config file', function() {
   describe('#_$size', function () {
     it('should return the correct size', function () {
       assert.equal(10, res.items[0].size);
+    });
+  });
+
+  describe('#_$root', function () {
+    it('should access the root', function () {
+      res.items.forEach(function (item) {
+        assert.equal(item.index, item.v.index);
+      });
     });
   });
 
