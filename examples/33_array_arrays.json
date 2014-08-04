@@ -1,8 +1,8 @@
 {
   "name": "{{chance.name()}}",
-  "friends": [{
+  "friends": [ "{{_$config}}", {}, {
     "name": "{{chance.name()}}",
-    "payment_method": [{
+    "payment_method": [ "{{_$config}}", {}, {
       "type": "{{chance.cc_type()}}",
       "card": "{{chance.cc()}}",
       "expiration": "{{chance.exp()}}"

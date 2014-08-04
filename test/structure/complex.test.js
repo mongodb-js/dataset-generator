@@ -1,4 +1,4 @@
-var helpers = require('./helpers');
+var helpers = require('../helpers');
 var Joi = require('joi');
 var assert = require('assert');
 
@@ -51,7 +51,7 @@ describe('complex schema', function() {
 
   it('should produce correct schema structure', function () {
     res.items.forEach(function (item) {
-      Joi.validate(item, expected.schema, function(err, val) {
+      Joi.validate(item, expected.schema, function(err) {
         assert.ifError(err);
       });
     });

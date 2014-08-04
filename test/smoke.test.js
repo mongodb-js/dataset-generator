@@ -33,7 +33,7 @@ describe('generate other datatypes', function() {
 
   it('should produce correct schema structure', function () {
     res.items.forEach(function (item) {
-      Joi.validate(item, expected.schema, function(err, val) {
+      Joi.validate(item, expected.schema, function(err) {
         assert.ifError(err);
       });
     });

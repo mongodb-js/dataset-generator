@@ -16,8 +16,8 @@
     },
     "violence-rating": "{{chance.d6()}}"
   },
-  "friends" : [{
+  "friends" : [ "{{_$config}}", {}, {
     "name": "{{chance.name()}}",
-    "phones": ["{{chance.phone()}}"]
+    "phones": [ "{{_$config}}", {}, "{{chance.phone()}}"]
   }]
 }
