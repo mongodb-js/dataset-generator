@@ -14,6 +14,7 @@
     "debug": "^1.0.2",
     "event-stream": "^3.1.5",
     "faker": "^1.0.0",
+    "joi": "^4.6.1",
     "mongodb-extended-json": "0.0.4",
     "mongodb-uri": "^0.9.7",
     "underscore": "^1.6.0",
@@ -21,7 +22,6 @@
   },
   "devDependencies": {
     "gulp": "^3.8.6",
-    "joi": "^4.6.1",
     "mocha": "^1.20.1",
     "mongodb-importer": "^0.0.0"
   },

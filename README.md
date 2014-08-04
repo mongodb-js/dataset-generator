@@ -193,12 +193,18 @@ First release!
 ### 0.1.3 - Jul. 24, 2014
 * Fixed bug that causes inconsistent content if `this.<embedded doc>` is used
 
-### 0.1.4 - Jul. 24, 2014
+### 0.1.4 - Jul. 28, 2014
 * Changed `Double` to `Number` to hide Javascript's `Number` constructor
 * Added `_$index`
 * Made the former `_$size()` a property `_$size`
 
 ### Changed not yet published
+
+#### branch:API - Jul. 29, 2014
+* Output nice formatted json array with flag `--pretty` enabled
+* Mapped chance and faker's random functions to higher level API of datasets.
+  Please consult comments in `lib/schema/context.js' for detailed usage.
+
 #### branch:arrayField - Jul. 31, 2014
 * New syntax for defining arrays in template schema
 * All configured arrays must conform to the format:
