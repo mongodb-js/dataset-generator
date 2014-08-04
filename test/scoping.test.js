@@ -10,6 +10,7 @@ describe('scoping', function() {
       'zip': '00000',
       'full_zip': '{{this.zip+"-0000"}}',
       'num': {
+        'neg': '{{Number(this._$parent.array.data[0])}}',
         'one': 1,
         'zip': '{{this._$parent.zip}}',
         'name': '{{this._$parent.name}}',
@@ -34,6 +35,13 @@ describe('scoping', function() {
           'val': '{{chance.name()}}'
         },
         'val': '{{chance.name()}}'
+      },
+      'array': {
+        'data': [ -1 ],
+        'ref': [
+          '{{Number(this._$parent.num.one)}}',
+          '{{this._$parent.name}}'
+        ]
       }
     };
     var options = {
@@ -87,6 +95,20 @@ describe('scoping', function() {
     assert.equal(self[1], res.item[3][2][1].val);
     assert.equal(self[2], res.item[3][2].val);
     assert.equal(self[3], res.item[3].val);
+  });
+
+  it('should be able to refer elements in an array', function () {
+    assert.ok(Array.isArray(res.item.array.data));
+    assert.equal(1, res.item.array.data.length);
+    assert.equal(-1, res.item.array.data[0]);
+    assert.equal(-1, res.item.num.neg);
+  });
+
+  it('should support accessing data from inside an array', function () {
+    assert.ok(Array.isArray(res.item.array.ref));
+    assert.equal(2, res.item.array.ref.length);
+    assert.equal(1, res.item.array.ref[0]);
+    assert.equal(res.item.name, res.item.array.ref[1]);
   });
 
 });

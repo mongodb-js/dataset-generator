@@ -1,6 +1,6 @@
 {
   "name": "{{chance.name()}}",
-  "friends": [{
+  "friends": [ "{{_$config}}", {}, {
     "name": "{{chance.name()}}",
     "payment_method": {
       "type": "{{chance.cc_type()}}",

@@ -4,6 +4,7 @@
 [![Dependency Status](https://david-dm.org/imlucas/mongodb-datasets.svg?theme=shields.io)](https://david-dm.org/imlucas/mongodb-datasets)
 ![npm version](http://img.shields.io/npm/v/mongodb-datasets.svg)
 <!-- [![Coverage Status](https://coveralls.io/repos/imlucas/mongodb-datasets/badge.png)](https://coveralls.io/r/imlucas/mongodb-datasets) -->
+
 What's a database without any data? With mongodb-datasets you never worry about
 how to populate your MongoDB database with the data as you wish. Unlike a simple
 populator, mongodb-datasets is designed to offer you the maximum control of the
@@ -51,10 +52,10 @@ fs.createReadStream('./test_schema.json')
 
 ## Usage
 
-`createGeneratorStream(options)` creates a [Transform]
-(http://nodejs.org/api/stream.html#stream_class_stream_transform) stream, which
-consumes a Readable stream containing a template schema and produces a stream
-of generated documents in the form of Javascript objects.
+`createGeneratorStream(options)` creates a
+[Transform](http://nodejs.org/api/stream.html#stream_class_stream_transform)
+stream, which consumes a Readable stream containing a template schema and
+produces a stream of generated documents in the form of Javascript objects.
 
 ### Options
 
@@ -152,9 +153,6 @@ potentially helpful. Currently we have:
   + `id` - the index of the counter to use, default is 0
   + `start` - the first count, default is 0
   + `step` - increment of each count, default is 1
-* `coordinates(options)` - generate a coordinate pairs of the
-  form [\<lat\>, \<lng\>]. Options:
-  + `fixed` - number of decimal digits for lat/lng
 * `util.sample(list, [n])` - identical to [underscore.js](http://underscorejs.org/#sample)
 
 ### Imperfections
@@ -193,10 +191,27 @@ First release!
 ### 0.1.3 - Jul. 24, 2014
 * Fixed bug that causes inconsistent content if `this.<embedded doc>` is used
 
-### 0.1.4 - Jul. 24, 2014
+### 0.1.4 - Jul. 28, 2014
 * Changed `Double` to `Number` to hide Javascript's `Number` constructor
 * Added `_$index`
 * Made the former `_$size()` a property `_$size`
+
+### Changed not yet published
+
+#### branch:API - Jul. 29, 2014
+* Output nice formatted json array with flag `--pretty` enabled
+* Mapped chance and faker's random functions to higher level API of datasets.
+  Please consult comments in `lib/schema/context.js' for detailed usage.
+
+#### branch:arrayField - Jul. 31, 2014
+* New syntax for defining arrays in template schema
+* All configured arrays must conform to the format:
+  + `[ "{{_$config}}", {/*options*/}, <content>, /*optionally*/ <more content...> ]`
+* Arrays whose first element is not `{{_$config}}` are treated as ordinary arrays
+  + multiple elements are ok, `[ '{{chance.name()}}',  '{{chance.age()}}' ]`
+  + different types are ok `[ true, 3, { doc: 'doc' }, [ "array" ]]`
+* Supported options:
+  + `size` - can be a number or an array of two numbers ([min, max]). the number of times the contents will be repeated
 
 ## License
 
