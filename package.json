@@ -3,7 +3,8 @@
   "version": "0.1.4",
   "description": "What's a database without any data?",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "docs-full": "jsdoc -c conf.json && open ./docs/index.html"
   },
   "bin": {
     "mongodb-datasets": "bin/mongodb-datasets.js"
