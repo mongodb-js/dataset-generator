@@ -31,9 +31,9 @@
   ],
   "repository": {
     "type": "git",
-    "url": "http://github.com/imlucas/mongodb-datasets.git"
+    "url": "http://github.com/mongodb-js/datasets.git"
   },
   "author": "Lucas Hrabovsky <hrabovsky.lucas@gmail.com> (http://imlucas.com)",
   "license": "MIT",
-  "homepage": "http://github.com/imlucas/mongodb-datasets"
+  "homepage": "http://github.com/mongodb-js/datasets"
 }
