@@ -10,3 +10,6 @@ coverage/
 
 test/
 examples/
+.jshintrc
+CONTRIBUTING.md
+.travis.yml
