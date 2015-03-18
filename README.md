@@ -1,6 +1,6 @@
 # MongoDB-Datasets
 
-[![Build Status](https://secure.travis-ci.org/imlucas/mongodb-datasets.png)](http://travis-ci.org/imlucas/mongodb-datasets)
+[![Build Status](https://secure.travis-ci.org/mongodb-js/datasets.png)](http://travis-ci.org/mongodb-js/datasets)
 
 What's a database without any data? With mongodb-datasets you never worry about
 how to populate your MongoDB database with the data as you wish. Unlike a simple
