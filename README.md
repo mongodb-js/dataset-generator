@@ -1,21 +1,21 @@
-# MongoDB-Datasets
+# mongodb-dataset-generator
 
 [![Build Status](https://secure.travis-ci.org/mongodb-js/datasets.png)](http://travis-ci.org/mongodb-js/datasets)
 
-What's a database without any data? With mongodb-datasets you never worry about
+What's a database without any data? With mongodb-dataset-generator you never worry about
 how to populate your MongoDB database with the data as you wish. Unlike a simple
-populator, mongodb-datasets is designed to offer you the maximum control of the
+populator, mongodb-dataset-generator is designed to offer you the maximum control of the
 data to be in your database.
 
 ## Installation
 
-To use the `mongodb-datasets` command, install mongodb-datasets globally:
+To use the `mongodb-dataset-generator` command, install mongodb-dataset-generator globally:
 
-    $ npm install -g mongodb-datasets
+    $ npm install -g mongodb-dataset-generator
 
 To use the Javascript API, in your project directory:
 
-    $ npm install mongodb-datasets --save
+    $ npm install mongodb-dataset-generator --save
 
 ## A Simple Example
 
@@ -31,14 +31,14 @@ test_schema.json
 
 Using the command:
 
-    $ mongodb-datasets test_schema.json -n 10 -o datasets.json
+    $ mongodb-dataset-generator test_schema.json -n 10 -o datasets.json
 
 Or using the Javascript API:
 ```javascript
 var fs = require('fs'),
   es = require('event-stream'),
   assert = require('assert'),
-  datasets = require('mongodb-datasets');
+  datasets = require('mongodb-dataset-generator');
 
 fs.createReadStream('./test_schema.json')
   .pipe(datasets.createGeneratorStream({size: 10})
@@ -62,10 +62,10 @@ If present, the returned stream effectively behaves as a Writable stream.
 
 ### Command line
 
-You can also use mongodb-datasets in cli. Examples:
+You can also use mongodb-dataset-generator in cli. Examples:
 
-    $ mongodb-datasets schema.json -n 10 -o dump.out
-    $ cat schema.json | mongodb-datasets -n 10 -o -
+    $ mongodb-dataset-generator schema.json -n 10 -o dump.out
+    $ cat schema.json | mongodb-dataset-generator -n 10 -o -
 
 ```
 Options:
@@ -182,7 +182,7 @@ this emerging market.
 First release!
 
 ### 0.1.1 - Jul. 23, 2014
-* Fixed bug that causes `mongodb-datasets` command crash
+* Fixed bug that causes `mongodb-dataset-generator` command crash
 * Updated README to include all features
 
 ### 0.1.3 - Jul. 24, 2014

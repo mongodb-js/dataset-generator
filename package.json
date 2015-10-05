@@ -1,5 +1,5 @@
 {
-  "name": "mongodb-datasets",
+  "name": "mongodb-dataset-generator",
   "version": "0.1.5",
   "description": "What's a database without any data?",
   "scripts": {
@@ -7,7 +7,7 @@
     "docs-full": "jsdoc -c conf.json && open ./docs/index.html"
   },
   "bin": {
-    "mongodb-datasets": "bin/mongodb-datasets.js"
+    "mongodb-dataset-generator": "bin/mongodb-dataset-generator.js"
   },
   "dependencies": {
     "bson": "^0.2.19",
@@ -35,7 +35,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "http://github.com/mongodb-js/datasets.git"
+    "url": "http://github.com/mongodb-js/dataset-generator.git"
   },
   "author": "Lucas Hrabovsky <hrabovsky.lucas@gmail.com> (http://imlucas.com)",
   "license": "MIT",
