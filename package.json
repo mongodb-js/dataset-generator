@@ -39,5 +39,5 @@
   },
   "author": "Lucas Hrabovsky <hrabovsky.lucas@gmail.com> (http://imlucas.com)",
   "license": "MIT",
-  "homepage": "http://github.com/mongodb-js/datasets"
+  "homepage": "http://github.com/mongodb-js/dataset-generator"
 }
