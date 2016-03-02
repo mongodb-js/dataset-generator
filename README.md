@@ -1,7 +1,5 @@
 # mongodb-dataset-generator
 
-[![Build Status](https://secure.travis-ci.org/mongodb-js/datasets-generator.png)](http://travis-ci.org/mongodb-js/datasets-generator)
-
 What's a database without any data?
 
 > :construction: **Warning** This was an experiment for the summer of 2014 MongoDB Summer Intern program and is not for production use.
