@@ -1,11 +1,10 @@
 # mongodb-dataset-generator
 
-[![Build Status](https://secure.travis-ci.org/mongodb-js/datasets.png)](http://travis-ci.org/mongodb-js/datasets)
+[![Build Status](https://secure.travis-ci.org/mongodb-js/datasets-generator.png)](http://travis-ci.org/mongodb-js/datasets-generator)
 
-What's a database without any data? With mongodb-dataset-generator you never worry about
-how to populate your MongoDB database with the data as you wish. Unlike a simple
-populator, mongodb-dataset-generator is designed to offer you the maximum control of the
-data to be in your database.
+What's a database without any data?
+
+> :construction: **Warning** This was an experiment for the summer of 2014 MongoDB Summer Intern program and is not for production use.
 
 ## Installation
 
