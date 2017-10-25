@@ -1,6 +1,6 @@
 {
   "name": "mongodb-dataset-generator",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "What's a database without any data?",
   "scripts": {
     "test": "mocha",
@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "bson": "^0.2.19",
-    "chance": "^0.5.6",
+    "chance": "^1.0.10",
     "debug": "^2.1.1",
     "event-stream": "^3.2.2",
     "faker": "^1.0.0",
