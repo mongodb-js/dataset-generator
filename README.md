@@ -175,6 +175,9 @@ this emerging market.
 
 ## Change log
 
+### 0.1.6
+* Upgraded chance library
+
 ### 0.1.0 - Jul. 23, 2014
 First release!
 
